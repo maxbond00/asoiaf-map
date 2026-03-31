@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Song of Ice and Fire — Character Map</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;overflow:hidden;height:100vh;user-select:none;}
+#app{display:flex;flex-direction:column;height:100vh;}
+
+/* ── HEADER ── */
+#header{background:linear-gradient(to right,#1a0a00,#0a0510,#1a0a00);border-bottom:2px solid #8b6914;padding:7px 18px;display:flex;align-items:center;justify-content:space-between;z-index:100;flex-shrink:0;}
+#header h1{font-size:1.2em;letter-spacing:3px;color:#d4a820;text-shadow:0 0 20px rgba(212,168,32,.5);}
+.header-right{display:flex;gap:14px;align-items:center;font-size:11px;color:#8b6914;letter-spacing:1px;}
+#music-btn{background:rgba(26,10,0,.7);border:1px solid #6a4a10;color:#d4a820;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;line-height:1;}
+#music-btn:hover{border-color:#d4a820;box-shadow:0 0 8px rgba(212,168,32,.4);}
+#music-btn.muted{color:#5a3a10;border-color:#3a2008;}
+
+/* ── MAP ── */
+#map-container{flex:1;position:relative;overflow:hidden;background:#4a7e9e;}
+#world-svg{width:100%;height:100%;cursor:grab;transform-origin:0 0;}
+#world-svg:active{cursor:grabbing;}
+
+/* ── TIMELINE ── */
+#timeline{background:linear-gradient(to right,#1a0a00,#0a0510,#1a0a00);border-top:2px solid #8b6914;padding:9px 18px;display:flex;align-items:center;gap:14px;flex-shrink:0;}
+.ctrl-btn{background:#2a1a05;border:1px solid #8b6914;color:#d4a820;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.ctrl-btn:hover{background:#4a2a10;box-shadow:0 0 10px rgba(212,168,32,.4);}
+#progress-container{flex:1;min-width:0;}
+#progress-track{width:100%;height:8px;background:#1a0800;border-radius:4px;cursor:pointer;position:relative;border:1px solid #4a2a08;}
+#progress-fill{height:100%;background:linear-gradient(to right,#d4a820,#ff6b00);border-radius:4px;width:0%;pointer-events:none;}
+#progress-handle{position:absolute;top:50%;width:14px;height:14px;background:#d4a820;border-radius:50%;transform:translate(-50%,-50%);cursor:grab;box-shadow:0 0 8px rgba(212,168,32,.6);left:0%;pointer-events:none;}
+#book-markers{display:flex;justify-content:space-between;margin-top:4px;}
+.book-marker{font-size:10px;color:#5a3a10;letter-spacing:1px;transition:color .3s;cursor:pointer;}
+.book-marker:hover{color:#a07030;}
+.book-marker.active{color:#d4a820;}
+#speed-control{display:flex;align-items:center;gap:8px;color:#8b6914;font-size:12px;flex-shrink:0;}
+#speed-select{background:#2a1a05;border:1px solid #8b6914;color:#d4a820;padding:3px 8px;border-radius:4px;font-family:inherit;cursor:pointer;}
+
+/* ── CHARACTER PANEL ── */
+#char-panel{position:fixed;right:-440px;top:0;width:420px;height:100vh;background:linear-gradient(160deg,#0d0800 0%,#1a0f00 50%,#0d0500 100%);border-left:2px solid #8b6914;transition:right .35s cubic-bezier(.25,.8,.25,1);z-index:300;overflow-y:auto;padding:18px;}
+#char-panel.open{right:0;}
+#char-panel-close{position:absolute;top:10px;right:12px;background:none;border:1px solid #8b6914;color:#d4a820;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1;font-family:inherit;}
+#char-panel-close:hover{background:#3a1a00;}
+.panel-top{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+#char-portrait-wrap{flex-shrink:0;position:relative;}
+#char-portrait-img{width:105px;height:105px;border-radius:10px;border:2px solid #8b6914;display:block;object-fit:cover;object-position:top center;}
+#char-portrait-svg{width:105px;height:105px;border-radius:10px;border:2px solid #8b6914;display:block;}
+#char-crown-panel{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:20px;line-height:1;filter:drop-shadow(0 0 4px gold);}
+#char-sigil-svg{width:52px;height:52px;display:block;flex-shrink:0;}
+.panel-info{flex:1;min-width:0;}
+#char-name{font-size:1.15em;color:#d4a820;margin-bottom:3px;line-height:1.2;}
+#char-aliases{font-size:.77em;color:#7a5a10;font-style:italic;margin-bottom:5px;line-height:1.4;}
+#char-house-display{font-size:.83em;color:#b09040;margin-bottom:7px;}
+#char-status-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.74em;letter-spacing:1px;margin-bottom:7px;}
+.s-alive{background:#0a2a0a;border:1px solid #2a7a2a;color:#4adf4a;}
+.s-dead{background:#2a0a0a;border:1px solid #7a2a2a;color:#df4a4a;}
+.s-prob{background:#1a1a0a;border:1px solid #7a7a2a;color:#dfdf4a;}
+#char-location-text{font-size:.79em;color:#a09040;}
+#char-divider{border:none;border-top:1px solid #3a2a10;margin:11px 0;}
+#char-bio{font-size:.81em;line-height:1.7;color:#a09060;}
+#char-current-status{font-size:.81em;line-height:1.6;color:#c0a070;margin-top:9px;border-top:1px solid #2a1a08;padding-top:9px;}
+
+/* ── MAP OVERLAYS ── */
+#zoom-controls{position:absolute;top:50px;left:14px;display:flex;flex-direction:column;gap:4px;z-index:10;}
+.zoom-btn{background:rgba(15,8,0,.88);border:1px solid #6a4a10;color:#d4a820;width:30px;height:30px;border-radius:4px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.zoom-btn:hover{background:rgba(60,30,5,.92);}
+#book-display{position:absolute;top:8px;right:14px;z-index:10;background:rgba(10,5,0,.92);border:1px solid #8b6914;padding:7px 14px;border-radius:6px;text-align:center;pointer-events:none;}
+#book-num{font-size:1.9em;display:block;color:#d4a820;line-height:1;}
+#book-title{font-size:9px;color:#8b6914;letter-spacing:1px;display:block;margin-top:2px;max-width:130px;}
+#legend{position:absolute;bottom:8px;left:14px;z-index:10;background:rgba(10,5,0,.9);border:1px solid #4a2a08;padding:9px 13px;border-radius:6px;font-size:11px;}
+#legend-title{color:#d4a820;font-size:11px;margin-bottom:5px;letter-spacing:1px;}
+.leg{display:flex;align-items:center;gap:7px;margin:3px 0;color:#8a6020;}
+.leg-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+#tooltip{position:fixed;pointer-events:none;z-index:500;background:rgba(10,5,0,.95);border:1px solid #8b6914;padding:4px 10px;border-radius:4px;font-size:12px;color:#d4a820;display:none;white-space:nowrap;}
+/* ── FOLLOW INDICATOR ── */
+#follow-indicator{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(8,4,0,.94);border:1px solid #d4a820;border-radius:20px;padding:5px 8px 5px 14px;display:none;align-items:center;gap:8px;font-size:11px;color:#d4a820;letter-spacing:.5px;white-space:nowrap;box-shadow:0 0 14px rgba(212,168,32,.25);}
+#follow-indicator .follow-name{max-width:160px;overflow:hidden;text-overflow:ellipsis;}
+#follow-indicator .follow-stop{background:none;border:none;color:#8b6914;cursor:pointer;font-size:13px;padding:0 2px;line-height:1;transition:color .15s;}
+#follow-indicator .follow-stop:hover{color:#d4a820;}
+
+/* ── SVG STYLES ── */
+.sea-bg{fill:#6b9cb8;}
+.land-w{fill:#d4c99a;stroke:#8a7050;stroke-width:1;stroke-linejoin:round;}
+.land-e{fill:#d0cc96;stroke:#8a7050;stroke-width:1;stroke-linejoin:round;}
+.land-s{fill:#c8c07a;stroke:#7a6840;stroke-width:.8;opacity:.9;}
+.land-isle{fill:#d4c99a;stroke:#8a7050;stroke-width:.8;stroke-linejoin:round;}
+.the-wall{stroke:#e8f4f8;stroke-width:4;fill:none;stroke-linecap:round;}
+.river{stroke:#4a7aa8;stroke-width:1.2;fill:none;opacity:.8;stroke-linecap:round;}
+.river-major{stroke:#4a7aa8;stroke-width:1.8;fill:none;opacity:.8;stroke-linecap:round;}
+.mountain{fill:none;stroke:#8a7858;stroke-width:1.5;opacity:.7;}
+.forest{fill:#7a9858;opacity:.38;}
+.road{stroke:#8a6840;stroke-width:.9;fill:none;stroke-dasharray:5,4;opacity:.5;}
+.loc-dot{fill:#2a1a0a;}
+.loc-lbl{font-size:9px;fill:#1a0e00;pointer-events:none;font-family:'Palatino Linotype',serif;}
+.loc-lbl-hi{font-size:10px;fill:#1a0e00;pointer-events:none;font-family:'Palatino Linotype',serif;font-weight:bold;}
+.loc-capital{fill:#5a3000;}
+.reg-lbl{font-size:11px;fill:#2a1e08;pointer-events:none;font-style:italic;letter-spacing:1px;font-family:'Palatino Linotype',serif;}
+.sea-lbl{font-size:11px;fill:#1a3a58;pointer-events:none;font-style:italic;font-family:'Palatino Linotype',serif;letter-spacing:2px;}
+.wall-lbl{font-size:9px;fill:#1a3a58;pointer-events:none;letter-spacing:2px;}
+.free-city-dot{fill:#383870;}
+.free-city-lbl{font-size:9px;fill:#383870;pointer-events:none;font-family:'Palatino Linotype',serif;}
+
+/* ── CHAR TOKENS ── */
+.char-token{cursor:pointer;transition:opacity .25s;}
+.char-token:hover .tok-ring{filter:brightness(1.6) drop-shadow(0 0 8px rgba(212,168,32,.95))!important;}
+.char-token:hover .tok-skull{filter:brightness(1.5);}
+.tok-ring{filter:drop-shadow(0 2px 5px rgba(0,0,0,.85));transition:filter .2s;}
+.tok-crown{font-size:12px;dominant-baseline:auto;text-anchor:middle;filter:drop-shadow(0 0 3px gold);}
+.tok-lbl{font-size:7.5px;fill:#fff;font-weight:bold;pointer-events:none;dominant-baseline:central;text-anchor:middle;letter-spacing:.3px;}
+.char-token.prob .tok-ring{stroke-dasharray:3,2!important;opacity:.82;}
+.char-token.dead-tok{opacity:.55;}
+.overflow-badge{cursor:pointer;}
+.overflow-badge circle{filter:drop-shadow(0 2px 4px rgba(0,0,0,.8));}
+.overflow-badge:hover circle{filter:brightness(1.4) drop-shadow(0 0 6px #d4a820);}
+@keyframes tokIn{from{opacity:0;transform:scale(.45)}to{opacity:1;transform:scale(1)}}
+@keyframes tokFadeIn{from{opacity:0}to{opacity:1}}
+/* tok-anim is an INNER wrapper — its CSS transform never conflicts with the outer group's SVG transform attribute */
+.tok-anim{animation:tokIn .22s cubic-bezier(.34,1.56,.64,1) both;transform-origin:0 0;}
+/* overflow badges use absolute SVG coords (no group transform), so scale around SVG origin → use fade only */
+.overflow-badge{animation:tokFadeIn .18s ease-out both;}
+.char-token.traveling .tok-ring{stroke:#ffe87a!important;filter:drop-shadow(0 0 5px rgba(255,232,100,.7)) drop-shadow(0 2px 5px rgba(0,0,0,.85))!important;}
+
+/* ── SEARCH ── */
+#search-wrap{position:absolute;top:12px;left:60px;z-index:50;width:290px;}
+#search-input-row{display:flex;align-items:center;background:rgba(8,5,0,.92);border:1px solid #8b6914;border-radius:20px;padding:5px 12px 5px 10px;gap:7px;transition:border-color .2s,box-shadow .2s;}
+#search-input-row:focus-within{border-color:#d4a820;box-shadow:0 0 12px rgba(212,168,32,.35);}
+#search-icon{font-size:13px;opacity:.7;flex-shrink:0;color:#d4a820;}
+#search-input{background:none;border:none;outline:none;color:#d4a820;font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:12px;width:100%;letter-spacing:.5px;}
+#search-input::placeholder{color:#5a3a10;}
+#search-clear{background:none;border:none;color:#8b6914;cursor:pointer;font-size:14px;line-height:1;padding:0;display:none;flex-shrink:0;}
+#search-clear:hover{color:#d4a820;}
+#search-results{position:absolute;top:calc(100% + 5px);left:0;right:0;background:rgba(10,6,0,.97);border:1px solid #6a4a10;border-radius:8px;overflow:hidden;display:none;box-shadow:0 8px 28px rgba(0,0,0,.7);}
+.sr-item{display:flex;align-items:center;gap:10px;padding:7px 12px;cursor:pointer;transition:background .15s;user-select:none;}
+.sr-item:hover,.sr-item.sr-active{background:rgba(212,168,32,.12);}
+.sr-item:not(:last-child){border-bottom:1px solid rgba(90,50,8,.4);}
+.sr-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:bold;color:#fff;border:1.5px solid rgba(212,168,32,.4);}
+.sr-name{flex:1;font-size:12px;color:#d4a820;letter-spacing:.3px;}
+.sr-loc{font-size:10px;color:#6a4a18;white-space:nowrap;}
+.sr-dead{color:#7a3a3a!important;}
+.sr-no{padding:10px 14px;font-size:11px;color:#5a3a18;font-style:italic;}
+/* ── SEARCH-FOUND HIGHLIGHT: glow pulse on the located token ── */
+@keyframes tokFoundGlow{0%,100%{filter:drop-shadow(0 2px 5px rgba(0,0,0,.85));}50%{filter:drop-shadow(0 0 14px rgba(255,255,255,1)) drop-shadow(0 0 7px rgba(212,168,32,.9));}}
+.char-token.tok-found .tok-ring{stroke:#fff!important;stroke-width:3!important;}
+.char-token.tok-found .tok-anim{animation:tokFoundGlow .55s ease-in-out 5 both!important;}
+/* HTML ping rings — positioned in screen space via getScreenCTM(), no SVG transform conflict */
+@keyframes pingRingAnim{0%{transform:translate(-50%,-50%) scale(.15);opacity:1;border-color:rgba(255,255,255,.95);}100%{transform:translate(-50%,-50%) scale(1);opacity:0;border-color:rgba(212,168,32,.1);}}
+.ping-ring{position:fixed;width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.9);pointer-events:none;z-index:9000;animation:pingRingAnim .85s cubic-bezier(.15,.8,.3,1) 1 both;}
+
+/* ── CREATURE TOKENS ── */
+.creature-token{cursor:pointer;transition:opacity .25s;}
+.creature-token.creature-dead{opacity:.45;}
+.creature-token:hover .crt-shape{filter:brightness(1.5) drop-shadow(0 0 8px rgba(255,255,255,.7))!important;}
+.crt-shape{filter:drop-shadow(0 2px 6px rgba(0,0,0,.9));transition:filter .2s;}
+.crt-label{font-size:10px;dominant-baseline:central;text-anchor:middle;pointer-events:none;}
+.creature-token.dragon-tok .crt-shape{filter:drop-shadow(0 0 5px rgba(200,48,48,.55)) drop-shadow(0 2px 6px rgba(0,0,0,.9));}
+.creature-token.wolf-tok .crt-shape{filter:drop-shadow(0 0 4px rgba(200,200,200,.3)) drop-shadow(0 2px 6px rgba(0,0,0,.9));}
+
+/* ── LANDING PAGE ── */
+#spoiler{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 60%,#110a00 0%,#060308 55%,#000 100%);z-index:9999;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+/* Fire vignette (bottom) + Ice vignette (top) */
+#spoiler::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 140% 35% at 50% 100%,rgba(220,70,0,.32) 0%,transparent 70%),
+    radial-gradient(ellipse 140% 35% at 50% 0%,  rgba(80,170,255,.22) 0%,transparent 70%);}
+#spoiler::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(to bottom,rgba(100,200,255,.08) 0%,transparent 18%,transparent 82%,rgba(255,60,0,.08) 100%),
+    radial-gradient(ellipse 60% 60% at 50% 50%,transparent 50%,rgba(0,0,0,.45) 100%);}
+/* Frost line at top */
+.sp-frost-bar{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(to right,transparent,rgba(120,200,255,.7),rgba(200,240,255,1),rgba(120,200,255,.7),transparent);z-index:3;box-shadow:0 0 18px rgba(140,210,255,.6),0 0 40px rgba(100,180,255,.3);animation:sp-frost-pulse 3s ease-in-out infinite;}
+@keyframes sp-frost-pulse{0%,100%{opacity:.7;box-shadow:0 0 14px rgba(140,210,255,.4);}50%{opacity:1;box-shadow:0 0 28px rgba(140,210,255,.9),0 0 60px rgba(100,180,255,.4);}}
+/* Ember glow at bottom */
+.sp-ember-bar{position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(to right,transparent,rgba(255,100,0,.7),rgba(255,200,40,1),rgba(255,100,0,.7),transparent);z-index:3;box-shadow:0 0 18px rgba(255,110,0,.6),0 0 40px rgba(220,60,0,.3);animation:sp-ember-pulse 2.5s ease-in-out infinite;}
+@keyframes sp-ember-pulse{0%,100%{opacity:.65;box-shadow:0 0 14px rgba(255,100,0,.4);}50%{opacity:1;box-shadow:0 0 32px rgba(255,100,0,.95),0 0 70px rgba(220,50,0,.4);}}
+#sp-inner{position:relative;z-index:2;text-align:center;width:min(700px,96vw);padding:18px 24px;max-height:100vh;overflow-y:auto;scrollbar-width:none;}
+#sp-inner::-webkit-scrollbar{display:none;}
+.sp-divider{display:flex;align-items:center;margin:10px auto;width:min(340px,90%);color:#5a3a10;}
+.sp-divider::before,.sp-divider::after{content:'';flex:1;height:1px;}
+.sp-divider::before{background:linear-gradient(to right,transparent,#6a4a14);}
+.sp-divider::after{background:linear-gradient(to left,transparent,#6a4a14);}
+.sp-divider span{padding:0 12px;color:#8b6914;font-size:15px;}
+.sp-seal{font-size:2.6em;margin-bottom:4px;filter:drop-shadow(0 0 14px rgba(212,168,32,.8));animation:sp-pulse 3s ease-in-out infinite;}
+@keyframes sp-pulse{0%,100%{filter:drop-shadow(0 0 10px rgba(212,168,32,.6));}50%{filter:drop-shadow(0 0 22px rgba(212,168,32,.95));}}
+.sp-title{font-size:clamp(2em,5.5vw,3.6em);letter-spacing:8px;color:#d4a820;line-height:1.1;margin-bottom:8px;animation:sp-title-glow 4s ease-in-out infinite;}
+@keyframes sp-title-glow{
+  0%,100%{text-shadow:0 0 30px rgba(212,168,32,.6),0 0 60px rgba(212,168,32,.2),0 0 100px rgba(212,168,32,.1);color:#d4a820;}
+  35%  {text-shadow:0 0 20px rgba(80,180,255,.5),0 0 50px rgba(80,180,255,.25),0 0 90px rgba(80,160,255,.15);color:#cce8ff;}
+  65%  {text-shadow:0 0 25px rgba(255,90,0,.6), 0 0 55px rgba(255,60,0,.3),  0 0 90px rgba(200,40,0,.2); color:#ffcc88;}
+}
+.sp-sub{font-size:.82em;letter-spacing:5px;color:#7a5a18;font-weight:normal;margin-bottom:4px;}
+.sp-houses{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:14px 0;}
+.sp-house{display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.025);border:1px solid rgba(90,58,16,.45);padding:9px 13px;border-radius:5px;min-width:90px;transition:background .25s,border-color .25s,transform .25s;cursor:default;}
+.sp-house:hover{background:rgba(212,168,32,.08);border-color:rgba(212,168,32,.4);transform:translateY(-3px);}
+.sp-sigil{font-size:1.9em;line-height:1;margin-bottom:2px;}
+.sp-hname{font-size:.62em;letter-spacing:2.5px;color:#c8a040;}
+.sp-hwords{font-size:.56em;color:#5a3a10;font-style:italic;letter-spacing:.3px;margin-top:1px;}
+.sp-quote{margin:14px auto;max-width:460px;font-size:.98em;color:#b89050;font-style:italic;line-height:1.75;border-left:2px solid #5a3a10;padding:4px 0 4px 16px;text-align:left;}
+.sp-quote cite{display:block;font-size:.75em;color:#6a4a18;margin-top:5px;font-style:normal;letter-spacing:1.5px;}
+.sp-desc{font-size:.76em;color:#6a4a20;line-height:1.75;max-width:480px;margin:0 auto 12px;}
+.sp-books{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 8px;margin-bottom:12px;font-size:.71em;letter-spacing:.4px;}
+.sp-books span{color:#7a5a20;}.sp-books .sp-dot{color:#3a2a08;}
+.sp-warn{color:#b03030;font-size:.74em;letter-spacing:2px;margin-bottom:16px;text-shadow:0 0 12px rgba(180,0,0,.4);}
+.sp-btn{background:linear-gradient(145deg,#1c0d00,#2e1800,#1c0d00);border:2px solid #d4a820;color:#d4a820;padding:13px 38px;font-size:.98em;letter-spacing:4px;cursor:pointer;border-radius:3px;font-family:inherit;text-shadow:0 0 10px rgba(212,168,32,.5);box-shadow:0 0 24px rgba(212,168,32,.18),inset 0 0 24px rgba(0,0,0,.5);transition:all .3s;}
+.sp-btn:hover{background:linear-gradient(145deg,#2e1800,#401f00,#2e1800);box-shadow:0 0 40px rgba(212,168,32,.5),inset 0 0 24px rgba(0,0,0,.4);transform:translateY(-2px);}
+.sp-btn-sword{margin:0 8px;opacity:.8;}
+.sp-credit{font-size:.63em;color:#3a2408;letter-spacing:2px;margin-top:8px;}
+/* Falling particles */
+.sp-particle{position:absolute;pointer-events:none;border-radius:50%;z-index:1;}
+.sp-ice{background:rgba(200,230,255,.9);box-shadow:0 0 6px rgba(140,210,255,.7),0 0 12px rgba(100,190,255,.35);}
+.sp-ice.sp-flare{background:rgba(220,240,255,1);box-shadow:0 0 10px rgba(160,220,255,.9),0 0 22px rgba(100,180,255,.5);}
+.sp-fire{background:radial-gradient(circle,rgba(255,200,50,1),rgba(230,70,0,.85));box-shadow:0 0 8px rgba(255,100,0,.65),0 0 18px rgba(200,40,0,.35);}
+.sp-fire.sp-flare{background:radial-gradient(circle,rgba(255,240,100,1),rgba(255,100,0,.9));box-shadow:0 0 14px rgba(255,140,0,.9),0 0 30px rgba(220,50,0,.5);}
+@keyframes sp-snow{
+  0%  {transform:translateY(-20px) translateX(0) rotate(0deg);opacity:0;}
+  8%  {opacity:1;}
+  90% {opacity:.7;}
+  100%{transform:translateY(110vh) translateX(80px) rotate(600deg);opacity:0;}}
+@keyframes sp-snow-drift{
+  0%  {transform:translateY(-20px) translateX(0) rotate(0deg);opacity:0;}
+  8%  {opacity:.9;}
+  50% {transform:translateY(55vh) translateX(-50px) rotate(300deg);opacity:.8;}
+  100%{transform:translateY(110vh) translateX(40px) rotate(660deg);opacity:0;}}
+@keyframes sp-ember{
+  0%  {transform:translateY(20px) translateX(0) scale(1);opacity:0;}
+  15% {opacity:1;}
+  80% {opacity:.8;}
+  100%{transform:translateY(-110vh) translateX(-60px) scale(.1);opacity:0;}}
+@keyframes sp-ember-flicker{
+  0%  {transform:translateY(20px) translateX(0) scale(1);opacity:0;}
+  15% {opacity:1;}
+  40% {transform:translateY(-40vh) translateX(30px) scale(.7);opacity:.9;}
+  70% {transform:translateY(-70vh) translateX(-20px) scale(.4);opacity:.6;}
+  100%{transform:translateY(-110vh) translateX(20px) scale(.05);opacity:0;}}
+</style>
+</head>
+<body>
+
+<div id="spoiler">
+  <!-- particles injected by JS -->
+  <div class="sp-frost-bar"></div>
+  <div class="sp-ember-bar"></div>
+  <div id="sp-inner">
+    <div class="sp-seal">⚔</div>
+    <h1 class="sp-title">A SONG OF<br>ICE AND FIRE</h1>
+    <h2 class="sp-sub">INTERACTIVE CHARACTER MAP</h2>
+
+    <div class="sp-divider"><span>✦</span></div>
+
+    <blockquote class="sp-quote">
+      "When you play the game of thrones, you win or you die. There is no middle ground."
+      <cite>— Cersei Lannister, A Game of Thrones</cite>
+    </blockquote>
+
+    <p class="sp-desc">Track every major character across all five novels — their journeys, alliances, betrayals, and ultimate fates — from the frozen wastes beyond the Wall to the scorching shores of Essos.</p>
+
+    <div class="sp-books">
+      <span>A Game of Thrones</span><span class="sp-dot">·</span>
+      <span>A Clash of Kings</span><span class="sp-dot">·</span>
+      <span>A Storm of Swords</span><span class="sp-dot">·</span>
+      <span>A Feast for Crows</span><span class="sp-dot">·</span>
+      <span>A Dance with Dragons</span>
+    </div>
+
+    <div class="sp-divider"><span>✦</span></div>
+
+    <div class="sp-warn">⚠ &nbsp; MAJOR SPOILERS FOR ALL FIVE BOOKS &nbsp; ⚠</div>
+    <button class="sp-btn" onclick="enterMap()">
+      <span class="sp-btn-sword">⚔</span>ENTER THE REALM<span class="sp-btn-sword">⚔</span>
+    </button>
+    <p class="sp-credit">GEORGE R.R. MARTIN · A SONG OF ICE AND FIRE</p>
+  </div>
+</div>
+
+<div id="app">
+  <div id="header">
+    <h1>A SONG OF ICE AND FIRE — CHARACTER MAP</h1>
+    <div class="header-right">
+      <span>AGoT · ACoK · ASoS · AFfC · ADwD</span>
+      <span id="char-count" style="color:#5a3a10"></span>
+      <button id="music-btn" onclick="toggleMusic()" title="Mute music">♫</button>
+    </div>
+  </div>
+
+  <div id="map-container">
+  <!-- ═══════════════════════════ WORLD SVG ═══════════════════════════ -->
+  <svg id="world-svg" viewBox="0 0 1800 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="2.5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="softglow">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <radialGradient id="ocean-grad" cx="35%" cy="40%" r="65%">
+        <stop offset="0%" stop-color="#7ab4d0"/>
+        <stop offset="100%" stop-color="#4e88aa"/>
+      </radialGradient>
+      <!-- House color gradients for tokens -->
+      <radialGradient id="hg-stark"    cx="50%" cy="40%"><stop offset="0%" stop-color="#5a6070"/><stop offset="100%" stop-color="#2a2a3a"/></radialGradient>
+      <radialGradient id="hg-lannist"  cx="50%" cy="40%"><stop offset="0%" stop-color="#c8981a"/><stop offset="100%" stop-color="#6a4800"/></radialGradient>
+      <radialGradient id="hg-barath"   cx="50%" cy="40%"><stop offset="0%" stop-color="#b08018"/><stop offset="100%" stop-color="#503800"/></radialGradient>
+      <radialGradient id="hg-targ"     cx="50%" cy="40%"><stop offset="0%" stop-color="#c83030"/><stop offset="100%" stop-color="#6a0808"/></radialGradient>
+      <radialGradient id="hg-tyrell"   cx="50%" cy="40%"><stop offset="0%" stop-color="#508030"/><stop offset="100%" stop-color="#183808"/></radialGradient>
+      <radialGradient id="hg-mart"     cx="50%" cy="40%"><stop offset="0%" stop-color="#c87020"/><stop offset="100%" stop-color="#6a2800"/></radialGradient>
+      <radialGradient id="hg-grey"     cx="50%" cy="40%"><stop offset="0%" stop-color="#4a5878"/><stop offset="100%" stop-color="#181e28"/></radialGradient>
+      <radialGradient id="hg-tully"    cx="50%" cy="40%"><stop offset="0%" stop-color="#2860b0"/><stop offset="100%" stop-color="#082040"/></radialGradient>
+      <radialGradient id="hg-arryn"    cx="50%" cy="40%"><stop offset="0%" stop-color="#3888d0"/><stop offset="100%" stop-color="#083048"/></radialGradient>
+      <radialGradient id="hg-bolt"     cx="50%" cy="40%"><stop offset="0%" stop-color="#880808"/><stop offset="100%" stop-color="#280000"/></radialGradient>
+      <radialGradient id="hg-mort"     cx="50%" cy="40%"><stop offset="0%" stop-color="#406848"/><stop offset="100%" stop-color="#102018"/></radialGradient>
+      <radialGradient id="hg-nw"       cx="50%" cy="40%"><stop offset="0%" stop-color="#282828"/><stop offset="100%" stop-color="#080808"/></radialGradient>
+      <radialGradient id="hg-ff"       cx="50%" cy="40%"><stop offset="0%" stop-color="#387038"/><stop offset="100%" stop-color="#0a2008"/></radialGradient>
+      <radialGradient id="hg-none"     cx="50%" cy="40%"><stop offset="0%" stop-color="#505050"/><stop offset="100%" stop-color="#202020"/></radialGradient>
+      <radialGradient id="hg-sand"     cx="50%" cy="40%"><stop offset="0%" stop-color="#c06820"/><stop offset="100%" stop-color="#602000"/></radialGradient>
+    </defs>
+
+    <!-- MAP BACKGROUND IMAGE -->
+    <image href="map-bg.webp" x="0" y="0" width="1800" height="1000" preserveAspectRatio="none"/>
+
+
+    <!-- ═══════════════ CHARACTER TOKENS ═══════════════ -->
+    <defs id="clip-defs"><!-- clip paths generated by JS --></defs>
+    <g id="travel-lines"></g>
+    <g id="creature-tokens"></g>
+    <g id="char-tokens"></g>
+    <g id="overflow-badges"></g>
+
+  </svg><!-- end world-svg -->
+
+    <!-- Follow indicator (shown while tracking a character) -->
+    <div id="follow-indicator">
+      <span>📍 FOLLOWING</span>
+      <span class="follow-name" id="follow-name"></span>
+      <button class="follow-stop" onclick="stopFollowing()" title="Stop following">✕</button>
+    </div>
+
+    <!-- Search bar -->
+    <div id="search-wrap">
+      <div id="search-input-row">
+        <span id="search-icon">🔍</span>
+        <input id="search-input" type="text" placeholder="Search characters… ( / )" autocomplete="off" spellcheck="false">
+        <button id="search-clear" title="Clear">✕</button>
+      </div>
+      <div id="search-results"></div>
+    </div>
+
+    <!-- Zoom controls -->
+    <div id="zoom-controls">
+      <button class="zoom-btn" onclick="zoomAdj(1.3)" title="Zoom In">+</button>
+      <button class="zoom-btn" onclick="zoomAdj(0.77)" title="Zoom Out">−</button>
+      <button class="zoom-btn" onclick="resetView()" title="Reset" style="font-size:11px">⌂</button>
+      <button class="zoom-btn" onclick="focusWest()" title="Westeros" style="font-size:8px;letter-spacing:-1px">WES</button>
+      <button class="zoom-btn" onclick="focusEss()" title="Essos" style="font-size:8px;letter-spacing:-1px">ESS</button>
+    </div>
+
+    <!-- Book display -->
+    <div id="book-display">
+      <span id="book-num">1</span>
+      <span id="book-title">A Game of Thrones</span>
+    </div>
+
+    <!-- Legend -->
+    <div id="legend">
+      <div id="legend-title">LEGEND</div>
+      <div class="leg"><div class="leg-dot" style="background:#1a6a1a;border:1px solid #d4a820"></div>Confirmed alive</div>
+      <div class="leg"><div class="leg-dot" style="background:#6a6a10;border:1px dashed #d4a820;opacity:.8"></div>Probable location</div>
+      <div class="leg"><div class="leg-dot" style="background:#6a1a1a;border:1px solid #9a4a4a;opacity:.7"></div>Deceased</div>
+      <div class="leg" style="margin-top:2px;gap:5px"><span style="font-size:12px">👑</span>Claims kingship/queenship</div>
+      <div class="leg" style="margin-top:4px;gap:5px;border-top:1px solid #2a1a08;padding-top:4px"><span style="font-size:12px">🐉</span>Dragon</div>
+      <div class="leg" style="gap:5px"><span style="font-size:12px">🐺</span>Direwolf</div>
+      <div class="leg" style="margin-top:4px;font-size:10px;color:#5a4020">Click token for bio · press / to search</div>
+    </div>
+  </div><!-- end map-container -->
+
+  <!-- Timeline -->
+  <div id="timeline">
+    <div style="display:flex;gap:5px;align-items:center">
+      <button class="ctrl-btn" onclick="skipStart()" title="Start">⏮</button>
+      <button class="ctrl-btn" onclick="prevBook()" title="Prev">⏪</button>
+      <button class="ctrl-btn" id="play-btn" onclick="togglePlay()">▶</button>
+      <button class="ctrl-btn" onclick="nextBook()" title="Next">⏩</button>
+      <button class="ctrl-btn" onclick="skipEnd()" title="End">⏭</button>
+    </div>
+    <div id="progress-container">
+      <div id="progress-track" onclick="seekClick(event)">
+        <div id="progress-fill"></div>
+        <div id="progress-handle"></div>
+      </div>
+      <div id="book-markers">
+        <span class="book-marker" id="bm0" onclick="goBook(0)">AGoT</span>
+        <span class="book-marker" id="bm1" onclick="goBook(1)">ACoK</span>
+        <span class="book-marker" id="bm2" onclick="goBook(2)">ASoS</span>
+        <span class="book-marker" id="bm3" onclick="goBook(3)">AFfC</span>
+        <span class="book-marker" id="bm4" onclick="goBook(4)">ADwD</span>
+      </div>
+    </div>
+    <div id="speed-control">
+      <span>Speed:</span>
+      <select id="speed-select" onchange="playSpeed=+this.value">
+        <option value=".25">¼×</option>
+        <option value=".5">½×</option>
+        <option value="1" selected>1×</option>
+        <option value="2">2×</option>
+        <option value="4">4×</option>
+      </select>
+    </div>
+  </div>
+</div><!-- end app -->
+
+<!-- Character Panel -->
+<div id="char-panel">
+  <button id="char-panel-close" onclick="closePanel()">×</button>
+  <div class="panel-top">
+    <div id="char-portrait-wrap">
+      <!-- filled by JS: either <img> or <svg> -->
+    </div>
+    <svg id="char-sigil-svg" viewBox="0 0 60 60"></svg>
+    <div class="panel-info">
+      <div id="char-name">—</div>
+      <div id="char-aliases"></div>
+      <div id="char-house-display"></div>
+      <div id="char-status-badge" class="s-alive">ALIVE</div>
+      <div id="char-location-text"></div>
+    </div>
+  </div>
+  <hr id="char-divider">
+  <div id="char-bio"></div>
+  <div id="char-current-status"></div>
+</div>
+
+<div id="tooltip"></div>
+
+<!-- ═══════════════════════════ CORE ENGINE ═══════════════════════════ -->
+<script>
+'use strict';
+
+const BOOK_NAMES = [
+  'A Game of Thrones','A Clash of Kings','A Storm of Swords',
+  'A Feast for Crows','A Dance with Dragons'
+];
+const BOOK_SEC  = 60;   // 60 "seconds" per book = smoother sub-chapter travel
+const TOTAL_SEC = BOOK_SEC * 5;
+
+// Approximate chapter counts per book (for chapter display)
+const BOOK_CHAPTERS = [73, 70, 82, 46, 73];
+
+let t = 0, playing = false, playSpeed = 1, lastStamp = null, rafId = null;
+let followingId = null;  // character id being tracked by the camera
+// Travel animation: tracks per-character current rendered position for smooth movement
+const _pos = {};   // id -> {x, y}  current displayed SVG coords
+let transform = {x:0,y:0,s:1};
+let dragging = false, dragPt = {x:0,y:0}, dragOrigin = {x:0,y:0};
+
+// ── LOCATIONS ─────────────────────────────────────────────────────────
+const LOC = {
+  // Beyond the Wall  (image ~17%w, 17%h → SVG 1800×1000)
+  'beyond-wall':       {x:306, y:170, lbl:"Beyond the Wall"},
+  'hardhome':          {x:342, y:195, lbl:"Hardhome"},
+  'fist-first-men':    {x:280, y:215, lbl:"Fist of First Men"},
+  'crasters-keep':     {x:310, y:220, lbl:"Craster's Keep"},
+  'land-always-winter':{x:230, y:72,  lbl:"Land of Always Winter"},
+  // The Wall  (~13–21%w, 26%h)
+  'castle-black':      {x:305, y:262, lbl:"Castle Black"},
+  'shadow-tower':      {x:232, y:268, lbl:"Shadow Tower"},
+  'eastwatch':         {x:378, y:258, lbl:"Eastwatch-by-the-Sea"},
+  // The North
+  'winterfell':        {x:288, y:340, lbl:"Winterfell"},
+  'white-harbor':      {x:362, y:308, lbl:"White Harbor"},
+  'last-hearth':       {x:326, y:298, lbl:"Last Hearth"},
+  'bear-island':       {x:232, y:296, lbl:"Bear Island"},
+  'deepwood-motte':    {x:250, y:312, lbl:"Deepwood Motte"},
+  'dreadfort':         {x:344, y:318, lbl:"The Dreadfort"},
+  'karhold':           {x:378, y:286, lbl:"Karhold"},
+  'moat-cailin':       {x:286, y:368, lbl:"Moat Cailin"},
+  'greywater-watch':   {x:268, y:378, lbl:"Greywater Watch"},
+  // Riverlands
+  'riverrun':          {x:268, y:420, lbl:"Riverrun"},
+  'harrenhal':         {x:340, y:412, lbl:"Harrenhal"},
+  'the-twins':         {x:305, y:388, lbl:"The Twins"},
+  'seagard':           {x:268, y:380, lbl:"Seagard"},
+  'saltpans':          {x:358, y:418, lbl:"Saltpans"},
+  'riverlands':        {x:290, y:408, lbl:"The Riverlands"},
+  // The Vale
+  'eyrie':             {x:376, y:378, lbl:"The Eyrie"},
+  'gulltown':          {x:396, y:400, lbl:"Gulltown"},
+  'vale':              {x:376, y:375, lbl:"The Vale"},
+  // Iron Islands  (~11%w, 43%h)
+  'pyke':              {x:196, y:432, lbl:"Pyke"},
+  'iron-islands':      {x:196, y:432, lbl:"Iron Islands"},
+  // Westerlands
+  'casterly-rock':     {x:214, y:432, lbl:"Casterly Rock"},
+  'lannisport':        {x:210, y:422, lbl:"Lannisport"},
+  // Crownlands  (~21%w, 47%h)
+  'kings-landing':     {x:375, y:470, lbl:"King's Landing"},
+  'dragonstone':       {x:415, y:468, lbl:"Dragonstone"},
+  // Stormlands
+  'storms-end':        {x:413, y:520, lbl:"Storm's End"},
+  // The Reach
+  'highgarden':        {x:232, y:490, lbl:"Highgarden"},
+  'oldtown':           {x:196, y:514, lbl:"Oldtown"},
+  'horn-hill':         {x:250, y:498, lbl:"Horn Hill"},
+  'the-reach':         {x:232, y:472, lbl:"The Reach"},
+  // Dorne  (~13–20%w, 54–59%h)
+  'sunspear':          {x:342, y:592, lbl:"Sunspear"},
+  'water-gardens':     {x:332, y:582, lbl:"Water Gardens"},
+  'starfall':          {x:232, y:570, lbl:"Starfall"},
+  'yronwood':          {x:360, y:542, lbl:"Yronwood"},
+  'dorne':             {x:286, y:570, lbl:"Dorne"},
+  // At sea
+  'narrow-sea':        {x:432, y:440, lbl:"Narrow Sea"},
+  'sunset-sea':        {x:108, y:400, lbl:"Sunset Sea"},
+  'summer-sea':        {x:630, y:730, lbl:"Summer Sea"},
+  // Essos — Free Cities  (~25–36%w, 28–58%h)
+  'braavos':           {x:452, y:350, lbl:"Braavos"},
+  'pentos':            {x:450, y:430, lbl:"Pentos"},
+  'lorath':            {x:468, y:280, lbl:"Lorath"},
+  'norvos':            {x:520, y:370, lbl:"Norvos"},
+  'qohor':             {x:540, y:410, lbl:"Qohor"},
+  'myr':               {x:468, y:450, lbl:"Myr"},
+  'tyrosh':            {x:485, y:480, lbl:"Tyrosh"},
+  'lys':               {x:485, y:530, lbl:"Lys"},
+  'volantis':          {x:648, y:580, lbl:"Volantis"},
+  // Essos interior
+  'vaes-dothrak':      {x:846, y:432, lbl:"Vaes Dothrak"},
+  'dothraki-sea':      {x:756, y:462, lbl:"Dothraki Sea"},
+  // Slaver's Bay  (~47–52%w, 59–63%h)
+  'astapor':           {x:846, y:632, lbl:"Astapor"},
+  'yunkai':            {x:898, y:620, lbl:"Yunkai"},
+  'meereen':           {x:938, y:594, lbl:"Meereen"},
+  'slavers-bay':       {x:898, y:605, lbl:"Slaver's Bay"},
+  // Far Essos
+  'qarth':             {x:1134,y:652, lbl:"Qarth"},
+  'asshai':            {x:1620,y:732, lbl:"Asshai"},
+  'red-waste':         {x:1026,y:602, lbl:"Red Waste"},
+  'mantarys':          {x:720, y:572, lbl:"Mantarys"},
+  'unknown':           {x:900, y:200, lbl:"Location Unknown"},
+  'at-sea':            {x:360, y:720, lbl:"At Sea"},
+  // Additional specific locations
+  'skagos':            {x:398, y:228, lbl:"Skagos"},
+  'moat-cailin':       {x:286, y:368, lbl:"Moat Cailin"},
+  'moles-town':        {x:305, y:268, lbl:"Mole's Town"},
+  'griffin-roost':     {x:426, y:512, lbl:"Griffin's Roost"},
+  'oldstones':         {x:268, y:408, lbl:"Oldstones"},
+  'crossroads-inn':    {x:322, y:412, lbl:"The Crossroads Inn"},
+  'duskendale':        {x:394, y:455, lbl:"Duskendale"},
+  'deep-lake':         {x:262, y:258, lbl:"Deep Lake"},
+  'long-lake':         {x:283, y:308, lbl:"Long Lake"},
+  'stoney-sept':       {x:258, y:440, lbl:"Stoney Sept"},
+  'nightfort':         {x:286, y:262, lbl:"The Nightfort"},
+  'stepstones':        {x:440, y:550, lbl:"Stepstones"},
+  'valyria':           {x:616, y:548, lbl:"Valyria (ruins)"},
+};
+
+// ── HOUSE COLOR GRADIENT IDs ───────────────────────────────────────────
+const HOUSE_GRAD = {
+  stark:'hg-stark', lannister:'hg-lannist', baratheon:'hg-barath',
+  targaryen:'hg-targ', tyrell:'hg-tyrell', martell:'hg-mart',
+  greyjoy:'hg-grey', tully:'hg-tully', arryn:'hg-arryn',
+  bolton:'hg-bolt', mormont:'hg-mort', nighswatch:'hg-nw',
+  freefolk:'hg-ff', none:'hg-none', sand:'hg-sand', stannis:'hg-barath',
+};
+
+// ── HOUSE SIGILS ──────────────────────────────────────────────────────
+const SIGILS = {
+  stark:`<rect width="60" height="60" fill="#141424" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28" fill="#9090b0">🐺</text>
+    <text x="30" y="56" text-anchor="middle" font-size="7" fill="#8080a0" letter-spacing="2">STARK</text>`,
+  lannister:`<rect width="60" height="60" fill="#201800" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">🦁</text>
+    <text x="30" y="56" text-anchor="middle" font-size="6" fill="#d4a820" letter-spacing="1">LANNISTER</text>`,
+  baratheon:`<rect width="60" height="60" fill="#100800" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">🦌</text>
+    <text x="30" y="56" text-anchor="middle" font-size="6" fill="#b08010" letter-spacing="1">BARATHEON</text>`,
+  targaryen:`<rect width="60" height="60" fill="#200000" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">🐉</text>
+    <text x="30" y="56" text-anchor="middle" font-size="6" fill="#e03030" letter-spacing="1">TARGARYEN</text>`,
+  tyrell:`<rect width="60" height="60" fill="#081800" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">🌹</text>
+    <text x="30" y="56" text-anchor="middle" font-size="7" fill="#50b030" letter-spacing="1">TYRELL</text>`,
+  martell:`<rect width="60" height="60" fill="#200c00" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">☀️</text>
+    <text x="30" y="56" text-anchor="middle" font-size="6" fill="#e08030" letter-spacing="1">MARTELL</text>`,
+  greyjoy:`<rect width="60" height="60" fill="#080c14" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">🐙</text>
+    <text x="30" y="56" text-anchor="middle" font-size="7" fill="#7080a0" letter-spacing="1">GREYJOY</text>`,
+  tully:`<rect width="60" height="60" fill="#001018" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">🐟</text>
+    <text x="30" y="56" text-anchor="middle" font-size="8" fill="#3878c0" letter-spacing="1">TULLY</text>`,
+  arryn:`<rect width="60" height="60" fill="#001018" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">🦅</text>
+    <text x="30" y="56" text-anchor="middle" font-size="8" fill="#5090d8" letter-spacing="1">ARRYN</text>`,
+  bolton:`<rect width="60" height="60" fill="#140000" rx="5"/>
+    <text x="30" y="38" text-anchor="middle" font-size="26" fill="#900000">✝</text>
+    <text x="30" y="56" text-anchor="middle" font-size="8" fill="#901010" letter-spacing="1">BOLTON</text>`,
+  mormont:`<rect width="60" height="60" fill="#0c1010" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">🐻</text>
+    <text x="30" y="56" text-anchor="middle" font-size="7" fill="#608060" letter-spacing="1">MORMONT</text>`,
+  nighswatch:`<rect width="60" height="60" fill="#050505" rx="5"/>
+    <text x="30" y="38" text-anchor="middle" font-size="24" fill="#282828">⚔</text>
+    <text x="30" y="56" text-anchor="middle" font-size="6" fill="#404040" letter-spacing="1">NIGHT'S WATCH</text>`,
+  freefolk:`<rect width="60" height="60" fill="#080e08" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">❄️</text>
+    <text x="30" y="56" text-anchor="middle" font-size="7" fill="#80b080" letter-spacing="1">FREE FOLK</text>`,
+  sand:`<rect width="60" height="60" fill="#200800" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="28">☀️</text>
+    <text x="30" y="56" text-anchor="middle" font-size="7" fill="#e07030" letter-spacing="1">SAND SNAKE</text>`,
+  stannis:`<rect width="60" height="60" fill="#100800" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="24">🔥</text>
+    <text x="30" y="56" text-anchor="middle" font-size="6" fill="#c040c0" letter-spacing="1">BARATHEON</text>`,
+  none:`<rect width="60" height="60" fill="#100e08" rx="5"/>
+    <text x="30" y="40" text-anchor="middle" font-size="26" fill="#404030">⚜</text>
+    <text x="30" y="56" text-anchor="middle" font-size="8" fill="#504830" letter-spacing="1">NONE</text>`,
+};
+
+// ── CHARACTER DATA (injected by chunk files) ──────────────────────────
+window.CHARS = {};
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function curBook(){ return Math.min(4, Math.floor(t/BOOK_SEC)); }
+function curBookFrac(){ return Math.min(4.999, t/BOOK_SEC); } // 0.0 – 4.999
+
+// Convert t → fractional "book position" used against waypoints
+// Waypoints use integer book numbers; we match on book <= currentBook
+// For sub-book travel, we linearly interpolate between waypoints
+function charStateAt(ch, time){
+  const bookF = Math.min(4.999, time/BOOK_SEC);
+  const book  = Math.min(4, Math.floor(bookF));
+  const wps   = ch.waypoints||[];
+  // book > deathBook: character is alive *during* the book they die in, dead from the next book onwards
+  const isDead = ch.deathBook!==undefined && book>ch.deathBook;
+
+  if(wps.length===0) return {loc:'unknown',confirmed:true,isDead,status:isDead?'dead':'alive',travel:null};
+
+  // Find the "current" and "next" waypoints
+  let prev=wps[0], next=null;
+  for(let i=0;i<wps.length;i++){
+    if(wps[i].book<=bookF) prev=wps[i];
+    else if(!next) next=wps[i];
+  }
+
+  // Compute travel fraction between prev and next (for animation)
+  let travel=null;
+  if(next && next.loc!==prev.loc){
+    const segLen = next.book - prev.book;
+    const elapsed = bookF - prev.book;
+    const frac = segLen>0 ? Math.min(1, elapsed/segLen) : 1;
+    travel={fromLoc:prev.loc, toLoc:next.loc, frac};
+  }
+
+  const confirmed=prev.confirmed!==false;
+  const status = isDead?'dead': !confirmed?'prob':'alive';
+  return {loc:prev.loc, confirmed, isDead, status, travel};
+}
+
+// Get interpolated SVG {x,y} for a character given its travel state
+function charXY(st){
+  if(!st.travel || st.travel.frac<=0 || st.travel.frac>=1){
+    const pos=LOC[st.loc]||LOC['unknown'];
+    return {x:pos.x,y:pos.y};
+  }
+  const from=LOC[st.travel.fromLoc]||LOC['unknown'];
+  const to  =LOC[st.travel.toLoc]  ||LOC['unknown'];
+  const f=st.travel.frac;
+  // Ease in-out for natural movement
+  const ease=f<0.5?2*f*f:1-Math.pow(-2*f+2,2)/2;
+  return {x:from.x+(to.x-from.x)*ease, y:from.y+(to.y-from.y)*ease};
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────
+const SVG_NS    = 'http://www.w3.org/2000/svg';
+const TOKEN_R   = 13;   // photo token radius
+const TOKEN_R_S = 10;   // initial token radius
+const TOKEN_R_K = 15;   // king token radius (slightly larger)
+const MAX_VISIBLE = 8;  // max individual tokens before overflow badge
+const COLS_MAX  = 4;    // max columns in grid layout
+const SPACING   = 28;   // px between token centers
+
+function mkEl(tag, attrs){
+  const el=document.createElementNS(SVG_NS,tag);
+  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+  return el;
+}
+
+// Sort priority: kings alive first, then alive, then prob, then dead
+function tokPriority(st,ch){
+  if(st.isDead) return 4;
+  if(st.status==='prob') return 3;
+  if(ch.isKing) return 0;
+  if(ch.photoUrl) return 1;
+  return 2;
+}
+
+// buildToken: outer <g data-id transform="translate(x,y)"> positions the token (never animated by CSS)
+//             inner <g class="tok-anim"> handles the pop-in animation (CSS transform won't conflict)
+function buildToken(id, ch, st, clipDefs){
+  const r = st.isDead ? TOKEN_R_S : (ch.isKing ? TOKEN_R_K : (ch.photoUrl ? TOKEN_R : TOKEN_R_S));
+  const gradId = HOUSE_GRAD[ch.house]||'hg-none';
+
+  const grp   = mkEl('g',{'data-id':id});   // outer: positioned by SVG transform, no CSS animation
+  const inner = mkEl('g',{class:'tok-anim'}); // inner: gets tokIn animation, cx=0,cy=0 children scale correctly
+  grp.appendChild(inner);
+
+  if(st.isDead){
+    inner.appendChild(mkEl('circle',{cx:0,cy:0,r,fill:'#150505',stroke:'#7a1a1a','stroke-width':'1.5',class:'tok-ring tok-skull'}));
+    const sk=mkEl('text',{x:0,y:0,class:'tok-skull','text-anchor':'middle','dominant-baseline':'central','font-size':'12'});
+    sk.textContent='💀'; inner.appendChild(sk);
+  } else {
+    if(ch.photoUrl){
+      const ringStroke = st.status==='prob' ? '#c8c020' : (ch.isKing ? '#ffd700' : '#d4a820');
+      const ringW = ch.isKing ? '2.5' : '2';
+      const ringAttrs={cx:0,cy:0,r:r+2.5,fill:`url(#${gradId})`,stroke:ringStroke,'stroke-width':ringW,class:'tok-ring'};
+      if(st.status==='prob'){ringAttrs['stroke-dasharray']='3,2';}
+      inner.appendChild(mkEl('circle',ringAttrs));
+      // Clip path — create once in the persistent <defs id="clip-defs">, never recreate
+      const clipId='cp-'+id;
+      if(!document.getElementById(clipId)){
+        const cp=mkEl('clipPath',{id:clipId});
+        cp.appendChild(mkEl('circle',{cx:0,cy:0,r}));
+        clipDefs.appendChild(cp);
+      }
+      inner.appendChild(mkEl('image',{href:ch.photoUrl,x:-r,y:-r,width:r*2,height:r*2,'clip-path':`url(#${clipId})`,'preserveAspectRatio':'xMidYMin slice'}));
+    } else {
+      const strokeCol = st.status==='prob' ? '#c8c020' : (ch.isKing ? '#ffd700' : '#d4a820');
+      const circAttrs={cx:0,cy:0,r,fill:`url(#${gradId})`,stroke:strokeCol,'stroke-width':ch.isKing?'2.5':'1.8',class:'tok-ring'};
+      if(st.status==='prob') circAttrs['stroke-dasharray']='3,2';
+      inner.appendChild(mkEl('circle',circAttrs));
+      const lbl=mkEl('text',{x:0,y:0,class:'tok-lbl'});
+      lbl.textContent=ch.initial||ch.name.charAt(0);
+      inner.appendChild(lbl);
+    }
+    if(ch.isKing){
+      const cr=mkEl('text',{x:0,y:-(r+2),class:'tok-crown','dominant-baseline':'auto'});
+      cr.textContent='👑'; inner.appendChild(cr);
+    }
+  }
+
+  grp.addEventListener('mouseenter',e=>tip(e,ch.name+(ch.isKing?' 👑':'')+(st.isDead?' †':'')));
+  grp.addEventListener('mousemove', e=>moveTip(e));
+  grp.addEventListener('mouseleave',hideTip);
+  grp.addEventListener('click',e=>{e.stopPropagation();openPanel(id);});
+  return grp;
+}
+
+// ── CREATURE TOKENS (dragons 🐉 / direwolves 🐺) ──────────────────────
+const CREAT_R       = 10;   // creature token radius
+const CREAT_SPACING = 21;
+const CREAT_COLS    = 3;
+const CREAT_YOFFSET = 52;   // px below the location pin — clears the character cluster
+
+function buildCreatureToken(id, cr, isDead){
+  const grp   = mkEl('g',{'data-creature-id':id});
+  const inner = mkEl('g',{class:'tok-anim'});
+  grp.appendChild(inner);
+
+  if(isDead){
+    const bg = cr.type==='dragon'
+      ? mkEl('polygon',{points:`0,-${CREAT_R} ${CREAT_R},0 0,${CREAT_R} -${CREAT_R},0`,fill:'#150505',stroke:'#7a1a1a','stroke-width':'1.5',class:'crt-shape'})
+      : mkEl('circle',{cx:0,cy:0,r:CREAT_R,fill:'#101010',stroke:'#7a1a1a','stroke-width':'1.5','stroke-dasharray':'3,2',class:'crt-shape'});
+    inner.appendChild(bg);
+    const sk=mkEl('text',{x:0,y:0,class:'crt-label','font-size':'9'});
+    sk.textContent='💀'; inner.appendChild(sk);
+  } else if(cr.type==='dragon'){
+    // Diamond / rhombus shape — visually distinct from circular char tokens
+    const pts=`0,-${CREAT_R+1} ${CREAT_R+1},0 0,${CREAT_R+1} -${CREAT_R+1},0`;
+    inner.appendChild(mkEl('polygon',{points:pts,fill:cr.color||'#1a0000',stroke:cr.ringColor||'#c83030','stroke-width':'1.8',class:'crt-shape'}));
+    const ico=mkEl('text',{x:0,y:0,class:'crt-label','font-size':'10'});
+    ico.textContent='🐉'; inner.appendChild(ico);
+  } else {
+    // Wolf — dashed circle (different stroke pattern from solid char circles)
+    inner.appendChild(mkEl('circle',{cx:0,cy:0,r:CREAT_R,fill:cr.color||'#181818',stroke:cr.ringColor||'#d0d0d0','stroke-width':'2','stroke-dasharray':'4,2.5',class:'crt-shape'}));
+    const ico=mkEl('text',{x:0,y:0,class:'crt-label','font-size':'10'});
+    ico.textContent='🐺'; inner.appendChild(ico);
+  }
+
+  const tipText = cr.name + (isDead?' †':'') + ' — ' + (cr.type==='dragon'?'Dragon':'Direwolf');
+  grp.addEventListener('mouseenter',e=>tip(e,tipText));
+  grp.addEventListener('mousemove', e=>moveTip(e));
+  grp.addEventListener('mouseleave',hideTip);
+  return grp;
+}
+
+function renderCreatures(){
+  const g = document.getElementById('creature-tokens');
+  if(!g || !window.CREATURES) return;
+
+  const desired = new Map();
+  const byLoc   = {};
+
+  Object.entries(window.CREATURES).forEach(([id,cr])=>{
+    const st = charStateAt(cr, t);   // same waypoint logic works for creatures
+    const bookFloor = Math.floor(t/BOOK_SEC);
+    const isDead = cr.deathBook!==undefined && bookFloor > cr.deathBook;
+    const locKey = st.loc;
+    if(!byLoc[locKey]) byLoc[locKey] = [];
+    byLoc[locKey].push({id, cr, isDead});
+  });
+
+  Object.entries(byLoc).forEach(([locKey, items])=>{
+    const pos = LOC[locKey]||LOC['unknown'];
+    const cols = Math.min(CREAT_COLS, items.length);
+    const rows = Math.ceil(items.length/cols);
+    items.forEach(({id,cr,isDead},idx)=>{
+      const col=idx%cols, row=Math.floor(idx/cols);
+      const ox=(col-(cols-1)/2)*CREAT_SPACING;
+      const oy=(row-(rows-1)/2)*CREAT_SPACING;
+      const typeCls = cr.type==='dragon' ? ' dragon-tok' : ' wolf-tok';
+      const cls = 'creature-token'+typeCls+(isDead?' creature-dead':'');
+      desired.set(id,{x:pos.x+ox, y:pos.y+CREAT_YOFFSET+oy, cr, isDead, cls});
+    });
+  });
+
+  // Reconcile — same pattern as char tokens
+  const existing = new Map();
+  g.querySelectorAll('[data-creature-id]').forEach(el=>existing.set(el.dataset.creatureId,el));
+  existing.forEach((el,id)=>{ if(!desired.has(id)) el.remove(); });
+  desired.forEach(({x,y,cr,isDead,cls},id)=>{
+    const tx=Math.round(x), ty=Math.round(y);
+    if(existing.has(id)){
+      const el=existing.get(id);
+      el.setAttribute('transform',`translate(${tx},${ty})`);
+      el.setAttribute('class',cls);
+    } else {
+      const tok=buildCreatureToken(id,cr,isDead);
+      tok.setAttribute('class',cls);
+      tok.setAttribute('transform',`translate(${tx},${ty})`);
+      g.appendChild(tok);
+    }
+  });
+}
+
+function render(){
+  const g         = document.getElementById('char-tokens');
+  const travelG   = document.getElementById('travel-lines');
+  const badgeG_el = document.getElementById('overflow-badges');
+  const clipDefs  = document.getElementById('clip-defs');
+  if(!g||!clipDefs) return;
+
+  // ── 1. Compute desired state ────────────────────────────────────────
+  const desired  = new Map();   // id → {x,y,st,ch,traveling,cls}
+  const byLoc    = {};
+  const traveling= [];
+
+  Object.entries(window.CHARS).forEach(([id,ch])=>{
+    const st=charStateAt(ch,t);
+    if(st.travel && st.travel.frac>0.05 && st.travel.frac<0.95){
+      traveling.push({id,ch,st});
+    } else {
+      const locKey=st.travel&&st.travel.frac>=0.95 ? st.travel.toLoc : st.loc;
+      if(!byLoc[locKey]) byLoc[locKey]=[];
+      byLoc[locKey].push({id,ch,st});
+    }
+  });
+
+  // Stationary characters — grid layout per location
+  const badgeDesired = new Map(); // locKey → badge data
+  Object.entries(byLoc).forEach(([locKey,items])=>{
+    const pos=LOC[locKey]||LOC['unknown'];
+    items.sort((a,b)=>tokPriority(a.st,a.ch)-tokPriority(b.st,b.ch));
+    const visible=items.slice(0,MAX_VISIBLE);
+    const overflow=items.length-MAX_VISIBLE;
+    const cols=Math.min(COLS_MAX,Math.ceil(Math.sqrt(visible.length)));
+    const rows=Math.ceil(visible.length/cols);
+    visible.forEach(({id,ch,st},idx)=>{
+      const col=idx%cols, row=Math.floor(idx/cols);
+      const ox=(col-(cols-1)/2)*SPACING, oy=(row-(rows-1)/2)*SPACING-10;
+      const cls='char-token'+(st.status==='prob'?' prob':'')+(st.isDead?' dead-tok':'');
+      desired.set(id,{x:pos.x+ox, y:pos.y+oy, st, ch, traveling:false, cls});
+    });
+    if(overflow>0){
+      badgeDesired.set(locKey,{pos, overflow, hidden:items.slice(MAX_VISIBLE), cols});
+    }
+  });
+
+  // Traveling characters
+  traveling.forEach(({id,ch,st})=>{
+    const {x,y}=charXY(st);
+    const cls='char-token'+(st.status==='prob'?' prob':'')+(st.isDead?' dead-tok':'')+' traveling';
+    desired.set(id,{x,y,st,ch,traveling:true,cls});
+  });
+
+  // ── 2. Reconcile char tokens (NO full clear — just update/add/remove) ──
+  const existing=new Map();
+  g.querySelectorAll('[data-id]').forEach(el=>existing.set(el.dataset.id,el));
+
+  // Remove tokens that no longer exist
+  existing.forEach((el,id)=>{ if(!desired.has(id)) el.remove(); });
+
+  // Update existing, create new
+  desired.forEach(({x,y,st,ch,cls},id)=>{
+    const tx=Math.round(x), ty=Math.round(y);
+    if(existing.has(id)){
+      const el=existing.get(id);
+      el.setAttribute('transform',`translate(${tx},${ty})`);
+      el.setAttribute('class',cls);   // status may change (dead, prob)
+    } else {
+      const tok=buildToken(id,ch,st,clipDefs);
+      tok.setAttribute('class',cls);
+      tok.setAttribute('transform',`translate(${tx},${ty})`);
+      g.appendChild(tok);
+    }
+  });
+
+  // ── 3. Travel lines — redraw each frame (no animation, no flicker) ──
+  if(travelG){
+    travelG.innerHTML='';
+    traveling.forEach(({st})=>{
+      const from=LOC[st.travel.fromLoc]||LOC['unknown'];
+      const to  =LOC[st.travel.toLoc]  ||LOC['unknown'];
+      travelG.appendChild(mkEl('line',{
+        x1:from.x,y1:from.y,x2:to.x,y2:to.y,
+        stroke:'rgba(212,168,32,0.4)','stroke-width':'1.8',
+        'stroke-dasharray':'6,5','pointer-events':'none','stroke-linecap':'round'
+      }));
+    });
+  }
+
+  // ── 4. Overflow badges — reconcile by loc key ──────────────────────
+  if(badgeG_el){
+    const existBadges=new Map();
+    badgeG_el.querySelectorAll('[data-loc]').forEach(el=>existBadges.set(el.dataset.loc,el));
+    existBadges.forEach((el,loc)=>{ if(!badgeDesired.has(loc)) el.remove(); });
+    badgeDesired.forEach(({pos,overflow,hidden,cols},locKey)=>{
+      const bx=pos.x+(cols/2)*SPACING+8, by=pos.y-10;
+      const names=hidden.map(i=>i.ch.name).join(' · ');
+      if(existBadges.has(locKey)){
+        // Just update the count text
+        const el=existBadges.get(locKey);
+        const txt=el.querySelector('text');
+        if(txt) txt.textContent='+'+overflow;
+      } else {
+        const bg=mkEl('g',{class:'overflow-badge','data-loc':locKey});
+        bg.appendChild(mkEl('circle',{cx:bx,cy:by,r:TOKEN_R_S,fill:'#1a1008',stroke:'#d4a820','stroke-width':'1.8'}));
+        const bt=mkEl('text',{x:bx,y:by,'text-anchor':'middle','dominant-baseline':'central','font-size':'8','fill':'#d4a820','font-weight':'bold'});
+        bt.textContent='+'+overflow; bg.appendChild(bt);
+        bg.addEventListener('mouseenter',e=>tip(e,`+${overflow}: ${names}`));
+        bg.addEventListener('mousemove',e=>moveTip(e));
+        bg.addEventListener('mouseleave',hideTip);
+        bg.addEventListener('click',()=>zoomToLoc(pos));
+        badgeG_el.appendChild(bg);
+      }
+    });
+  }
+
+  // ── 5. Creatures ──────────────────────────────────────────────────────
+  renderCreatures();
+}
+
+function zoomToLoc(pos){
+  const svgEl=document.getElementById('world-svg');
+  const vw=svgEl.clientWidth, vh=svgEl.clientHeight;
+  const targetS=3.5;
+  transform.s=targetS;
+  transform.x=vw/2 - pos.x*targetS;
+  transform.y=vh/2 - pos.y*targetS;
+  applyXf();
+}
+
+// Smooth animated pan+zoom — used by search. Calls onDone() when complete.
+function panToChar(pos, onDone){
+  const svgEl=document.getElementById('world-svg');
+  const vw=svgEl.clientWidth, vh=svgEl.clientHeight;
+  const targetS=3.8;
+  const endX=vw/2 - pos.x*targetS, endY=vh/2 - pos.y*targetS;
+  const startX=transform.x, startY=transform.y, startS=transform.s;
+  const dur=480;
+  const t0=performance.now();
+  function ease(k){return k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;}
+  function step(now){
+    const f=Math.min(1,(now-t0)/dur), e=ease(f);
+    transform.x=startX+(endX-startX)*e;
+    transform.y=startY+(endY-startY)*e;
+    transform.s=startS+(targetS-startS)*e;
+    applyXf();
+    if(f<1) requestAnimationFrame(step);
+    else if(onDone) onDone();
+  }
+  requestAnimationFrame(step);
+}
+
+// ── CHARACTER FOLLOW ──────────────────────────────────────────────────
+function followChar(id){
+  followingId = id;
+  const ch = window.CHARS[id];
+  const nameEl = document.getElementById('follow-name');
+  const ind    = document.getElementById('follow-indicator');
+  if(nameEl) nameEl.textContent = ch ? ch.name : '';
+  if(ind)    ind.style.display  = 'flex';
+}
+
+function stopFollowing(){
+  followingId = null;
+  const ind = document.getElementById('follow-indicator');
+  if(ind) ind.style.display = 'none';
+}
+
+// Re-center the map on the followed character each frame (no easing — keeps up with movement)
+function centerOnFollowed(){
+  if(!followingId) return;
+  const ch = window.CHARS[followingId];
+  if(!ch){ stopFollowing(); return; }
+  const st = charStateAt(ch, t);
+  const {x,y} = charXY(st);   // exact interpolated position — works for traveling chars
+  const svgEl = document.getElementById('world-svg');
+  const vw = svgEl.clientWidth, vh = svgEl.clientHeight;
+  // Keep current zoom level (minimum 3x so the character is visible)
+  const s = Math.max(transform.s, 3);
+  transform.x = vw/2 - x*s;
+  transform.y = vh/2 - y*s;
+  transform.s = s;
+  applyXf();
+}
+
+function updateUI(){
+  const bk=curBook(), pct=(t/TOTAL_SEC)*100;
+  const bookFrac=(t/BOOK_SEC)-bk;   // 0–1 within current book
+  const chapterNum=Math.max(1,Math.round(bookFrac*BOOK_CHAPTERS[bk]));
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-handle').style.left=pct+'%';
+  document.getElementById('book-num').textContent=bk+1;
+  document.getElementById('book-title').textContent=
+    BOOK_NAMES[bk]+(bookFrac>0.01?` · Ch. ${chapterNum}/${BOOK_CHAPTERS[bk]}`:'');
+  document.getElementById('play-btn').textContent=playing?'⏸':'▶';
+  for(let i=0;i<5;i++){
+    const el=document.getElementById('bm'+i);
+    if(el) el.className='book-marker'+(i===bk?' active':'');
+  }
+}
+
+// ── ANIMATION LOOP ────────────────────────────────────────────────────
+function tick(ts){
+  if(!playing) return;
+  if(!lastStamp) lastStamp=ts;
+  const dt=(ts-lastStamp)/1000; lastStamp=ts;
+  t=Math.min(TOTAL_SEC,t+dt*playSpeed);
+  if(t>=TOTAL_SEC){t=TOTAL_SEC;playing=false;}
+  centerOnFollowed();   // keep camera on followed character
+  render(); updateUI();
+  if(playing) rafId=requestAnimationFrame(tick);
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────────
+function togglePlay(){
+  playing=!playing;
+  if(playing){lastStamp=null;rafId=requestAnimationFrame(tick);}
+  updateUI();
+}
+function goBook(b){t=b*BOOK_SEC;render();updateUI();}
+function nextBook(){goBook(Math.min(4,curBook()+1));}
+function prevBook(){goBook(Math.max(0,curBook()-1));}
+function skipStart(){t=0;playing=false;render();updateUI();}
+function skipEnd(){t=TOTAL_SEC;playing=false;render();updateUI();}
+function seekClick(e){
+  const r=document.getElementById('progress-track').getBoundingClientRect();
+  t=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*TOTAL_SEC;
+  centerOnFollowed();
+  render();updateUI();
+}
+
+// ── PROGRESS BAR DRAG ─────────────────────────────────────────────────
+let seekDragging=false;
+(function(){
+  const track=document.getElementById('progress-track');
+  track.addEventListener('mousedown',e=>{
+    seekDragging=true;
+    const wasPlaying=playing;
+    if(playing){playing=false;}  // pause while dragging for smooth feedback
+    seekClick(e);
+    function onMove(ev){ if(seekDragging) seekClick(ev); }
+    function onUp(){
+      seekDragging=false;
+      if(wasPlaying){playing=true;lastStamp=null;rafId=requestAnimationFrame(tick);}
+      window.removeEventListener('mousemove',onMove);
+      window.removeEventListener('mouseup',onUp);
+    }
+    window.addEventListener('mousemove',onMove);
+    window.addEventListener('mouseup',onUp);
+  });
+  // Touch support
+  track.addEventListener('touchstart',e=>{e.preventDefault();seekClick(e.touches[0]);},{passive:false});
+  track.addEventListener('touchmove', e=>{e.preventDefault();seekClick(e.touches[0]);},{passive:false});
+})();
+
+// ── ZOOM & PAN ────────────────────────────────────────────────────────
+const svg=document.getElementById('world-svg');
+const mc =document.getElementById('map-container');
+function clampTransform(){
+  const W=mc.clientWidth,H=mc.clientHeight;
+  transform.s=Math.max(1,Math.min(12,transform.s));
+  transform.x=Math.min(0,Math.max(W*(1-transform.s),transform.x));
+  transform.y=Math.min(0,Math.max(H*(1-transform.s),transform.y));
+}
+function applyXf(){clampTransform();svg.style.transform=`translate(${transform.x}px,${transform.y}px) scale(${transform.s})`;}
+function zoomAdj(f){transform.s=Math.max(1,Math.min(12,transform.s*f));applyXf();}
+function resetView(){transform={x:0,y:0,s:1};applyXf();}
+function focusWest(){
+  const W=mc.clientWidth,H=mc.clientHeight,s=2.4;
+  transform={x:W*(0.5-s*0.22),y:H*(0.5-s*0.38),s};applyXf();
+}
+function focusEss(){
+  const W=mc.clientWidth,H=mc.clientHeight,s=1.9;
+  transform={x:W*(0.5-s*0.73),y:H*(0.5-s*0.42),s};applyXf();
+}
+
+svg.addEventListener('mousedown',e=>{
+  if(e.target.closest('.char-token')) return;
+  stopFollowing();   // user taking manual control → release camera
+  dragging=true; dragPt={x:e.clientX,y:e.clientY}; dragOrigin={x:transform.x,y:transform.y};
+});
+window.addEventListener('mousemove',e=>{
+  if(!dragging) return;
+  transform.x=dragOrigin.x+(e.clientX-dragPt.x);
+  transform.y=dragOrigin.y+(e.clientY-dragPt.y);
+  applyXf();
+});
+window.addEventListener('mouseup',()=>{dragging=false;});
+mc.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const f=e.deltaY<0?1.1:0.9;
+  const r=mc.getBoundingClientRect();
+  const mx=e.clientX-r.left, my=e.clientY-r.top;
+  const ns=Math.max(1,Math.min(12,transform.s*f)), sc=ns/transform.s;
+  transform.x=mx-sc*(mx-transform.x);
+  transform.y=my-sc*(my-transform.y);
+  transform.s=ns; applyXf();
+},{passive:false});
+
+// ── TOOLTIP ───────────────────────────────────────────────────────────
+const tipEl=document.getElementById('tooltip');
+function tip(e,name){tipEl.textContent=name;tipEl.style.display='block';moveTip(e);}
+function moveTip(e){tipEl.style.left=(e.clientX+14)+'px';tipEl.style.top=(e.clientY-22)+'px';}
+function hideTip(){tipEl.style.display='none';}
+window.addEventListener('mousemove',e=>{if(tipEl.style.display==='block') moveTip(e);});
+
+// ── CHARACTER PANEL ───────────────────────────────────────────────────
+function openPanel(id){
+  const ch=window.CHARS[id]; if(!ch) return;
+  const bk=curBook(), st=charStateAt(ch,t);
+  const pos=LOC[st.loc]||{lbl:'Unknown'};
+
+  document.getElementById('char-name').textContent=
+    ch.name + (ch.isKing?' 👑':'');
+  document.getElementById('char-aliases').textContent=
+    ch.aliases&&ch.aliases.length?'AKA: '+ch.aliases.join(' · '):'';
+  document.getElementById('char-house-display').textContent=ch.houseLabel||'';
+
+  const badge=document.getElementById('char-status-badge');
+  if(st.isDead){badge.className='char-status-badge s-dead';badge.textContent='DECEASED';}
+  else if(st.status==='prob'){badge.className='char-status-badge s-prob';badge.textContent='PROBABLE LOCATION';}
+  else{badge.className='char-status-badge s-alive';badge.textContent='ALIVE';}
+
+  document.getElementById('char-location-text').textContent=
+    '📍 '+(st.isDead?'Deceased':pos.lbl)+(st.status==='prob'?' (probable)':'');
+
+  // Portrait — photo if available, else SVG art
+  const wrap=document.getElementById('char-portrait-wrap');
+  wrap.innerHTML='';
+  if(ch.photoUrl){
+    const img=document.createElement('img');
+    img.id='char-portrait-img';
+    img.src=ch.photoUrl;
+    img.alt=ch.name;
+    wrap.appendChild(img);
+  } else {
+    const svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svgEl.id='char-portrait-svg';
+    svgEl.setAttribute('viewBox','0 0 100 100');
+    svgEl.innerHTML=buildPortrait(ch);
+    wrap.appendChild(svgEl);
+  }
+  // Crown on portrait
+  if(ch.isKing){
+    const cr=document.createElement('div');
+    cr.id='char-crown-panel'; cr.textContent='👑';
+    wrap.appendChild(cr);
+  }
+
+  document.getElementById('char-sigil-svg').innerHTML=
+    SIGILS[ch.house]||SIGILS['none'];
+
+  document.getElementById('char-bio').textContent=ch.bio||'';
+  const bkBios=ch.bookBios||{};
+  document.getElementById('char-current-status').textContent=
+    bkBios[bk]?'📖 Book '+(bk+1)+': '+bkBios[bk]:'';
+
+  document.getElementById('char-panel').classList.add('open');
+}
+function closePanel(){document.getElementById('char-panel').classList.remove('open');}
+
+// ── KEYBOARD SHORTCUTS ────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  const tag=document.activeElement.tagName;
+  const inInput=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT';
+  // '/' → focus search
+  if(e.key==='/'&&!inInput&&!e.ctrlKey&&!e.metaKey){
+    e.preventDefault();
+    document.getElementById('search-input').focus();
+  }
+  // Escape → stop follow, close panel, or blur search (in that priority order)
+  if(e.key==='Escape'){
+    if(followingId){ stopFollowing(); return; }
+    const panel=document.getElementById('char-panel');
+    if(panel.classList.contains('open')){ closePanel(); return; }
+    const sinp=document.getElementById('search-input');
+    if(sinp===document.activeElement){ sinp.blur(); }
+  }
+});
+
+// ── FALLBACK SVG PORTRAIT ─────────────────────────────────────────────
+function buildPortrait(ch){
+  const s=ch._skin||'#c09070', h=ch._hair||'#2a1a08', e=ch._eye||'#4a5060';
+  const beard=ch._beard, female=ch.gender==='f';
+  let out=`<rect width="100" height="100" fill="#100c08" rx="6"/>`;
+  // hair back
+  if(female) out+=`<ellipse cx="50" cy="35" rx="28" ry="32" fill="${h}" opacity=".9"/>`;
+  else out+=`<ellipse cx="50" cy="28" rx="26" ry="16" fill="${h}"/>`;
+  // face
+  out+=`<circle cx="50" cy="42" r="24" fill="${s}"/>`;
+  // eyes
+  out+=`<ellipse cx="42" cy="40" rx="4" ry="3" fill="#fff"/><circle cx="42" cy="40" r="2.5" fill="${e}"/><circle cx="43" cy="39" r="1" fill="#111"/>`;
+  out+=`<ellipse cx="58" cy="40" rx="4" ry="3" fill="#fff"/><circle cx="58" cy="40" r="2.5" fill="${e}"/><circle cx="59" cy="39" r="1" fill="#111"/>`;
+  // nose
+  out+=`<path d="M49,44 L47,50 L53,50" fill="none" stroke="${s}" stroke-width="1.5" opacity=".5"/>`;
+  // mouth
+  out+=`<path d="M44,55 Q50,59 56,55" fill="none" stroke="#7a4030" stroke-width="1.5"/>`;
+  // beard
+  if(beard==='full') out+=`<ellipse cx="50" cy="60" rx="17" ry="10" fill="${h}" opacity=".8"/>`;
+  else if(beard==='short') out+=`<ellipse cx="50" cy="57" rx="13" ry="7" fill="${h}" opacity=".65"/>`;
+  // body hint
+  out+=`<rect x="24" y="66" width="52" height="34" fill="${h}" opacity=".55" rx="3"/>`;
+  // name
+  const nm=ch.name.split(' ')[0].substring(0,10);
+  out+=`<text x="50" y="97" text-anchor="middle" font-size="7" fill="#a09060" letter-spacing="1">${nm}</text>`;
+  return out;
+}
+
+// ── SEARCH ────────────────────────────────────────────────────────────
+const HOUSE_DOT_COL = {
+  stark:'#4a5068',lannist:'#c8981a',barath:'#b08018',targ:'#c83030',
+  tyrell:'#508030',mart:'#c87020',grey:'#4a5878',tully:'#2860b0',
+  arryn:'#3888d0',bolt:'#880808',mort:'#406848',nw:'#484848',
+  ff:'#387038',sand:'#c06820',stannis:'#8030a0',none:'#505050',
+};
+
+(function initSearch(){
+  const inp   = document.getElementById('search-input');
+  const box   = document.getElementById('search-results');
+  const clrBtn= document.getElementById('search-clear');
+  let activeIdx = -1;
+  let results   = [];
+
+  function scoreMatch(ch, q){
+    const lq = q.toLowerCase();
+    const nm = ch.name.toLowerCase();
+    if(nm===lq) return 100;
+    if(nm.startsWith(lq)) return 90;
+    if(nm.includes(lq)) return 70;
+    // check first name
+    const first = nm.split(' ')[0];
+    if(first.startsWith(lq)) return 80;
+    // check aliases
+    if(ch.aliases){
+      for(const a of ch.aliases){
+        const al=a.toLowerCase();
+        if(al.includes(lq)) return 60;
+      }
+    }
+    return 0;
+  }
+
+  function runSearch(q){
+    q = q.trim();
+    if(q.length < 2){ closeResults(); return; }
+    results = [];
+    Object.entries(window.CHARS).forEach(([id,ch])=>{
+      const s = scoreMatch(ch, q);
+      if(s>0) results.push({id, ch, score:s});
+    });
+    results.sort((a,b)=>b.score-a.score);
+    results = results.slice(0,9);
+    renderResults();
+  }
+
+  function renderResults(){
+    activeIdx = -1;
+    if(results.length===0){
+      box.innerHTML='<div class="sr-no">No characters found</div>';
+      box.style.display='block';
+      return;
+    }
+    box.innerHTML='';
+    results.forEach(({id,ch},i)=>{
+      const st = charStateAt(ch, t);
+      const pos = LOC[st.loc]||{lbl:'Unknown'};
+      const col = HOUSE_DOT_COL[ch.house]||'#505050';
+      const initials = (ch.initial || ch.name.split(' ').map(w=>w[0]).join('').substring(0,2));
+      const div = document.createElement('div');
+      div.className = 'sr-item'+(st.isDead?' sr-dead-row':'');
+      div.dataset.idx = i;
+      div.innerHTML = `
+        <div class="sr-dot" style="background:${col}">${initials}</div>
+        <span class="sr-name${st.isDead?' sr-dead':''}">${highlightMatch(ch.name, inp.value.trim())}</span>
+        <span class="sr-loc">${st.isDead?'† ':''} ${pos.lbl}</span>`;
+      div.addEventListener('mousedown', e=>{
+        e.preventDefault();  // prevent input blur before click fires
+        selectResult(i);
+      });
+      box.appendChild(div);
+    });
+    box.style.display='block';
+  }
+
+  function highlightMatch(name, q){
+    if(!q) return name;
+    const idx = name.toLowerCase().indexOf(q.toLowerCase());
+    if(idx<0) return name;
+    return name.substring(0,idx)
+      + '<span style="color:#fff;background:rgba(212,168,32,.25);border-radius:2px">'
+      + name.substring(idx, idx+q.length)+'</span>'
+      + name.substring(idx+q.length);
+  }
+
+  function selectResult(i){
+    const r = results[i]; if(!r) return;
+    const {id, ch} = r;
+    const st  = charStateAt(ch, t);
+    const xy  = charXY(st);   // interpolated position — accurate for traveling chars
+
+    // Flash the search bar as instant feedback
+    const row = document.getElementById('search-input-row');
+    row.style.borderColor='#fff';
+    row.style.boxShadow='0 0 18px rgba(255,255,255,.45)';
+    setTimeout(()=>{ row.style.borderColor=''; row.style.boxShadow=''; }, 380);
+
+    // Open character panel
+    openPanel(id);
+
+    // Start following this character (camera will track them continuously)
+    followChar(id);
+
+    // Smooth pan+zoom to their exact position, then ping & highlight
+    panToChar(xy, ()=>{
+      spawnPingRings(id);
+      highlightToken(id);
+    });
+
+    // Close search
+    inp.value='';
+    clrBtn.style.display='none';
+    closeResults();
+    inp.blur();
+  }
+
+  // Spawn 3 expanding HTML ring divs at the token's screen position.
+  // Uses getScreenCTM() to convert SVG coords → screen coords — no SVG transform conflict.
+  function spawnPingRings(id){
+    const svgEl = document.getElementById('world-svg');
+    const tokEl = document.getElementById('char-tokens').querySelector(`[data-id="${id}"]`);
+    if(!svgEl || !tokEl) return;
+
+    // Get the token's SVG-space coords from its transform attribute
+    const m = (tokEl.getAttribute('transform')||'').match(/translate\(([^,]+),([^)]+)\)/);
+    if(!m) return;
+    const svgX=+m[1], svgY=+m[2];
+
+    // Convert SVG coords to screen coords
+    const pt = svgEl.createSVGPoint();
+    pt.x = svgX; pt.y = svgY;
+    const ctm = svgEl.getScreenCTM();
+    if(!ctm) return;
+    const sp = pt.matrixTransform(ctm);
+
+    for(let i=0;i<3;i++){
+      const ring = document.createElement('div');
+      ring.className = 'ping-ring';
+      ring.style.left = sp.x+'px';
+      ring.style.top  = sp.y+'px';
+      ring.style.animationDelay = (i*0.23)+'s';
+      document.body.appendChild(ring);
+      setTimeout(()=>ring.remove(), 900+i*230+100);
+    }
+  }
+
+  // Add a glowing CSS class to the token, auto-remove after the pulse finishes
+  function highlightToken(id){
+    const tok = document.getElementById('char-tokens').querySelector(`[data-id="${id}"]`);
+    if(!tok) return;
+    tok.classList.add('tok-found');
+    setTimeout(()=>tok.classList.remove('tok-found'), 3200);
+  }
+
+  function closeResults(){
+    box.style.display='none';
+    box.innerHTML='';
+    results=[];
+    activeIdx=-1;
+  }
+
+  function setActive(i){
+    activeIdx = Math.max(-1, Math.min(results.length-1, i));
+    box.querySelectorAll('.sr-item').forEach((el,j)=>{
+      el.classList.toggle('sr-active', j===activeIdx);
+    });
+    if(activeIdx>=0){
+      const el=box.querySelectorAll('.sr-item')[activeIdx];
+      if(el) el.scrollIntoView({block:'nearest'});
+    }
+  }
+
+  inp.addEventListener('input', ()=>{
+    clrBtn.style.display = inp.value ? 'block' : 'none';
+    runSearch(inp.value);
+  });
+
+  inp.addEventListener('keydown', e=>{
+    if(!results.length && e.key!=='Escape') return;
+    if(e.key==='ArrowDown'){  e.preventDefault(); setActive(activeIdx+1); }
+    else if(e.key==='ArrowUp'){e.preventDefault(); setActive(activeIdx-1); }
+    else if(e.key==='Enter'){
+      e.preventDefault();
+      if(activeIdx>=0) selectResult(activeIdx);
+      else if(results.length>0) selectResult(0);
+    }
+    else if(e.key==='Escape'){ closeResults(); inp.blur(); }
+  });
+
+  inp.addEventListener('focus', ()=>{ if(inp.value.trim().length>=2) runSearch(inp.value); });
+  inp.addEventListener('blur',  ()=>{ setTimeout(closeResults, 150); });
+
+  clrBtn.addEventListener('click', ()=>{
+    inp.value=''; clrBtn.style.display='none'; closeResults(); inp.focus();
+  });
+
+  // Clicking anywhere on map closes search
+  document.getElementById('map-container').addEventListener('mousedown', e=>{
+    if(!document.getElementById('search-wrap').contains(e.target)){
+      closeResults(); inp.value=''; clrBtn.style.display='none';
+    }
+  });
+})();
+
+// ── MUSIC ─────────────────────────────────────────────────────────────
+// Game of Thrones Main Title by Ramin Djawadi
+// Replace GOT_VIDEO_ID if the video becomes unavailable
+const GOT_VIDEO_ID = 'VHQK-BcFMdc';
+let ytPlayer = null, musicReady = false, musicMuted = false, userHasEntered = false;
+
+function onYouTubeIframeAPIReady(){
+  ytPlayer = new YT.Player('yt-player',{
+    videoId: GOT_VIDEO_ID,
+    playerVars:{autoplay:0,controls:0,loop:1,playlist:GOT_VIDEO_ID,modestbranding:1,rel:0},
+    events:{
+      onReady(e){ musicReady=true; if(userHasEntered) e.target.playVideo(); },
+      onError(){ document.getElementById('music-btn').style.display='none'; }
+    }
+  });
+}
+
+function startMusic(){
+  userHasEntered=true;
+  if(ytPlayer && musicReady) ytPlayer.playVideo();
+  // If not ready yet, onReady handler will start playback once the API loads
+}
+
+function toggleMusic(){
+  const btn = document.getElementById('music-btn');
+  if(!ytPlayer || !musicReady){ btn.style.opacity='.35'; return; }
+  musicMuted = !musicMuted;
+  if(musicMuted){ ytPlayer.mute();   btn.textContent='🔇'; btn.title='Unmute music'; btn.classList.add('muted'); }
+  else           { ytPlayer.unMute(); btn.textContent='♫';  btn.title='Mute music';   btn.classList.remove('muted'); }
+}
+
+// ── LANDING PAGE ──────────────────────────────────────────────────────
+function enterMap(){
+  const sp = document.getElementById('spoiler');
+  sp.style.transition='opacity .6s ease';
+  sp.style.opacity='0';
+  setTimeout(()=>{ sp.style.display='none'; }, 600);
+  // Start music immediately — browser autoplay is satisfied because this
+  // runs inside a click handler (user gesture). The userHasEntered flag
+  // ensures playVideo() is called even if the YT API hasn't finished loading.
+  startMusic();
+}
+
+function initSpoilerParticles(){
+  const container = document.getElementById('spoiler');
+  const count = 110;
+  const iceAnims  = ['sp-snow','sp-snow','sp-snow-drift'];
+  const fireAnims = ['sp-ember','sp-ember','sp-ember-flicker'];
+  for(let i=0;i<count;i++){
+    const p = document.createElement('div');
+    const isIce  = Math.random() > 0.44;
+    const isFlare= Math.random() < 0.14; // big dramatic particles
+    const sz     = isFlare
+      ? (isIce ? (5+Math.random()*7) : (6+Math.random()*10))
+      : (isIce ? (1.2+Math.random()*3.5) : (1.8+Math.random()*5));
+    const left   = Math.random()*100;
+    const delay  = -(Math.random()*22);
+    const dur    = isFlare
+      ? (isIce ? (12+Math.random()*10) : (6+Math.random()*7))
+      : (isIce ? (8+Math.random()*14)  : (4+Math.random()*10));
+    const anim   = isIce
+      ? iceAnims [Math.floor(Math.random()*iceAnims.length)]
+      : fireAnims[Math.floor(Math.random()*fireAnims.length)];
+    p.className = 'sp-particle '+(isIce?'sp-ice':'sp-fire')+(isFlare?' sp-flare':'');
+    p.style.cssText =
+      `width:${sz}px;height:${sz}px;left:${left}%;`
+      +(isIce?'top:-20px':'bottom:-20px')
+      +`;animation:${anim} ${dur}s ${delay}s linear infinite`;
+    container.appendChild(p);
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+function init(){
+  const count=Object.keys(window.CHARS).length;
+  const el=document.getElementById('char-count');
+  if(el) el.textContent=count+' characters tracked';
+  render(); updateUI();
+}
+window.addEventListener('load',()=>{ initSpoilerParticles(); setTimeout(init,100); });
+</script>
+
+<!-- ═══════════════════ CHARACTER DATA CHUNKS ═══════════════════ -->
+<script src="chunk-starks-lannisters-baratheons.js"></script>
+<script src="chunk-targaryens-tyrells-martells-greyjoys.js"></script>
+<script src="chunk-wall-essos-misc.js"></script>
+<script src="chunk-additions.js"></script>
+<script src="chunk-creatures.js"></script>
+
+<!-- ── MUSIC: YouTube IFrame API ── -->
+<!-- Change videoId below if the GoT theme link breaks -->
+<div id="yt-player" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
