@@ -1610,27 +1610,34 @@ const HOUSE_DOT_COL = {
   });
 })();
 
-// ── MUSIC — Web Audio API ambient synthesizer ──────────────────────────
-// No external dependencies — generates a GoT-style ambient track in-browser.
+// ── MUSIC — Medieval Web Audio synthesizer ──────────────────────────
+// D Dorian mode: hurdy-gurdy drone + recorder melody + lute plucks
 let audioCtx=null, masterGain=null, musicPlaying=false, musicMuted=false;
-let melodyTimer=null, noteIdx=0;
+let melodyTimer=null, noteIdx=0, luteTimer=null, luteIdx=0;
 
-// GoT main title melodic motif (approximate), in Hz
-const MELODY = [
-  196.0, 196.0, 196.0, 155.6, 174.6, 196.0,
-  220.0, 246.9, 220.0, 196.0, 174.6, 155.6,
-  185.0, 185.0, 185.0, 146.8, 164.8, 185.0,
-  207.7, 233.1, 207.7, 185.0, 164.8, 146.8,
+// D Dorian melody phrases (Hz) — 0 = rest
+const MED_MELODY = [
+  // Phrase 1: ascending run
+  293.7, 329.6, 349.2, 392.0, 440.0, 392.0, 349.2, 329.6,
+  // Phrase 2: descending with rests
+  293.7, 261.6, 293.7, 329.6, 293.7, 0,    293.7, 0,
+  // Phrase 3: high reach
+  440.0, 493.9, 440.0, 392.0, 349.2, 392.0, 440.0, 392.0,
+  // Phrase 4: cadence to D
+  349.2, 329.6, 293.7, 261.6, 220.0, 246.9, 261.6, 293.7,
 ];
-const NOTE_DUR = 0.72; // seconds per note
+const MED_NOTE_DUR = 0.52; // seconds per note
+
+// Lute pluck pattern: root / fifth / octave / third / fifth / root
+const LUTE_PATTERN = [146.8, 220.0, 293.7, 174.6, 220.0, 146.8];
+const LUTE_DUR = 0.80;
 
 function buildReverb(ctx){
-  // Simple convolution reverb via delay network
-  const len = ctx.sampleRate * 2.2;
+  const len = ctx.sampleRate * 2.8;
   const buf = ctx.createBuffer(2, len, ctx.sampleRate);
   for(let c=0;c<2;c++){
     const d=buf.getChannelData(c);
-    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.4);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.0);
   }
   const conv=ctx.createConvolver(); conv.buffer=buf; return conv;
 }
@@ -1642,44 +1649,69 @@ function startMusic(){
     if(audioCtx.state==='suspended') audioCtx.resume();
     masterGain = audioCtx.createGain();
     masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-    masterGain.gain.linearRampToValueAtTime(musicMuted?0:0.18, audioCtx.currentTime+3);
+    masterGain.gain.linearRampToValueAtTime(musicMuted?0:0.22, audioCtx.currentTime+3);
     masterGain.connect(audioCtx.destination);
 
     const reverb = buildReverb(audioCtx);
-    const reverbGain = audioCtx.createGain(); reverbGain.gain.value=0.38;
+    const reverbGain = audioCtx.createGain(); reverbGain.gain.value=0.48;
     reverb.connect(reverbGain); reverbGain.connect(masterGain);
 
-    // Sustained drone — Em chord layers
-    [[82.4,'triangle',0.055],[123.5,'sine',0.038],[164.8,'sine',0.028],
-     [196.0,'sine',0.022],[246.9,'sine',0.015]].forEach(([f,type,vol])=>{
-      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-      o.type=type; o.frequency.value=f; g.gain.value=vol;
-      // Slow vibrato
+    // Hurdy-gurdy drone — D2, A2, D3 sawtooth through warm low-pass
+    [[73.4,0.052],[110.0,0.038],[146.8,0.022]].forEach(([f,vol])=>{
+      const osc=audioCtx.createOscillator();
+      const filt=audioCtx.createBiquadFilter();
+      const g=audioCtx.createGain();
+      osc.type='sawtooth'; osc.frequency.value=f;
+      filt.type='lowpass'; filt.frequency.value=580; filt.Q.value=1.8;
+      g.gain.value=vol;
       const lfo=audioCtx.createOscillator(), lfog=audioCtx.createGain();
-      lfo.frequency.value=0.22+Math.random()*0.1; lfog.gain.value=0.5;
-      lfo.connect(lfog); lfog.connect(o.frequency);
-      lfo.start(); o.connect(g); g.connect(masterGain); g.connect(reverb);
-      o.start();
+      lfo.frequency.value=4.6+Math.random()*0.4; lfog.gain.value=1.1;
+      lfo.connect(lfog); lfog.connect(osc.frequency);
+      lfo.start(); osc.connect(filt); filt.connect(g);
+      g.connect(masterGain); g.connect(reverb); osc.start();
     });
 
-    // Melodic line
+    // Recorder / flute melody (sine with delayed vibrato)
     noteIdx=0;
-    function playNote(){
+    function playFlute(){
       if(!musicPlaying) return;
       const now=audioCtx.currentTime;
-      const freq=MELODY[noteIdx%MELODY.length];
-      const o=audioCtx.createOscillator(), env=audioCtx.createGain();
-      o.type='triangle'; o.frequency.value=freq;
-      env.gain.setValueAtTime(0,now);
-      env.gain.linearRampToValueAtTime(0.09,now+0.08);
-      env.gain.setValueAtTime(0.07,now+NOTE_DUR*0.4);
-      env.gain.exponentialRampToValueAtTime(0.001,now+NOTE_DUR*1.1);
-      o.connect(env); env.connect(masterGain); env.connect(reverb);
-      o.start(now); o.stop(now+NOTE_DUR*1.2);
+      const freq=MED_MELODY[noteIdx%MED_MELODY.length];
+      if(freq>0){
+        const o=audioCtx.createOscillator(), env=audioCtx.createGain();
+        o.type='sine'; o.frequency.value=freq;
+        const lfo=audioCtx.createOscillator(), lfog=audioCtx.createGain();
+        lfo.frequency.value=5.4; lfog.gain.value=3.2;
+        lfo.connect(lfog); lfog.connect(o.frequency);
+        lfo.start(now+0.10); lfo.stop(now+MED_NOTE_DUR*1.1);
+        env.gain.setValueAtTime(0,now);
+        env.gain.linearRampToValueAtTime(0.13, now+0.055);
+        env.gain.setValueAtTime(0.11, now+MED_NOTE_DUR*0.55);
+        env.gain.exponentialRampToValueAtTime(0.001, now+MED_NOTE_DUR*1.08);
+        o.connect(env); env.connect(masterGain); env.connect(reverb);
+        o.start(now); o.stop(now+MED_NOTE_DUR*1.12);
+      }
       noteIdx++;
-      melodyTimer=setTimeout(playNote, NOTE_DUR*1000);
+      melodyTimer=setTimeout(playFlute, MED_NOTE_DUR*1000);
     }
-    setTimeout(playNote, 1800);
+    setTimeout(playFlute, 2400);
+
+    // Lute plucks
+    luteIdx=0;
+    function pluckLute(){
+      if(!musicPlaying) return;
+      const now=audioCtx.currentTime;
+      const freq=LUTE_PATTERN[luteIdx%LUTE_PATTERN.length];
+      const o=audioCtx.createOscillator(), env=audioCtx.createGain();
+      o.type='sawtooth'; o.frequency.value=freq;
+      env.gain.setValueAtTime(0.11, now);
+      env.gain.exponentialRampToValueAtTime(0.001, now+0.48);
+      o.connect(env); env.connect(masterGain); env.connect(reverb);
+      o.start(now); o.stop(now+0.52);
+      luteIdx++;
+      luteTimer=setTimeout(pluckLute, LUTE_DUR*1000);
+    }
+    setTimeout(pluckLute, 900);
 
     musicPlaying=true;
     updateMusicBtn();
@@ -1688,6 +1720,7 @@ function startMusic(){
 
 function stopMusic(){
   if(melodyTimer) clearTimeout(melodyTimer);
+  if(luteTimer)   clearTimeout(luteTimer);
   if(masterGain){
     masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime+1);
     setTimeout(()=>{ try{audioCtx.close();}catch(e){} audioCtx=null; masterGain=null; },1200);
@@ -1701,7 +1734,7 @@ function toggleMusic(){
   musicMuted=!musicMuted;
   if(masterGain){
     masterGain.gain.linearRampToValueAtTime(
-      musicMuted?0:0.18, audioCtx.currentTime+0.5);
+      musicMuted?0:0.22, audioCtx.currentTime+0.5);
   }
   updateMusicBtn();
 }
@@ -1712,7 +1745,7 @@ function updateMusicBtn(){
   if(!musicPlaying){
     btn.innerHTML='<span>♫</span> MUSIC';
     btn.classList.remove('muted');
-    btn.title='Play ambient music';
+    btn.title='Play medieval music';
   } else if(musicMuted){
     btn.innerHTML='<span>🔇</span> MUTED';
     btn.classList.add('muted');
@@ -1769,18 +1802,79 @@ function drawMiniMap(){
   if(!canvas) return;
   const ctx=canvas.getContext('2d');
   const MW=180, MH=100;
+
   // Ocean
-  ctx.fillStyle='#4a7e9e'; ctx.fillRect(0,0,MW,MH);
-  // Westeros landmass
-  ctx.fillStyle='#c8bf8a';
-  ctx.fillRect(6,2,50,90); ctx.fillRect(3,5,12,42);
-  // Essos
-  ctx.fillStyle='#c2bc82';
-  ctx.fillRect(58,7,120,60); ctx.fillRect(95,32,80,38);
-  // The Wall
-  ctx.strokeStyle='rgba(200,230,255,.75)'; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(7,18); ctx.lineTo(54,18); ctx.stroke();
-  // Character dots
+  ctx.fillStyle='#3a6a8a'; ctx.fillRect(0,0,MW,MH);
+
+  // ── WESTEROS ──────────────────────────────────────────────────────
+  ctx.fillStyle='#b8b07a';
+  ctx.beginPath();
+  ctx.moveTo(9,2);                         // NW beyond-the-wall
+  ctx.lineTo(20,2); ctx.lineTo(32,3);      // north coast
+  ctx.lineTo(43,2); ctx.lineTo(45,5);      // NE corner
+  ctx.lineTo(48,12); ctx.lineTo(49,20);    // east coast, north
+  ctx.lineTo(51,28); ctx.lineTo(52,35);    // narrowing toward neck
+  ctx.lineTo(54,41); ctx.lineTo(53,47);    // Vale / Dragonstone bulge
+  ctx.lineTo(47,54); ctx.lineTo(45,62);    // Stormlands
+  ctx.lineTo(41,72); ctx.lineTo(38,82);    // southeast coast
+  ctx.lineTo(34,92); ctx.lineTo(29,97);    // Dorne tip (Sunspear)
+  ctx.lineTo(22,94); ctx.lineTo(16,86);    // Dorne west coast
+  ctx.lineTo(11,76); ctx.lineTo(8,68);     // Reach / Highgarden
+  ctx.lineTo(5,58);  ctx.lineTo(6,50);     // Westerlands
+  ctx.lineTo(9,44);  ctx.lineTo(7,38);     // west of Neck
+  ctx.lineTo(6,32);  ctx.lineTo(5,22);     // west coast, north
+  ctx.lineTo(6,14);  ctx.lineTo(5,8);      // NW coast
+  ctx.closePath(); ctx.fill();
+
+  // The Neck — darker boggy strip
+  ctx.fillStyle='#7a9e68';
+  ctx.beginPath();
+  ctx.moveTo(9,36); ctx.lineTo(19,34); ctx.lineTo(21,40); ctx.lineTo(11,42);
+  ctx.closePath(); ctx.fill();
+
+  // Iron Islands — small cluster off west coast
+  ctx.fillStyle='#a8a070';
+  [[5,45,3,2,0],[7,48,2.5,1.5,-0.2],[4,49,2,1.2,0.1]].forEach(([x,y,rx,ry,rot])=>{
+    ctx.beginPath(); ctx.ellipse(x,y,rx,ry,rot,0,Math.PI*2); ctx.fill();
+  });
+
+  // The Wall — icy blue line
+  ctx.strokeStyle='rgba(185,225,255,.88)'; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.moveTo(9,17); ctx.lineTo(49,17); ctx.stroke();
+
+  // ── ESSOS ─────────────────────────────────────────────────────────
+  ctx.fillStyle='#b0aa76';
+  ctx.beginPath();
+  ctx.moveTo(59,8);                         // NW Free Cities
+  ctx.lineTo(63,14); ctx.lineTo(61,22);     // Braavos / Pentos coast
+  ctx.lineTo(65,28); ctx.lineTo(63,36);     // western Essos coast
+  ctx.lineTo(67,44); ctx.lineTo(69,52);     // curves south
+  ctx.lineTo(76,57); ctx.lineTo(88,63);     // Slaver's Bay western approach
+  ctx.lineTo(100,68); ctx.lineTo(116,72);   // Slaver's Bay south
+  ctx.lineTo(135,74); ctx.lineTo(152,72);   // eastern coast
+  ctx.lineTo(168,68); ctx.lineTo(176,60);   // far east
+  ctx.lineTo(178,42); ctx.lineTo(178,22);   // east coast north
+  ctx.lineTo(175,12); ctx.lineTo(162,7);    // NE corner
+  ctx.lineTo(140,5);  ctx.lineTo(115,4);    // north coast
+  ctx.lineTo(90,5);   ctx.lineTo(72,6);     // north coast west
+  ctx.lineTo(62,8);   ctx.closePath(); ctx.fill();
+
+  // Slaver's Bay water inlet
+  ctx.fillStyle='#3a6a8a';
+  ctx.beginPath();
+  ctx.moveTo(92,56); ctx.lineTo(104,52); ctx.lineTo(120,57);
+  ctx.lineTo(124,67); ctx.lineTo(108,70); ctx.lineTo(92,65);
+  ctx.closePath(); ctx.fill();
+
+  // Dothraki Sea — slightly greener interior plateau
+  ctx.fillStyle='rgba(140,148,88,0.55)';
+  ctx.beginPath(); ctx.ellipse(115,28,38,16,0,0,Math.PI*2); ctx.fill();
+
+  // Red Waste — slightly reddish
+  ctx.fillStyle='rgba(155,110,68,0.40)';
+  ctx.beginPath(); ctx.ellipse(148,50,18,10,0.2,0,Math.PI*2); ctx.fill();
+
+  // ── CHARACTER DOTS ─────────────────────────────────────────────────
   if(window.CHARS){
     Object.entries(window.CHARS).forEach(([id,ch])=>{
       if(houseFilter!=='all'&&ch.house!==houseFilter) return;
@@ -1788,18 +1882,19 @@ function drawMiniMap(){
       const loc=LOC[st.loc]; if(!loc) return;
       const mx=loc.x/1800*MW, my=loc.y/1000*MH;
       ctx.fillStyle=MINI_HOUSE_COLORS[ch.house]||'#888';
-      ctx.globalAlpha=st.isDead?0.25:0.9;
-      ctx.beginPath(); ctx.arc(mx,my,1.5,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=st.isDead?0.22:0.92;
+      ctx.beginPath(); ctx.arc(mx,my,1.6,0,Math.PI*2); ctx.fill();
     });
     ctx.globalAlpha=1;
   }
-  // Viewport rectangle
+
+  // ── VIEWPORT RECT ──────────────────────────────────────────────────
   const W=mc.clientWidth, H=mc.clientHeight;
   const vl=(-transform.x/transform.s)/1800*MW;
   const vt=(-transform.y/transform.s)/1000*MH;
   const vw=(W/transform.s)/1800*MW;
   const vh=(H/transform.s)/1000*MH;
-  ctx.strokeStyle='rgba(212,168,32,.9)'; ctx.lineWidth=1.5;
+  ctx.strokeStyle='rgba(212,168,32,.92)'; ctx.lineWidth=1.5;
   ctx.strokeRect(Math.max(0,vl),Math.max(0,vt),Math.min(MW-vl,vw),Math.min(MH-vt,vh));
 }
 
