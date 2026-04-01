@@ -81,6 +81,7 @@ Object.assign(window.CHARS, {
   'dontos-hollard': {
     name: 'Ser Dontos Hollard',
     initial: 'DH',
+    photoUrl: 'https://thronesapi.com/assets/images/dontos-hollard.jpg',
     gender: 'm',
     house: 'none',
     houseLabel: 'Disgraced knight — Sansa\'s unlikely protector',
@@ -106,6 +107,7 @@ Object.assign(window.CHARS, {
   'maester-luwin': {
     name: 'Maester Luwin',
     initial: 'ML',
+    photoUrl: 'https://thronesapi.com/assets/images/maester-luwin.jpg',
     gender: 'm',
     house: 'none',
     houseLabel: 'Winterfell — Maester',

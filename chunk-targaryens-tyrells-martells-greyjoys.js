@@ -175,6 +175,7 @@ Object.assign(window.CHARS, {
   'illyrio-mopatis': {
     name: 'Illyrio Mopatis',
     initial: 'Il',
+    photoUrl: 'https://thronesapi.com/assets/images/illyrio-mopatis.jpg',
     gender: 'm',
     house: 'none',
     houseLabel: 'Magister of Pentos',
@@ -275,6 +276,7 @@ Object.assign(window.CHARS, {
   'mace-tyrell': {
     name: 'Mace Tyrell',
     initial: 'Ma',
+    photoUrl: 'https://thronesapi.com/assets/images/mace-tyrell.jpg',
     gender: 'm',
     house: 'tyrell',
     houseLabel: 'House Tyrell — Lord of Highgarden, Hand of the King',
@@ -630,6 +632,7 @@ Object.assign(window.CHARS, {
   'robin-arryn': {
     name: 'Robin Arryn',
     initial: 'Rb',
+    photoUrl: 'https://thronesapi.com/assets/images/robin-arryn.jpg',
     gender: 'm',
     house: 'arryn',
     houseLabel: 'House Arryn — Lord of the Eyrie',

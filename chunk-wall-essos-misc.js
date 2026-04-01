@@ -482,6 +482,7 @@ Object.assign(window.CHARS, {
   'ilyn-payne': {
     name: 'Ser Ilyn Payne',
     initial: 'IP',
+    photoUrl: 'https://thronesapi.com/assets/images/ilyn-payne.jpg',
     gender: 'm',
     house: 'lannister',
     houseLabel: 'House Lannister — King\'s Justice',
@@ -592,6 +593,7 @@ Object.assign(window.CHARS, {
     name: 'Hizdahr zo Loraq',
     isKing: true,
     initial: 'Hz',
+    photoUrl: 'https://thronesapi.com/assets/images/hizdahr-zo-loraq.jpg',
     gender: 'm',
     house: 'none',
     houseLabel: 'Great Master of Meereen — King-Consort',

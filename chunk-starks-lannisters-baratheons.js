@@ -598,6 +598,7 @@
 
   'selyse-baratheon': {
     name:'Selyse Baratheon', initial:'Sy', gender:'f',
+    photoUrl:'https://thronesapi.com/assets/images/selyse-baratheon.jpg',
     house:'stannis', houseLabel:'House Baratheon of Dragonstone — Queen to Stannis',
     aliases:[],
     _skin:'#c0a878',_hair:'#603020',_eye:'#3050a0',
