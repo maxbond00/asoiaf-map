@@ -196,7 +196,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 .sp-sigil{font-size:1.9em;line-height:1;margin-bottom:2px;}
 .sp-hname{font-size:.62em;letter-spacing:2.5px;color:#c8a040;}
 .sp-hwords{font-size:.56em;color:#5a3a10;font-style:italic;letter-spacing:.3px;margin-top:1px;}
-.sp-quote{margin:14px auto;max-width:460px;font-size:.98em;color:#b89050;font-style:italic;line-height:1.75;border-left:2px solid #5a3a10;padding:4px 0 4px 16px;text-align:left;}
+.sp-quote{margin:14px auto;max-width:460px;font-size:.98em;color:#b89050;font-style:italic;line-height:1.75;border-left:2px solid #5a3a10;padding:4px 0 4px 16px;text-align:left;transition:opacity .65s ease;}
 .sp-quote cite{display:block;font-size:.75em;color:#6a4a18;margin-top:5px;font-style:normal;letter-spacing:1.5px;}
 .sp-desc{font-size:.76em;color:#6a4a20;line-height:1.75;max-width:480px;margin:0 auto 12px;}
 .sp-books{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 8px;margin-bottom:12px;font-size:.71em;letter-spacing:.4px;}
@@ -1051,6 +1051,14 @@ function render(){
   // ── 5. Creatures ──────────────────────────────────────────────────────
   renderCreatures();
   drawMiniMap();
+
+  // ── 6. Death SFX detection ────────────────────────────────────────────
+  if(sfxReady){
+    const nowDead=new Set();
+    Object.entries(window.CHARS).forEach(([id,ch])=>{ if(charStateAt(ch,t).isDead) nowDead.add(id); });
+    nowDead.forEach(id=>{ if(!prevDeadSet.has(id)) playSwordClash(); });
+    prevDeadSet=nowDead;
+  }
 }
 
 function zoomToLoc(pos){
@@ -1125,6 +1133,16 @@ function updateUI(){
     if(el) el.className='book-marker'+(i===bk?' active':'');
   }
   refreshPanelBio();
+
+  // Raven SFX when followed character changes location
+  if(sfxReady && followingId){
+    const fch=window.CHARS[followingId];
+    if(fch){
+      const floc=charStateAt(fch,t).loc;
+      if(prevFollowedLoc && prevFollowedLoc!==floc) playRavenCaw();
+      prevFollowedLoc=floc;
+    }
+  }
 }
 
 function refreshPanelBio(){
@@ -1610,34 +1628,29 @@ const HOUSE_DOT_COL = {
   });
 })();
 
-// ── MUSIC — Medieval Web Audio synthesizer ──────────────────────────
-// D Dorian mode: hurdy-gurdy drone + recorder melody + lute plucks
+// ── MUSIC — Warm medieval harp & flute (G major) ─────────────────────
 let audioCtx=null, masterGain=null, musicPlaying=false, musicMuted=false;
-let melodyTimer=null, noteIdx=0, luteTimer=null, luteIdx=0;
+let melodyTimer=null, noteIdx=0, harpTimer=null, harpIdx=0;
 
-// D Dorian melody phrases (Hz) — 0 = rest
+// G major melody — gentle, flowing, entirely pleasant (0 = rest)
 const MED_MELODY = [
-  // Phrase 1: ascending run
-  293.7, 329.6, 349.2, 392.0, 440.0, 392.0, 349.2, 329.6,
-  // Phrase 2: descending with rests
-  293.7, 261.6, 293.7, 329.6, 293.7, 0,    293.7, 0,
-  // Phrase 3: high reach
-  440.0, 493.9, 440.0, 392.0, 349.2, 392.0, 440.0, 392.0,
-  // Phrase 4: cadence to D
-  349.2, 329.6, 293.7, 261.6, 220.0, 246.9, 261.6, 293.7,
+  196.0, 220.0, 247.0, 294.0, 330.0, 294.0, 247.0, 220.0, // ascending
+  196.0, 247.0, 294.0, 330.0, 294.0, 247.0, 196.0,   0,   // with rest
+  392.0, 349.2, 330.0, 294.0, 247.0, 220.0, 247.0, 294.0, // high descend
+  330.0, 294.0, 247.0, 220.0, 196.0, 147.0, 196.0, 196.0, // cadence home
 ];
-const MED_NOTE_DUR = 0.52; // seconds per note
+const MED_NOTE_DUR = 0.68;
 
-// Lute pluck pattern: root / fifth / octave / third / fifth / root
-const LUTE_PATTERN = [146.8, 220.0, 293.7, 174.6, 220.0, 146.8];
-const LUTE_DUR = 0.80;
+// Harp arpeggio pattern — G major chord tones, triangle wave
+const HARP_PAT = [98.0, 147.0, 196.0, 247.0, 196.0, 147.0]; // G2 D3 G3 B3 G3 D3
+const HARP_DUR = 0.36;
 
 function buildReverb(ctx){
-  const len = ctx.sampleRate * 2.8;
+  const len = ctx.sampleRate * 1.6;   // shorter, lighter reverb
   const buf = ctx.createBuffer(2, len, ctx.sampleRate);
   for(let c=0;c<2;c++){
     const d=buf.getChannelData(c);
-    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6);
   }
   const conv=ctx.createConvolver(); conv.buffer=buf; return conv;
 }
@@ -1649,29 +1662,38 @@ function startMusic(){
     if(audioCtx.state==='suspended') audioCtx.resume();
     masterGain = audioCtx.createGain();
     masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-    masterGain.gain.linearRampToValueAtTime(musicMuted?0:0.22, audioCtx.currentTime+3);
+    masterGain.gain.linearRampToValueAtTime(musicMuted?0:0.24, audioCtx.currentTime+2.5);
     masterGain.connect(audioCtx.destination);
 
     const reverb = buildReverb(audioCtx);
-    const reverbGain = audioCtx.createGain(); reverbGain.gain.value=0.48;
-    reverb.connect(reverbGain); reverbGain.connect(masterGain);
+    const rvbGain = audioCtx.createGain(); rvbGain.gain.value=0.32;
+    reverb.connect(rvbGain); rvbGain.connect(masterGain);
 
-    // Hurdy-gurdy drone — D2, A2, D3 sawtooth through warm low-pass
-    [[73.4,0.052],[110.0,0.038],[146.8,0.022]].forEach(([f,vol])=>{
-      const osc=audioCtx.createOscillator();
-      const filt=audioCtx.createBiquadFilter();
-      const g=audioCtx.createGain();
-      osc.type='sawtooth'; osc.frequency.value=f;
-      filt.type='lowpass'; filt.frequency.value=580; filt.Q.value=1.8;
-      g.gain.value=vol;
-      const lfo=audioCtx.createOscillator(), lfog=audioCtx.createGain();
-      lfo.frequency.value=4.6+Math.random()*0.4; lfog.gain.value=1.1;
-      lfo.connect(lfog); lfog.connect(osc.frequency);
-      lfo.start(); osc.connect(filt); filt.connect(g);
-      g.connect(masterGain); g.connect(reverb); osc.start();
+    // Soft bass drone — G1 + D2, pure sine, barely audible foundation
+    [[49.0, 0.018],[73.4, 0.012]].forEach(([f,vol])=>{
+      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+      o.type='sine'; o.frequency.value=f; g.gain.value=vol;
+      o.connect(g); g.connect(masterGain); o.start();
     });
 
-    // Recorder / flute melody (sine with delayed vibrato)
+    // Harp arpeggios — triangle wave, quick pluck decay
+    harpIdx=0;
+    function pluckHarp(){
+      if(!musicPlaying) return;
+      const now=audioCtx.currentTime;
+      const freq=HARP_PAT[harpIdx%HARP_PAT.length];
+      const o=audioCtx.createOscillator(), env=audioCtx.createGain();
+      o.type='triangle'; o.frequency.value=freq;
+      env.gain.setValueAtTime(0.13, now);
+      env.gain.exponentialRampToValueAtTime(0.001, now+0.32);
+      o.connect(env); env.connect(masterGain); env.connect(reverb);
+      o.start(now); o.stop(now+0.34);
+      harpIdx++;
+      harpTimer=setTimeout(pluckHarp, HARP_DUR*1000);
+    }
+    setTimeout(pluckHarp, 600);
+
+    // Flute melody — sine wave, gentle vibrato starts a touch in
     noteIdx=0;
     function playFlute(){
       if(!musicPlaying) return;
@@ -1681,37 +1703,20 @@ function startMusic(){
         const o=audioCtx.createOscillator(), env=audioCtx.createGain();
         o.type='sine'; o.frequency.value=freq;
         const lfo=audioCtx.createOscillator(), lfog=audioCtx.createGain();
-        lfo.frequency.value=5.4; lfog.gain.value=3.2;
+        lfo.frequency.value=5.2; lfog.gain.value=2.5;
         lfo.connect(lfog); lfog.connect(o.frequency);
-        lfo.start(now+0.10); lfo.stop(now+MED_NOTE_DUR*1.1);
-        env.gain.setValueAtTime(0,now);
-        env.gain.linearRampToValueAtTime(0.13, now+0.055);
-        env.gain.setValueAtTime(0.11, now+MED_NOTE_DUR*0.55);
-        env.gain.exponentialRampToValueAtTime(0.001, now+MED_NOTE_DUR*1.08);
+        lfo.start(now+0.14); lfo.stop(now+MED_NOTE_DUR*1.05);
+        env.gain.setValueAtTime(0, now);
+        env.gain.linearRampToValueAtTime(0.10, now+0.07);
+        env.gain.setValueAtTime(0.08, now+MED_NOTE_DUR*0.6);
+        env.gain.exponentialRampToValueAtTime(0.001, now+MED_NOTE_DUR*1.05);
         o.connect(env); env.connect(masterGain); env.connect(reverb);
-        o.start(now); o.stop(now+MED_NOTE_DUR*1.12);
+        o.start(now); o.stop(now+MED_NOTE_DUR*1.08);
       }
       noteIdx++;
       melodyTimer=setTimeout(playFlute, MED_NOTE_DUR*1000);
     }
-    setTimeout(playFlute, 2400);
-
-    // Lute plucks
-    luteIdx=0;
-    function pluckLute(){
-      if(!musicPlaying) return;
-      const now=audioCtx.currentTime;
-      const freq=LUTE_PATTERN[luteIdx%LUTE_PATTERN.length];
-      const o=audioCtx.createOscillator(), env=audioCtx.createGain();
-      o.type='sawtooth'; o.frequency.value=freq;
-      env.gain.setValueAtTime(0.11, now);
-      env.gain.exponentialRampToValueAtTime(0.001, now+0.48);
-      o.connect(env); env.connect(masterGain); env.connect(reverb);
-      o.start(now); o.stop(now+0.52);
-      luteIdx++;
-      luteTimer=setTimeout(pluckLute, LUTE_DUR*1000);
-    }
-    setTimeout(pluckLute, 900);
+    setTimeout(playFlute, 2200);
 
     musicPlaying=true;
     updateMusicBtn();
@@ -1720,10 +1725,10 @@ function startMusic(){
 
 function stopMusic(){
   if(melodyTimer) clearTimeout(melodyTimer);
-  if(luteTimer)   clearTimeout(luteTimer);
+  if(harpTimer)   clearTimeout(harpTimer);
   if(masterGain){
-    masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime+1);
-    setTimeout(()=>{ try{audioCtx.close();}catch(e){} audioCtx=null; masterGain=null; },1200);
+    masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime+1.2);
+    setTimeout(()=>{ try{audioCtx.close();}catch(e){} audioCtx=null; masterGain=null; },1400);
   }
   musicPlaying=false;
   updateMusicBtn();
@@ -1734,7 +1739,7 @@ function toggleMusic(){
   musicMuted=!musicMuted;
   if(masterGain){
     masterGain.gain.linearRampToValueAtTime(
-      musicMuted?0:0.22, audioCtx.currentTime+0.5);
+      musicMuted?0:0.24, audioCtx.currentTime+0.5);
   }
   updateMusicBtn();
 }
@@ -1745,7 +1750,7 @@ function updateMusicBtn(){
   if(!musicPlaying){
     btn.innerHTML='<span>♫</span> MUSIC';
     btn.classList.remove('muted');
-    btn.title='Play medieval music';
+    btn.title='Play music';
   } else if(musicMuted){
     btn.innerHTML='<span>🔇</span> MUTED';
     btn.classList.add('muted');
@@ -1757,14 +1762,76 @@ function updateMusicBtn(){
   }
 }
 
+// ── SOUND EFFECTS ─────────────────────────────────────────────────────
+let sfxCtx=null;
+function getSFX(){
+  if(audioCtx&&audioCtx.state!=='closed') return audioCtx;
+  if(!sfxCtx||sfxCtx.state==='closed'){
+    try{ sfxCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; }
+  }
+  return sfxCtx;
+}
+
+function playSwordClash(){
+  const ctx=getSFX(); if(!ctx) return;
+  try{
+    const now=ctx.currentTime;
+    // Noise burst — metallic impact
+    const bufLen=Math.floor(ctx.sampleRate*0.09);
+    const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/bufLen,1.4);
+    const noise=ctx.createBufferSource(); noise.buffer=buf;
+    const hpf=ctx.createBiquadFilter(); hpf.type='highpass'; hpf.frequency.value=1400;
+    const ng=ctx.createGain(); ng.gain.setValueAtTime(0.22,now); ng.gain.exponentialRampToValueAtTime(0.001,now+0.1);
+    noise.connect(hpf); hpf.connect(ng); ng.connect(ctx.destination);
+    noise.start(now); noise.stop(now+0.1);
+    // Metallic ring tones
+    [680,1100,1750].forEach((f,i)=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.07/(i+1),now); g.gain.exponentialRampToValueAtTime(0.001,now+0.28-i*0.05);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(now); o.stop(now+0.3);
+    });
+  }catch(e){}
+}
+
+function playRavenCaw(){
+  const ctx=getSFX(); if(!ctx) return;
+  try{
+    const now=ctx.currentTime;
+    [0, 0.25].forEach(off=>{
+      const car=ctx.createOscillator(), mod=ctx.createOscillator();
+      const modG=ctx.createGain(), env=ctx.createGain();
+      car.type='sawtooth'; car.frequency.value=340+Math.random()*30;
+      mod.frequency.value=285; modG.gain.value=160;
+      mod.connect(modG); modG.connect(car.frequency);
+      env.gain.setValueAtTime(0,now+off);
+      env.gain.linearRampToValueAtTime(0.055,now+off+0.04);
+      env.gain.exponentialRampToValueAtTime(0.001,now+off+0.15);
+      car.connect(env); env.connect(ctx.destination);
+      car.start(now+off); car.stop(now+off+0.17);
+      mod.start(now+off); mod.stop(now+off+0.17);
+    });
+  }catch(e){}
+}
+
+// Track state for SFX triggers
+let prevDeadSet=new Set(), prevFollowedLoc=null, sfxReady=false;
+
 // ── LANDING PAGE ──────────────────────────────────────────────────────
 function enterMap(){
   const sp = document.getElementById('spoiler');
   sp.style.transition='opacity .6s ease';
   sp.style.opacity='0';
   setTimeout(()=>{ sp.style.display='none'; }, 600);
-  // Start ambient music — user gesture satisfies browser autoplay policy
   startMusic();
+  // SFX armed after first user gesture (browser autoplay policy satisfied)
+  setTimeout(()=>{ sfxReady=true; prevDeadSet=new Set(); prevFollowedLoc=null;
+    // Pre-populate dead set so we don't fire on load
+    Object.entries(window.CHARS).forEach(([id,ch])=>{ if(charStateAt(ch,t).isDead) prevDeadSet.add(id); });
+  }, 800);
 }
 
 function initSpoilerParticles(){
@@ -1803,76 +1870,92 @@ function drawMiniMap(){
   const ctx=canvas.getContext('2d');
   const MW=180, MH=100;
 
-  // Ocean
-  ctx.fillStyle='#3a6a8a'; ctx.fillRect(0,0,MW,MH);
+  // Helper: fill polygon from [[x,y]…]
+  function poly(pts,fill){
+    ctx.fillStyle=fill; ctx.beginPath();
+    ctx.moveTo(pts[0][0],pts[0][1]);
+    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]);
+    ctx.closePath(); ctx.fill();
+  }
+
+  // ── OCEAN ─────────────────────────────────────────────────────────
+  ctx.fillStyle='#2c5872'; ctx.fillRect(0,0,MW,MH);
 
   // ── WESTEROS ──────────────────────────────────────────────────────
-  ctx.fillStyle='#b8b07a';
-  ctx.beginPath();
-  ctx.moveTo(9,2);                         // NW beyond-the-wall
-  ctx.lineTo(20,2); ctx.lineTo(32,3);      // north coast
-  ctx.lineTo(43,2); ctx.lineTo(45,5);      // NE corner
-  ctx.lineTo(48,12); ctx.lineTo(49,20);    // east coast, north
-  ctx.lineTo(51,28); ctx.lineTo(52,35);    // narrowing toward neck
-  ctx.lineTo(54,41); ctx.lineTo(53,47);    // Vale / Dragonstone bulge
-  ctx.lineTo(47,54); ctx.lineTo(45,62);    // Stormlands
-  ctx.lineTo(41,72); ctx.lineTo(38,82);    // southeast coast
-  ctx.lineTo(34,92); ctx.lineTo(29,97);    // Dorne tip (Sunspear)
-  ctx.lineTo(22,94); ctx.lineTo(16,86);    // Dorne west coast
-  ctx.lineTo(11,76); ctx.lineTo(8,68);     // Reach / Highgarden
-  ctx.lineTo(5,58);  ctx.lineTo(6,50);     // Westerlands
-  ctx.lineTo(9,44);  ctx.lineTo(7,38);     // west of Neck
-  ctx.lineTo(6,32);  ctx.lineTo(5,22);     // west coast, north
-  ctx.lineTo(6,14);  ctx.lineTo(5,8);      // NW coast
-  ctx.closePath(); ctx.fill();
+  // All coords derived from actual SVG city positions ÷ 10
+  // Westeros: x≈13–44  y≈2–62 in mini-map space
+  poly([
+    [14,2],[22,2],[32,2],[40,3],[43,4],   // north coast
+    [44,8],[42,16],[40,20],               // east coast, north section
+    [39,26],                             // Eastwatch (x:37.8,y:25.8)
+    [41,30],[42,34],                     // White Harbor latitude
+    [44,37],[44,41],                     // Vale bulge (Eyrie x:37.6, Gulltown x:39.6)
+    [43,44],[43,48],                     // Dragonstone (x:41.5,y:46.8)
+    [42,52],                             // Storm's End (x:41.3,y:52)
+    [40,56],[38,58],                     // SE coast
+    [36,62],[34,62],                     // Dorne east (Sunspear x:34.2,y:59.2)
+    [30,60],[24,58],[20,57],             // Dorne south & west (Starfall x:23.2,y:57)
+    [18,53],[19,52],                     // Oldtown (x:19.6,y:51.4)
+    [17,49],[18,45],[17,43],             // Reach → Westerlands
+    [16,39],[17,36],                     // Neck west (moat-cailin x:28.6,y:36.8)
+    [15,32],[14,26],[13,18],[13,10],     // NW coast going north
+  ],'#c2b87e');
 
-  // The Neck — darker boggy strip
-  ctx.fillStyle='#7a9e68';
-  ctx.beginPath();
-  ctx.moveTo(9,36); ctx.lineTo(19,34); ctx.lineTo(21,40); ctx.lineTo(11,42);
-  ctx.closePath(); ctx.fill();
+  // The Neck — boggy green-grey pinch (narrowest point)
+  poly([[16,36],[28,34],[30,38],[18,41]],'#7a9862');
 
-  // Iron Islands — small cluster off west coast
-  ctx.fillStyle='#a8a070';
-  [[5,45,3,2,0],[7,48,2.5,1.5,-0.2],[4,49,2,1.2,0.1]].forEach(([x,y,rx,ry,rot])=>{
-    ctx.beginPath(); ctx.ellipse(x,y,rx,ry,rot,0,Math.PI*2); ctx.fill();
+  // Bear Island — tiny offshore (x:23.2,y:29.6)
+  ctx.fillStyle='#b6ae78';
+  ctx.beginPath(); ctx.ellipse(22,30,2.2,1.4,0,0,Math.PI*2); ctx.fill();
+
+  // Iron Islands — cluster (Pyke x:19.6,y:43.2)
+  ctx.fillStyle='#aaa270';
+  [[14,43,2.5,1.4,-0.2],[16,45,2.8,1.5,0],[14,47,2.0,1.2,0.1]].forEach(([x,y,rx,ry,r])=>{
+    ctx.beginPath(); ctx.ellipse(x,y,rx,ry,r,0,Math.PI*2); ctx.fill();
   });
 
-  // The Wall — icy blue line
-  ctx.strokeStyle='rgba(185,225,255,.88)'; ctx.lineWidth=1.8;
-  ctx.beginPath(); ctx.moveTo(9,17); ctx.lineTo(49,17); ctx.stroke();
+  // The Wall — icy blue (Shadow Tower x:23.2 → Eastwatch x:37.8, y:26–27)
+  ctx.strokeStyle='rgba(190,228,255,.94)'; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.moveTo(14,26); ctx.lineTo(42,26); ctx.stroke();
 
   // ── ESSOS ─────────────────────────────────────────────────────────
-  ctx.fillStyle='#b0aa76';
-  ctx.beginPath();
-  ctx.moveTo(59,8);                         // NW Free Cities
-  ctx.lineTo(63,14); ctx.lineTo(61,22);     // Braavos / Pentos coast
-  ctx.lineTo(65,28); ctx.lineTo(63,36);     // western Essos coast
-  ctx.lineTo(67,44); ctx.lineTo(69,52);     // curves south
-  ctx.lineTo(76,57); ctx.lineTo(88,63);     // Slaver's Bay western approach
-  ctx.lineTo(100,68); ctx.lineTo(116,72);   // Slaver's Bay south
-  ctx.lineTo(135,74); ctx.lineTo(152,72);   // eastern coast
-  ctx.lineTo(168,68); ctx.lineTo(176,60);   // far east
-  ctx.lineTo(178,42); ctx.lineTo(178,22);   // east coast north
-  ctx.lineTo(175,12); ctx.lineTo(162,7);    // NE corner
-  ctx.lineTo(140,5);  ctx.lineTo(115,4);    // north coast
-  ctx.lineTo(90,5);   ctx.lineTo(72,6);     // north coast west
-  ctx.lineTo(62,8);   ctx.closePath(); ctx.fill();
+  // West coast: Braavos x:45.2,y:35 · Pentos x:45,y:43 · Myr x:46.8,y:45
+  // North coast estimated from Lorath x:46.8,y:28 eastward
+  // South:  Volantis x:64.8,y:58 · Astapor x:84.6,y:63 · Qarth x:113.4,y:65 · Asshai x:162,y:73
+  poly([
+    [46,28],                             // NW — Lorath latitude
+    [50,22],[60,16],[76,12],             // north coast sweeping east
+    [98,9],[122,8],[148,9],[164,13],     // central-to-eastern north coast
+    [176,17],[178,28],                   // NE corner
+    [178,46],[175,58],                   // east coast
+    [168,72],[162,75],                   // Asshai area (x:162,y:73.2)
+    [146,76],[128,75],[112,73],          // south coast going west
+    [96,68],[88,65],                     // above Slaver's Bay
+    [74,62],[65,60],                     // Volantis / SW Essos (x:64.8,y:58)
+    [60,54],[56,48],[52,43],[50,36],[48,30], // west coast Free Cities
+  ],'#bbb47a');
 
-  // Slaver's Bay water inlet
-  ctx.fillStyle='#3a6a8a';
-  ctx.beginPath();
-  ctx.moveTo(92,56); ctx.lineTo(104,52); ctx.lineTo(120,57);
-  ctx.lineTo(124,67); ctx.lineTo(108,70); ctx.lineTo(92,65);
-  ctx.closePath(); ctx.fill();
+  // Slaver's Bay — ocean inlet cut-out
+  // Cities on north coast: Astapor(85,63) Yunkai(90,62) Meereen(94,59)
+  poly([[85,62],[98,58],[118,62],[122,72],[106,74],[85,70]],'#2c5872');
 
-  // Dothraki Sea — slightly greener interior plateau
-  ctx.fillStyle='rgba(140,148,88,0.55)';
-  ctx.beginPath(); ctx.ellipse(115,28,38,16,0,0,Math.PI*2); ctx.fill();
+  // Dothraki Sea interior tint (Vaes Dothrak x:84.6,y:43.2)
+  ctx.fillStyle='rgba(132,138,74,0.52)';
+  ctx.beginPath(); ctx.ellipse(100,32,44,14,0,0,Math.PI*2); ctx.fill();
 
-  // Red Waste — slightly reddish
-  ctx.fillStyle='rgba(155,110,68,0.40)';
-  ctx.beginPath(); ctx.ellipse(148,50,18,10,0.2,0,Math.PI*2); ctx.fill();
+  // Red Waste — arid reddish region (SE of Slaver's Bay, near Qarth)
+  ctx.fillStyle='rgba(145,90,50,0.44)';
+  ctx.beginPath(); ctx.ellipse(140,52,22,10,0.15,0,Math.PI*2); ctx.fill();
+
+  // Lorath island (x:46.8,y:28) — sits just north of mainland
+  ctx.fillStyle='#b0a870';
+  ctx.beginPath(); ctx.ellipse(47,25,3.2,2,0.1,0,Math.PI*2); ctx.fill();
+
+  // Stepstones / Tyrosh island chain (between Westeros east coast and Essos)
+  ctx.fillStyle='#aaa46e';
+  [[45,48,2.2,1.4,0.3],[47,51,1.8,1.2,0],[46,54,1.6,1.1,0.1]].forEach(([x,y,rx,ry,r])=>{
+    ctx.beginPath(); ctx.ellipse(x,y,rx,ry,r,0,Math.PI*2); ctx.fill();
+  });
 
   // ── CHARACTER DOTS ─────────────────────────────────────────────────
   if(window.CHARS){
@@ -1882,8 +1965,8 @@ function drawMiniMap(){
       const loc=LOC[st.loc]; if(!loc) return;
       const mx=loc.x/1800*MW, my=loc.y/1000*MH;
       ctx.fillStyle=MINI_HOUSE_COLORS[ch.house]||'#888';
-      ctx.globalAlpha=st.isDead?0.22:0.92;
-      ctx.beginPath(); ctx.arc(mx,my,1.6,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=st.isDead?0.22:0.95;
+      ctx.beginPath(); ctx.arc(mx,my,1.7,0,Math.PI*2); ctx.fill();
     });
     ctx.globalAlpha=1;
   }
@@ -1894,7 +1977,7 @@ function drawMiniMap(){
   const vt=(-transform.y/transform.s)/1000*MH;
   const vw=(W/transform.s)/1800*MW;
   const vh=(H/transform.s)/1000*MH;
-  ctx.strokeStyle='rgba(212,168,32,.92)'; ctx.lineWidth=1.5;
+  ctx.strokeStyle='rgba(218,174,32,.96)'; ctx.lineWidth=1.5;
   ctx.strokeRect(Math.max(0,vl),Math.max(0,vt),Math.min(MW-vl,vw),Math.min(MH-vt,vh));
 }
 
@@ -1936,22 +2019,47 @@ function init(){
     });
   }
 
-  // Rotating landing page quote
+  // Rotating landing page quotes — shuffled random order, cycles every 9s
   const QUOTES=[
-    {q:'"When you play the game of thrones, you win or you die."',              a:'Cersei Lannister'},
-    {q:'"A mind needs books as a sword needs a whetstone, if it is to keep its edge."', a:'Tyrion Lannister'},
-    {q:'"Fear cuts deeper than swords."',                                       a:'Syrio Forel'},
-    {q:'"The man who passes the sentence should swing the sword."',             a:'Eddard Stark'},
-    {q:'"Winter is coming."',                                                   a:'House Stark words'},
-    {q:'"A lion does not concern itself with the opinion of sheep."',           a:'Tywin Lannister'},
-    {q:'"There is only one god and his name is Death. And there is only one thing we say to Death: not today."', a:'Syrio Forel'},
-    {q:'"If you think this has a happy ending, you haven\'t been paying attention."', a:'Ramsay Bolton'},
-    {q:'"Chaos isn\'t a pit. Chaos is a ladder."',                             a:'Petyr Baelish'},
-    {q:'"The things I do for love."',                                           a:'Jaime Lannister'},
+    {q:'"When you play the game of thrones, you win or you die."',                           a:'Cersei Lannister'},
+    {q:'"A mind needs books as a sword needs a whetstone, if it is to keep its edge."',      a:'Tyrion Lannister'},
+    {q:'"Fear cuts deeper than swords."',                                                     a:'Syrio Forel'},
+    {q:'"The man who passes the sentence should swing the sword."',                           a:'Eddard Stark'},
+    {q:'"Winter is coming."',                                                                 a:'House Stark words'},
+    {q:'"A lion does not concern itself with the opinion of sheep."',                         a:'Tywin Lannister'},
+    {q:'"Not today."',                                                                        a:'Syrio Forel'},
+    {q:'"If you think this has a happy ending, you haven\'t been paying attention."',         a:'Ramsay Bolton'},
+    {q:'"Chaos isn\'t a pit. Chaos is a ladder."',                                           a:'Petyr Baelish'},
+    {q:'"The things I do for love."',                                                         a:'Jaime Lannister'},
+    {q:'"The night is dark and full of terrors."',                                            a:'Melisandre'},
+    {q:'"Power resides where men believe it resides."',                                       a:'Varys'},
+    {q:'"Any man who must say \'I am the king\' is no true king."',                          a:'Tywin Lannister'},
+    {q:'"The lone wolf dies, but the pack survives."',                                        a:'Eddard Stark'},
+    {q:'"A reader lives a thousand lives before he dies. The man who never reads lives only one."', a:'Jojen Reed'},
+    {q:'"I am the sword in the darkness. I am the watcher on the walls."',                   a:'Night\'s Watch Oath'},
+    {q:'"Never forget what you are. The rest of the world will not."',                        a:'Tyrion Lannister'},
+    {q:'"Fire cannot kill a dragon."',                                                        a:'Daenerys Targaryen'},
+    {q:'"Valar morghulis."',                                                                  a:'High Valyrian'},
+    {q:'"Valar dohaeris."',                                                                   a:'High Valyrian'},
+    {q:'"It\'s not easy being drunk all the time. Everyone would do it, if it were easy."',  a:'Tyrion Lannister'},
+    {q:'"Words are wind."',                                                                   a:'Various'},
+    {q:'"A Lannister always pays his debts."',                                                a:'House Lannister'},
+    {q:'"There is only one god, and his name is Death. And there is only one thing we say to Death: not today."', a:'Syrio Forel'},
   ];
-  const pick=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  // Shuffle array for random starting quote each visit
+  for(let i=QUOTES.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[QUOTES[i],QUOTES[j]]=[QUOTES[j],QUOTES[i]];}
+  let qIdx=0;
   const qel=document.getElementById('sp-quote-text');
-  if(qel) qel.innerHTML=`${pick.q}<cite>— ${pick.a}</cite>`;
+  if(qel){ qel.innerHTML=`${QUOTES[0].q}<cite>— ${QUOTES[0].a}</cite>`; qIdx=1; }
+  setInterval(()=>{
+    if(!qel||document.getElementById('spoiler').style.display==='none') return;
+    qel.style.opacity='0';
+    setTimeout(()=>{
+      const p=QUOTES[qIdx%QUOTES.length]; qIdx++;
+      qel.innerHTML=`${p.q}<cite>— ${p.a}</cite>`;
+      qel.style.opacity='1';
+    }, 680);
+  }, 9000);
 }
 window.addEventListener('load',()=>{ initSpoilerParticles(); setTimeout(init,100); });
 </script>
