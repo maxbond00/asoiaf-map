@@ -95,7 +95,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 .loc-lbl{font-size:9px;fill:#1a0e00;pointer-events:none;font-family:'Palatino Linotype',serif;}
 .loc-lbl-hi{font-size:10px;fill:#1a0e00;pointer-events:none;font-family:'Palatino Linotype',serif;font-weight:bold;}
 .loc-capital{fill:#5a3000;}
-.reg-lbl{font-size:11px;fill:#2a1e08;pointer-events:none;font-style:italic;letter-spacing:1px;font-family:'Palatino Linotype',serif;}
+.reg-lbl{font-size:12px;fill:#3a2a0a;pointer-events:none;font-style:italic;letter-spacing:2px;font-family:'Palatino Linotype',serif;font-weight:bold;paint-order:stroke fill;stroke:#f0e6b8;stroke-width:2.5px;stroke-linejoin:round;}
 .sea-lbl{font-size:11px;fill:#1a3a58;pointer-events:none;font-style:italic;font-family:'Palatino Linotype',serif;letter-spacing:2px;}
 .wall-lbl{font-size:9px;fill:#1a3a58;pointer-events:none;letter-spacing:2px;}
 .free-city-dot{fill:#383870;}
@@ -109,7 +109,8 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 .tok-crown{font-size:12px;dominant-baseline:auto;text-anchor:middle;filter:drop-shadow(0 0 3px gold);}
 .tok-lbl{font-size:7.5px;fill:#fff;font-weight:bold;pointer-events:none;dominant-baseline:central;text-anchor:middle;letter-spacing:.3px;}
 .char-token.prob .tok-ring{stroke-dasharray:3,2!important;opacity:.82;}
-.char-token.dead-tok{opacity:.55;}
+.char-token.dead-tok{opacity:.42;filter:grayscale(75%) sepia(25%);}
+.char-token.dead-tok .tok-ring{stroke:#7a2a2a!important;}
 .overflow-badge{cursor:pointer;}
 .overflow-badge circle{filter:drop-shadow(0 2px 4px rgba(0,0,0,.8));}
 .overflow-badge:hover circle{filter:brightness(1.4) drop-shadow(0 0 6px #d4a820);}
@@ -233,6 +234,28 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
   70% {transform:translateY(-70vh) translateX(-20px) scale(.4);opacity:.6;}
   100%{transform:translateY(-110vh) translateX(20px) scale(.05);opacity:0;}}
 
+/* ── MINI-MAP ── */
+#mini-map-wrap{position:absolute;bottom:14px;right:14px;z-index:20;border:1.5px solid #6a4a10;border-radius:4px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.7);cursor:crosshair;background:#3a6a85;transition:opacity .2s;}
+#mini-map-wrap:hover{opacity:.95;}
+#mini-map{display:block;width:180px;height:100px;}
+/* ── HOUSE FILTER ── */
+#house-filter{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:5px;background:rgba(8,4,0,.88);border:1px solid #4a2a08;border-radius:24px;padding:5px 10px;box-shadow:0 4px 16px rgba(0,0,0,.6);}
+.hf-btn{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.12);color:#a08040;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;padding:0;line-height:1;}
+.hf-btn.hf-all{font-size:9px;letter-spacing:.5px;color:#d4a820;border-color:#8b6914;width:36px;}
+.hf-btn:hover{border-color:var(--hc,#d4a820);box-shadow:0 0 8px var(--hc,rgba(212,168,32,.4));transform:scale(1.15);}
+.hf-btn.active{border-color:var(--hc,#d4a820);background:rgba(255,255,255,.1);box-shadow:0 0 10px var(--hc,rgba(212,168,32,.3));}
+/* ── TIMELINE EVENT MARKERS ── */
+#event-markers{position:relative;height:14px;margin-bottom:2px;}
+.ev-marker{position:absolute;top:0;transform:translateX(-50%);cursor:pointer;font-size:10px;line-height:1;transition:transform .15s;user-select:none;}
+.ev-marker:hover{transform:translateX(-50%) scale(1.5);}
+.ev-line{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:1px;height:5px;}
+/* ── RELATIONS ── */
+#char-relations{margin-top:12px;}
+.rel-title{font-size:.68em;color:#8b6914;letter-spacing:2px;margin-bottom:7px;}
+.rel-chip{display:inline-flex;flex-direction:column;margin:3px 4px 3px 0;padding:4px 9px;border:1px solid #4a2a08;border-radius:4px;cursor:pointer;transition:background .15s;vertical-align:top;}
+.rel-chip:hover{background:rgba(212,168,32,.1);}
+.rel-name{font-size:.74em;color:#d4a820;line-height:1.3;}
+.rel-type{font-size:.63em;color:#6a4a18;font-style:italic;}
 /* ── LOCATION POPUP ── */
 #loc-popup{position:fixed;left:14px;top:50%;transform:translateY(-50%);width:230px;max-height:70vh;background:linear-gradient(160deg,#0d0800,#1a0f00);border:2px solid #8b6914;border-radius:8px;z-index:400;display:none;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.8);}
 #loc-popup-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 8px;border-bottom:1px solid #3a2a10;}
@@ -262,10 +285,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 
     <div class="sp-divider"><span>✦</span></div>
 
-    <blockquote class="sp-quote">
-      "When you play the game of thrones, you win or you die. There is no middle ground."
-      <cite>— Cersei Lannister, A Game of Thrones</cite>
-    </blockquote>
+    <blockquote class="sp-quote" id="sp-quote-text"></blockquote>
 
     <p class="sp-desc">Track every major character across all five novels — their journeys, alliances, betrayals, and ultimate fates — from the frozen wastes beyond the Wall to the scorching shores of Essos.</p>
 
@@ -335,6 +355,20 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
     <image href="map-bg.webp" x="0" y="0" width="1800" height="1000" preserveAspectRatio="none"/>
 
 
+    <!-- ═══════════════ HOUSE SEAT SIGILS ═══════════════ -->
+    <g id="house-seats" style="pointer-events:none">
+      <text x="288" y="348" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🐺</text>
+      <text x="214" y="440" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🦁</text>
+      <text x="375" y="478" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">👑</text>
+      <text x="415" y="476" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🐉</text>
+      <text x="232" y="498" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🌹</text>
+      <text x="342" y="600" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">☀️</text>
+      <text x="196" y="440" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦑</text>
+      <text x="413" y="528" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦌</text>
+      <text x="376" y="386" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦅</text>
+      <text x="268" y="428" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🐟</text>
+    </g>
+
     <!-- ═══════════════ CHARACTER TOKENS ═══════════════ -->
     <defs id="clip-defs"><!-- clip paths generated by JS --></defs>
     <g id="travel-lines"></g>
@@ -343,6 +377,22 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
     <g id="overflow-badges"></g>
 
   </svg><!-- end world-svg -->
+
+    <!-- Mini-map -->
+    <div id="mini-map-wrap"><canvas id="mini-map" width="180" height="100"></canvas></div>
+
+    <!-- House filter -->
+    <div id="house-filter">
+      <button class="hf-btn hf-all active" data-house="all" onclick="setHouseFilter('all')" title="All">ALL</button>
+      <button class="hf-btn" data-house="stark"     onclick="setHouseFilter('stark')"     title="House Stark"      style="--hc:#5a6070">🐺</button>
+      <button class="hf-btn" data-house="lannister" onclick="setHouseFilter('lannister')" title="House Lannister"  style="--hc:#c8981a">🦁</button>
+      <button class="hf-btn" data-house="targaryen" onclick="setHouseFilter('targaryen')" title="House Targaryen"  style="--hc:#c83030">🐉</button>
+      <button class="hf-btn" data-house="baratheon" onclick="setHouseFilter('baratheon')" title="House Baratheon"  style="--hc:#b08018">🦌</button>
+      <button class="hf-btn" data-house="tyrell"    onclick="setHouseFilter('tyrell')"    title="House Tyrell"    style="--hc:#508030">🌹</button>
+      <button class="hf-btn" data-house="martell"   onclick="setHouseFilter('martell')"   title="House Martell"   style="--hc:#c87020">☀️</button>
+      <button class="hf-btn" data-house="greyjoy"   onclick="setHouseFilter('greyjoy')"   title="House Greyjoy"   style="--hc:#4a5878">🦑</button>
+      <button class="hf-btn" data-house="none"      onclick="setHouseFilter('none')"      title="Independents"    style="--hc:#888880">⚔️</button>
+    </div>
 
     <!-- Follow indicator (shown while tracking a character) -->
     <div id="follow-indicator">
@@ -399,6 +449,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
       <button class="ctrl-btn" onclick="skipEnd()" title="End">⏭</button>
     </div>
     <div id="progress-container">
+      <div id="event-markers"></div>
       <div id="progress-track" onclick="seekClick(event)">
         <div id="progress-fill"></div>
         <div id="progress-handle"></div>
@@ -443,6 +494,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
   <hr id="char-divider">
   <div id="char-bio"></div>
   <div id="char-current-status"></div>
+  <div id="char-relations"></div>
 </div>
 
 <!-- Location popup — shown when overflow badge clicked -->
@@ -473,6 +525,33 @@ const BOOK_CHAPTERS = [73, 70, 82, 46, 73];
 let t = 0, playing = false, playSpeed = 1, lastStamp = null, rafId = null;
 let followingId = null;  // character id being tracked by the camera
 let openPanelId = null;  // id of character whose panel is currently open
+let houseFilter = 'all'; // house filter for the map
+
+const MINI_HOUSE_COLORS = {
+  stark:'#5a6070', lannister:'#c8981a', baratheon:'#b08018',
+  targaryen:'#c83030', tyrell:'#508030', martell:'#c87020',
+  greyjoy:'#4a5878', tully:'#2860b0', arryn:'#3888d0',
+  bolton:'#880808', mormont:'#406848', nighswatch:'#404040',
+  freefolk:'#607060', none:'#888880', sand:'#c07030', stannis:'#6a3030',
+};
+
+function setHouseFilter(h){
+  houseFilter=h;
+  document.querySelectorAll('.hf-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.house===h);
+  });
+  render();
+}
+
+const EVENTS=[
+  {frac:0.9/5,  label:'Ned Stark executed',           color:'#c83030', icon:'⚔'},
+  {frac:1.7/5,  label:'Battle of Blackwater',          color:'#c87020', icon:'🔥'},
+  {frac:2.3/5,  label:'Purple Wedding',                color:'#9030c8', icon:'💀'},
+  {frac:2.65/5, label:'The Red Wedding',               color:'#8b0000', icon:'🩸'},
+  {frac:2.85/5, label:'Red Viper vs The Mountain',     color:'#c83030', icon:'⚔'},
+  {frac:3.5/5,  label:"Cersei's Walk of Shame",        color:'#c89030', icon:'🔔'},
+  {frac:4.9/5,  label:'Jon Snow stabbed at Castle Black', color:'#3060c8', icon:'❄'},
+];
 // Travel animation: tracks per-character current rendered position for smooth movement
 const _pos = {};   // id -> {x, y}  current displayed SVG coords
 let transform = {x:0,y:0,s:1};
@@ -868,6 +947,7 @@ function render(){
   const traveling= [];
 
   Object.entries(window.CHARS).forEach(([id,ch])=>{
+    if(houseFilter!=='all' && ch.house!==houseFilter) return;
     const st=charStateAt(ch,t);
     if(st.travel && st.travel.frac>0.05 && st.travel.frac<0.95){
       traveling.push({id,ch,st});
@@ -970,6 +1050,7 @@ function render(){
 
   // ── 5. Creatures ──────────────────────────────────────────────────────
   renderCreatures();
+  drawMiniMap();
 }
 
 function zoomToLoc(pos){
@@ -1125,7 +1206,7 @@ function clampTransform(){
   transform.x=Math.min(0,Math.max(W*(1-transform.s),transform.x));
   transform.y=Math.min(0,Math.max(H*(1-transform.s),transform.y));
 }
-function applyXf(){clampTransform();svg.style.transform=`translate(${transform.x}px,${transform.y}px) scale(${transform.s})`;}
+function applyXf(){clampTransform();svg.style.transform=`translate(${transform.x}px,${transform.y}px) scale(${transform.s})`;drawMiniMap();}
 function zoomAdj(f){transform.s=Math.max(1,Math.min(12,transform.s*f));applyXf();}
 function resetView(){transform={x:0,y:0,s:1};applyXf();}
 function focusWest(){
@@ -1218,6 +1299,23 @@ function openPanel(id){
   const bkBios=ch.bookBios||{};
   document.getElementById('char-current-status').textContent=
     bkBios[bk]?'📖 Book '+(bk+1)+': '+bkBios[bk]:'';
+
+  // Connections / relations
+  const relDiv=document.getElementById('char-relations');
+  if(relDiv){
+    const rels=ch.relations||[];
+    if(rels.length){
+      relDiv.innerHTML='<div class="rel-title">CONNECTIONS</div>'
+        +rels.map(r=>{
+          const rc=window.CHARS[r.id];
+          const col=rc?(MINI_HOUSE_COLORS[rc.house]||'#666'):'#555';
+          const nm=rc?rc.name:r.id;
+          return `<span class="rel-chip" onclick="openPanel('${r.id}')" style="border-color:${col}">`
+            +`<span class="rel-name">${nm}</span>`
+            +`<span class="rel-type">${r.type}</span></span>`;
+        }).join('');
+    } else { relDiv.innerHTML=''; }
+  }
 
   document.getElementById('char-panel').classList.add('open');
 }
@@ -1665,12 +1763,100 @@ function initSpoilerParticles(){
   }
 }
 
+// ── MINI-MAP ───────────────────────────────────────────────────────────
+function drawMiniMap(){
+  const canvas=document.getElementById('mini-map');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const MW=180, MH=100;
+  // Ocean
+  ctx.fillStyle='#4a7e9e'; ctx.fillRect(0,0,MW,MH);
+  // Westeros landmass
+  ctx.fillStyle='#c8bf8a';
+  ctx.fillRect(6,2,50,90); ctx.fillRect(3,5,12,42);
+  // Essos
+  ctx.fillStyle='#c2bc82';
+  ctx.fillRect(58,7,120,60); ctx.fillRect(95,32,80,38);
+  // The Wall
+  ctx.strokeStyle='rgba(200,230,255,.75)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(7,18); ctx.lineTo(54,18); ctx.stroke();
+  // Character dots
+  if(window.CHARS){
+    Object.entries(window.CHARS).forEach(([id,ch])=>{
+      if(houseFilter!=='all'&&ch.house!==houseFilter) return;
+      const st=charStateAt(ch,t);
+      const loc=LOC[st.loc]; if(!loc) return;
+      const mx=loc.x/1800*MW, my=loc.y/1000*MH;
+      ctx.fillStyle=MINI_HOUSE_COLORS[ch.house]||'#888';
+      ctx.globalAlpha=st.isDead?0.25:0.9;
+      ctx.beginPath(); ctx.arc(mx,my,1.5,0,Math.PI*2); ctx.fill();
+    });
+    ctx.globalAlpha=1;
+  }
+  // Viewport rectangle
+  const W=mc.clientWidth, H=mc.clientHeight;
+  const vl=(-transform.x/transform.s)/1800*MW;
+  const vt=(-transform.y/transform.s)/1000*MH;
+  const vw=(W/transform.s)/1800*MW;
+  const vh=(H/transform.s)/1000*MH;
+  ctx.strokeStyle='rgba(212,168,32,.9)'; ctx.lineWidth=1.5;
+  ctx.strokeRect(Math.max(0,vl),Math.max(0,vt),Math.min(MW-vl,vw),Math.min(MH-vt,vh));
+}
+
+// Mini-map click → pan main map
+window.addEventListener('load',()=>{
+  const mm=document.getElementById('mini-map');
+  if(mm) mm.addEventListener('click',e=>{
+    const r=e.target.getBoundingClientRect();
+    const mx=(e.clientX-r.left)/180, my=(e.clientY-r.top)/100;
+    const W=mc.clientWidth, H=mc.clientHeight;
+    transform.x=W/2-mx*1800*(W/1800)*transform.s;
+    transform.y=H/2-my*1000*(H/1000)*transform.s;
+    applyXf();
+  });
+});
+
 // ── INIT ──────────────────────────────────────────────────────────────
 function init(){
   const count=Object.keys(window.CHARS).length;
   const el=document.getElementById('char-count');
   if(el) el.textContent=count+' characters tracked';
   render(); updateUI();
+
+  // Event markers on timeline
+  const evContainer=document.getElementById('event-markers');
+  if(evContainer){
+    EVENTS.forEach(ev=>{
+      const wrap=document.createElement('div');
+      wrap.className='ev-marker';
+      wrap.style.left=(ev.frac*100)+'%';
+      wrap.title=ev.label;
+      const line=document.createElement('div');
+      line.className='ev-line';
+      line.style.cssText=`background:${ev.color};`;
+      wrap.appendChild(document.createTextNode(ev.icon));
+      wrap.appendChild(line);
+      wrap.addEventListener('click',()=>{ t=ev.frac*TOTAL_SEC; render(); updateUI(); });
+      evContainer.appendChild(wrap);
+    });
+  }
+
+  // Rotating landing page quote
+  const QUOTES=[
+    {q:'"When you play the game of thrones, you win or you die."',              a:'Cersei Lannister'},
+    {q:'"A mind needs books as a sword needs a whetstone, if it is to keep its edge."', a:'Tyrion Lannister'},
+    {q:'"Fear cuts deeper than swords."',                                       a:'Syrio Forel'},
+    {q:'"The man who passes the sentence should swing the sword."',             a:'Eddard Stark'},
+    {q:'"Winter is coming."',                                                   a:'House Stark words'},
+    {q:'"A lion does not concern itself with the opinion of sheep."',           a:'Tywin Lannister'},
+    {q:'"There is only one god and his name is Death. And there is only one thing we say to Death: not today."', a:'Syrio Forel'},
+    {q:'"If you think this has a happy ending, you haven\'t been paying attention."', a:'Ramsay Bolton'},
+    {q:'"Chaos isn\'t a pit. Chaos is a ladder."',                             a:'Petyr Baelish'},
+    {q:'"The things I do for love."',                                           a:'Jaime Lannister'},
+  ];
+  const pick=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  const qel=document.getElementById('sp-quote-text');
+  if(qel) qel.innerHTML=`${pick.q}<cite>— ${pick.a}</cite>`;
 }
 window.addEventListener('load',()=>{ initSpoilerParticles(); setTimeout(init,100); });
 </script>
@@ -1681,6 +1867,7 @@ window.addEventListener('load',()=>{ initSpoilerParticles(); setTimeout(init,100
 <script src="chunk-wall-essos-misc.js"></script>
 <script src="chunk-additions.js"></script>
 <script src="chunk-creatures.js"></script>
+<script src="chunk-relations.js"></script>
 
 </body>
 </html>
