@@ -92,6 +92,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Night\'s Watch — Ranger',
     aliases: ['The Halfhand'],
     portrait: 'default-male',
+    photoUrl: 'https://thronesapi.com/assets/images/qhorin-halfhand.jpg',
     deathBook: 1,
     bio: 'The most celebrated ranger of the Night\'s Watch. Lost the fingers of his sword hand to a wildling axe. Orders Jon Snow to kill him so Jon can convincingly infiltrate Mance Rayder\'s army.',
     bookBios: {
@@ -296,6 +297,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Tarly — Lord of Horn Hill',
     aliases: ['Lord Randyll'],
     portrait: 'default-male',
+    photoUrl: 'https://thronesapi.com/assets/images/randyll-tarly.jpg',
     bio: 'Lord of Horn Hill, one of the finest military commanders in Westeros and Mace Tyrell\'s best general. Harsh, honour-obsessed father who sent Sam to the Wall to rid himself of his "unworthy" heir.',
     bookBios: {
       1: 'Fights for the Tyrells at the Blackwater.',
@@ -510,6 +512,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Kingsguard',
     aliases: ['Ser Balon'],
     portrait: 'balon-swann',
+    photoUrl: 'https://thronesapi.com/assets/images/balon-swann.jpg',
     bio: 'One of the more honourable members of Joffrey\'s Kingsguard. Sent to Dorne to deliver Gregor Clegane\'s skull to Doran Martell as part of the peace agreement, and to bring Myrcella home.',
     bookBios: {
       4: 'Arrives in Dorne to deliver Gregor\'s skull. Accompanies Myrcella\'s party.',
@@ -528,6 +531,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Martell — Captain of the Guard',
     aliases: ['Captain of the Guard'],
     portrait: 'default-male',
+    photoUrl: 'https://thronesapi.com/assets/images/areo-hotah.jpg',
     bio: 'Doran Martell\'s Norvoshi captain of the guard. Devoted, silent, and lethal with his longaxe. The reader sees Dornish events partly through his limited but loyal perspective.',
     bookBios: {
       3: 'Protects Doran at the Water Gardens. Arrests Arianne after the Queenmaker plot.',

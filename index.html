@@ -252,10 +252,24 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 /* ── RELATIONS ── */
 #char-relations{margin-top:12px;}
 .rel-title{font-size:.68em;color:#8b6914;letter-spacing:2px;margin-bottom:7px;}
+/* ── JOURNEY LOG ── */
+#char-journey-log{margin-top:16px;border-top:1px solid #2a1a05;padding-top:12px;}
+.jl-title{font-size:.68em;color:#8b6914;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.jl-count{color:#5a4010;font-style:italic;letter-spacing:0;font-size:.9em;}
+.jl-list{display:flex;flex-direction:column;gap:3px;max-height:220px;overflow-y:auto;padding-right:4px;}
+.jl-list::-webkit-scrollbar{width:4px;}
+.jl-list::-webkit-scrollbar-thumb{background:#3a2010;border-radius:2px;}
+.jl-stop{display:flex;align-items:center;gap:7px;padding:2px 0;}
+.jl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;border:1px solid rgba(0,0,0,.4);}
+.jl-book{font-size:.63em;font-weight:bold;letter-spacing:.04em;width:32px;flex-shrink:0;}
+.jl-loc{font-size:.74em;color:#c8a050;}
 .rel-chip{display:inline-flex;flex-direction:column;margin:3px 4px 3px 0;padding:4px 9px;border:1px solid #4a2a08;border-radius:4px;cursor:pointer;transition:background .15s;vertical-align:top;}
 .rel-chip:hover{background:rgba(212,168,32,.1);}
 .rel-name{font-size:.74em;color:#d4a820;line-height:1.3;}
 .rel-type{font-size:.63em;color:#6a4a18;font-style:italic;}
+/* ── LOCATION HITBOXES ── */
+.loc-hit:hover ~ circle, .loc-hit:hover + circle { opacity: 0.9 !important; }
+.loc-hit:hover { stroke: #c8a050; stroke-width: 1.5; fill: rgba(200,160,80,0.08) !important; }
 /* ── LOCATION POPUP ── */
 #loc-popup{position:fixed;left:14px;top:50%;transform:translateY(-50%);width:230px;max-height:70vh;background:linear-gradient(160deg,#0d0800,#1a0f00);border:2px solid #8b6914;border-radius:8px;z-index:400;display:none;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.8);}
 #loc-popup-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 8px;border-bottom:1px solid #3a2a10;}
@@ -270,6 +284,57 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 .lp-dot-svg{width:100%;height:100%;}
 .lp-name{font-size:.78em;color:#c8a040;flex:1;line-height:1.3;}
 .lp-status{font-size:.65em;color:#5a3a10;}
+.lp-lore{font-size:.78em;color:#a08040;line-height:1.55;padding:8px 12px 10px;margin:0;border-bottom:1px solid #2a1a05;font-style:italic;}
+#loc-popup-title{font-size:.9em;}
+
+/* ── TAB BAR ── */
+#tab-bar{display:flex;gap:4px;align-items:center;margin-left:14px;}
+.tab-btn{background:rgba(20,10,0,.7);border:1px solid #4a2a08;color:#6a4a18;padding:5px 14px;border-radius:3px;cursor:pointer;font-size:11px;letter-spacing:1.5px;font-family:'Palatino Linotype',serif;transition:all .2s;}
+.tab-btn:hover{border-color:#8b6914;color:#b09040;background:rgba(40,20,0,.85);}
+.tab-btn.active{background:rgba(60,30,0,.9);border-color:#d4a820;color:#d4a820;box-shadow:0 0 10px rgba(212,168,32,.25);}
+
+/* ── RELATIONS GRAPH TAB ── */
+#tab-relations{flex:1;display:none;flex-direction:column;overflow:hidden;background:#050300;}
+#graph-toolbar{background:linear-gradient(to right,#0a0500,#100800,#0a0500);border-bottom:1px solid #3a2008;padding:7px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap;}
+#graph-toolbar-title{color:#d4a820;font-size:.85em;letter-spacing:2px;margin-right:4px;}
+#graph-count{font-size:.72em;color:#5a3a18;letter-spacing:.5px;}
+.ghf-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#7a5a28;padding:3px 9px;border-radius:12px;cursor:pointer;font-size:10px;font-family:'Palatino Linotype',serif;transition:all .18s;}
+.ghf-btn:hover{border-color:#8b6914;color:#b09040;}
+.ghf-btn.active{border-color:#d4a820;color:#d4a820;background:rgba(212,168,32,.1);}
+#graph-body{flex:1;display:flex;overflow:hidden;position:relative;}
+#graph-canvas-wrap{flex:1;overflow:hidden;position:relative;}
+#graph-sidebar{width:160px;flex-shrink:0;background:rgba(8,4,0,.9);border-left:1px solid #2a1a05;padding:12px;overflow-y:auto;}
+.gsb-title{font-size:.68em;color:#8b6914;letter-spacing:2px;margin-bottom:8px;}
+#graph-reset-btn{width:100%;background:#1a0d00;border:1px solid #4a2a08;color:#8b6914;padding:4px 0;border-radius:3px;cursor:pointer;font-size:10px;font-family:'Palatino Linotype',serif;letter-spacing:1px;margin-bottom:10px;transition:all .2s;}
+#graph-reset-btn:hover{border-color:#8b6914;color:#d4a820;}
+
+/* ── HISTORY TAB ── */
+#tab-history{flex:1;display:none;overflow-y:auto;background:linear-gradient(180deg,#030200 0%,#0a0500 100%);}
+#history-content{max-width:860px;margin:0 auto;padding:32px 24px 60px;}
+#history-title{text-align:center;color:#d4a820;font-size:1.6em;letter-spacing:6px;margin-bottom:6px;}
+#history-sub{text-align:center;color:#5a3a10;font-size:.78em;letter-spacing:3px;margin-bottom:36px;}
+.hist-era{margin-bottom:48px;}
+.hist-era-header{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.hist-era-icon{font-size:1.6em;filter:drop-shadow(0 0 6px currentColor);}
+.hist-era-name{font-size:1.05em;letter-spacing:3px;font-weight:bold;}
+.hist-era-period{font-size:.72em;letter-spacing:1.5px;color:#5a3a18;margin-left:auto;}
+.hist-era-line{flex:1;height:1px;opacity:.4;}
+.hist-events{position:relative;padding-left:28px;}
+.hist-events::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:1.5px;background:linear-gradient(to bottom,rgba(139,105,20,.6),rgba(139,105,20,.15));}
+.hist-event{position:relative;margin-bottom:18px;padding-left:18px;}
+.hist-event::before{content:'';position:absolute;left:-21px;top:7px;width:10px;height:10px;border-radius:50%;border:1.5px solid;background:#050300;}
+.hist-event-year{font-size:.68em;letter-spacing:1.5px;margin-bottom:3px;}
+.hist-event-title{font-size:.9em;color:#d4a820;font-weight:bold;margin-bottom:4px;line-height:1.3;}
+.hist-event-desc{font-size:.78em;color:#9a7840;line-height:1.7;}
+
+/* ── POV CHAPTERS (char panel) ── */
+#char-pov{margin-top:14px;border-top:1px solid #2a1a05;padding-top:12px;}
+.pov-title{font-size:.68em;color:#8b6914;letter-spacing:2px;margin-bottom:9px;}
+.pov-grid{display:flex;gap:6px;flex-wrap:wrap;}
+.pov-book{display:flex;flex-direction:column;align-items:center;background:#100800;border:1px solid #3a2008;border-radius:4px;padding:5px 8px;min-width:52px;}
+.pov-book-name{font-size:.6em;color:#6a4a18;letter-spacing:.5px;margin-bottom:3px;}
+.pov-book-count{font-size:1.1em;color:#d4a820;font-weight:bold;line-height:1;}
+.pov-book-ch{font-size:.6em;color:#5a3a10;margin-top:2px;}
 </style>
 </head>
 <body>
@@ -310,8 +375,12 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 <div id="app">
   <div id="header">
     <h1>A SONG OF ICE AND FIRE — CHARACTER MAP</h1>
+    <div id="tab-bar">
+      <button class="tab-btn active" data-tab="map"       onclick="switchTab('map')">🗺 MAP</button>
+      <button class="tab-btn"        data-tab="relations" onclick="switchTab('relations')">🕸 RELATIONS</button>
+      <button class="tab-btn"        data-tab="history"   onclick="switchTab('history')">📜 HISTORY</button>
+    </div>
     <div class="header-right">
-      <span>AGoT · ACoK · ASoS · AFfC · ADwD</span>
       <span id="char-count" style="color:#5a3a10"></span>
       <button id="music-btn" onclick="toggleMusic()" title="Play ambient music"><span>♫</span> MUSIC</button>
     </div>
@@ -351,26 +420,33 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
       <radialGradient id="hg-sand"     cx="50%" cy="40%"><stop offset="0%" stop-color="#c06820"/><stop offset="100%" stop-color="#602000"/></radialGradient>
     </defs>
 
-    <!-- MAP BACKGROUND IMAGE -->
-    <image href="map-bg.webp" x="0" y="0" width="1800" height="1000" preserveAspectRatio="none"/>
+    <!-- OCEAN FILL (covers letterbox bars left/right of image) -->
+    <rect x="0" y="0" width="1800" height="1000" fill="url(#ocean-grad)"/>
+    <!-- MAP BACKGROUND IMAGE — displayed at natural 1024×682 ratio (1500×1000 in SVG coords, centered) -->
+    <image href="map-bg.webp" x="150" y="0" width="1500" height="1000" preserveAspectRatio="none"/>
 
 
     <!-- ═══════════════ HOUSE SEAT SIGILS ═══════════════ -->
+    <!-- x,y match LOC coords; text y = loc_y + 10 for visual centering -->
     <g id="house-seats" style="pointer-events:none">
-      <text x="288" y="348" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🐺</text>
-      <text x="214" y="440" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🦁</text>
-      <text x="375" y="478" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">👑</text>
-      <text x="415" y="476" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🐉</text>
-      <text x="232" y="498" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🌹</text>
-      <text x="342" y="600" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">☀️</text>
-      <text x="196" y="440" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦑</text>
-      <text x="413" y="528" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦌</text>
-      <text x="376" y="386" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦅</text>
-      <text x="268" y="428" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🐟</text>
+      <text x="398" y="280" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🐺</text>
+      <text x="281" y="505" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🦁</text>
+      <text x="420" y="567" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">👑</text>
+      <text x="519" y="528" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🐉</text>
+      <text x="345" y="608" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🌹</text>
+      <text x="432" y="692" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">☀️</text>
+      <text x="280" y="510" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦑</text>
+      <text x="502" y="618" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦌</text>
+      <text x="510" y="478" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦅</text>
+      <text x="352" y="507" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🐟</text>
     </g>
+
+    <!-- ═══════════════ LOCATION HITBOXES ═══════════════ -->
+    <g id="loc-hitboxes"></g>
 
     <!-- ═══════════════ CHARACTER TOKENS ═══════════════ -->
     <defs id="clip-defs"><!-- clip paths generated by JS --></defs>
+    <g id="journey-trail" style="pointer-events:none"></g>
     <g id="travel-lines"></g>
     <g id="creature-tokens"></g>
     <g id="char-tokens"></g>
@@ -439,6 +515,47 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
     </div>
   </div><!-- end map-container -->
 
+  <!-- ═══════════════════════ RELATIONS GRAPH TAB ═══════════════════════ -->
+  <div id="tab-relations">
+    <div id="graph-toolbar">
+      <span id="graph-toolbar-title">CHARACTER RELATIONSHIPS</span>
+      <span id="graph-count"></span>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-left:8px;">
+        <button class="ghf-btn active" data-house="all"       onclick="filterGraphByHouse('all')">ALL</button>
+        <button class="ghf-btn" data-house="stark"     onclick="filterGraphByHouse('stark')"    >🐺 Stark</button>
+        <button class="ghf-btn" data-house="lannister" onclick="filterGraphByHouse('lannister')">🦁 Lannister</button>
+        <button class="ghf-btn" data-house="targaryen" onclick="filterGraphByHouse('targaryen')">🐉 Targaryen</button>
+        <button class="ghf-btn" data-house="baratheon" onclick="filterGraphByHouse('baratheon')">🦌 Baratheon</button>
+        <button class="ghf-btn" data-house="tyrell"    onclick="filterGraphByHouse('tyrell')"   >🌹 Tyrell</button>
+        <button class="ghf-btn" data-house="martell"   onclick="filterGraphByHouse('martell')"  >☀️ Martell</button>
+        <button class="ghf-btn" data-house="greyjoy"   onclick="filterGraphByHouse('greyjoy')"  >🦑 Greyjoy</button>
+        <button class="ghf-btn" data-house="none"      onclick="filterGraphByHouse('none')"     >⚔ Other</button>
+      </div>
+    </div>
+    <div id="graph-body">
+      <div id="graph-canvas-wrap"></div>
+      <div id="graph-sidebar">
+        <div class="gsb-title">EDGE KEY</div>
+        <button id="graph-reset-btn" onclick="resetGraphView()">⌂ RESET VIEW</button>
+        <div id="graph-legend"></div>
+        <div style="margin-top:14px;font-size:.65em;color:#3a2008;line-height:1.6;">
+          Hover a node to highlight its connections.<br>
+          Drag nodes to rearrange.<br>
+          Scroll to zoom.<br>
+          Click to open character panel.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════ HISTORY TIMELINE TAB ══════════════════════ -->
+  <div id="tab-history">
+    <div id="history-content">
+      <div id="history-title">THE HISTORY OF THE KNOWN WORLD</div>
+      <div id="history-sub">FROM THE DAWN AGE TO THE WAR OF THE FIVE KINGS</div>
+    </div>
+  </div>
+
   <!-- Timeline -->
   <div id="timeline">
     <div style="display:flex;gap:5px;align-items:center">
@@ -487,6 +604,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
       <div id="char-name">—</div>
       <div id="char-aliases"></div>
       <div id="char-house-display"></div>
+      <div id="char-house-words" style="font-style:italic;font-size:11px;color:#8b7a55;margin-top:1px;letter-spacing:0.03em;"></div>
       <div id="char-status-badge" class="s-alive">ALIVE</div>
       <div id="char-location-text"></div>
     </div>
@@ -494,7 +612,9 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
   <hr id="char-divider">
   <div id="char-bio"></div>
   <div id="char-current-status"></div>
+  <div id="char-pov"></div>
   <div id="char-relations"></div>
+  <div id="char-journey-log"></div>
 </div>
 
 <!-- Location popup — shown when overflow badge clicked -->
@@ -546,8 +666,8 @@ function setHouseFilter(h){
 const EVENTS=[
   {frac:0.9/5,  label:'Ned Stark executed',           color:'#c83030', icon:'⚔'},
   {frac:1.7/5,  label:'Battle of Blackwater',          color:'#c87020', icon:'🔥'},
-  {frac:2.3/5,  label:'Purple Wedding',                color:'#9030c8', icon:'💀'},
-  {frac:2.65/5, label:'The Red Wedding',               color:'#8b0000', icon:'🩸'},
+  {frac:2.3/5,  label:'The Red Wedding',               color:'#8b0000', icon:'🩸'},
+  {frac:2.65/5, label:'Purple Wedding',                color:'#9030c8', icon:'💀'},
   {frac:2.85/5, label:'Red Viper vs The Mountain',     color:'#c83030', icon:'⚔'},
   {frac:3.5/5,  label:"Cersei's Walk of Shame",        color:'#c89030', icon:'🔔'},
   {frac:4.9/5,  label:'Jon Snow stabbed at Castle Black', color:'#3060c8', icon:'❄'},
@@ -558,104 +678,162 @@ let transform = {x:0,y:0,s:1};
 let dragging = false, dragPt = {x:0,y:0}, dragOrigin = {x:0,y:0};
 
 // ── LOCATIONS ─────────────────────────────────────────────────────────
+// LOC x-coordinates remapped for corrected image aspect ratio:
+// Image 1024×682 displayed as 1500×1000 centered in SVG (x offset +150).
+// Formula: new_x = round(old_x × 5/6 + 150)
 const LOC = {
-  // Beyond the Wall  (image ~17%w, 17%h → SVG 1800×1000)
-  'beyond-wall':       {x:306, y:170, lbl:"Beyond the Wall"},
-  'hardhome':          {x:342, y:195, lbl:"Hardhome"},
-  'fist-first-men':    {x:280, y:215, lbl:"Fist of First Men"},
-  'crasters-keep':     {x:310, y:220, lbl:"Craster's Keep"},
-  'land-always-winter':{x:230, y:72,  lbl:"Land of Always Winter"},
-  // The Wall  (~13–21%w, 26%h)
-  'castle-black':      {x:305, y:262, lbl:"Castle Black"},
-  'shadow-tower':      {x:232, y:268, lbl:"Shadow Tower"},
-  'eastwatch':         {x:378, y:258, lbl:"Eastwatch-by-the-Sea"},
+  // Beyond the Wall  (y < 183 = north of the Wall)
+  'beyond-wall':       {x:405, y:118, lbl:"Beyond the Wall"},
+  'hardhome':          {x:466, y:122, lbl:"Hardhome"},
+  'fist-first-men':    {x:380, y:152, lbl:"Fist of First Men"},
+  'crasters-keep':     {x:410, y:163, lbl:"Craster's Keep"},
+  'land-always-winter':{x:342, y:72,  lbl:"Land of Always Winter"},
+  // The Wall  (click-measured on raster map dots, y≈181-183)
+  'castle-black':      {x:412, y:183, lbl:"Castle Black"},
+  'shadow-tower':      {x:357, y:181, lbl:"Shadow Tower"},
+  'eastwatch':         {x:486, y:181, lbl:"Eastwatch-by-the-Sea"},
+  'nightfort':         {x:390, y:182, lbl:"The Nightfort"},
+  'deep-lake':         {x:373, y:182, lbl:"Deep Lake"},
+  'moles-town':        {x:413, y:200, lbl:"Mole's Town"},
   // The North
-  'winterfell':        {x:288, y:340, lbl:"Winterfell"},
-  'white-harbor':      {x:362, y:308, lbl:"White Harbor"},
-  'last-hearth':       {x:326, y:298, lbl:"Last Hearth"},
-  'bear-island':       {x:232, y:296, lbl:"Bear Island"},
-  'deepwood-motte':    {x:250, y:312, lbl:"Deepwood Motte"},
-  'dreadfort':         {x:344, y:318, lbl:"The Dreadfort"},
-  'karhold':           {x:378, y:286, lbl:"Karhold"},
-  'moat-cailin':       {x:286, y:368, lbl:"Moat Cailin"},
-  'greywater-watch':   {x:268, y:378, lbl:"Greywater Watch"},
+  'winterfell':        {x:398, y:270, lbl:"Winterfell"},
+  'white-harbor':      {x:400, y:312, lbl:"White Harbor"},
+  'last-hearth':       {x:456, y:248, lbl:"Last Hearth"},
+  'bear-island':       {x:317, y:278, lbl:"Bear Island"},
+  'deepwood-motte':    {x:352, y:298, lbl:"Deepwood Motte"},
+  'dreadfort':         {x:452, y:318, lbl:"The Dreadfort"},
+  'karhold':           {x:480, y:232, lbl:"Karhold"},
+  'long-lake':         {x:399, y:258, lbl:"Long Lake"},
+  'skagos':            {x:488, y:202, lbl:"Skagos"},
+  'moat-cailin':       {x:408, y:390, lbl:"Moat Cailin"},
+  'greywater-watch':   {x:396, y:412, lbl:"Greywater Watch"},
   // Riverlands
-  'riverrun':          {x:268, y:420, lbl:"Riverrun"},
-  'harrenhal':         {x:340, y:412, lbl:"Harrenhal"},
-  'the-twins':         {x:305, y:388, lbl:"The Twins"},
-  'seagard':           {x:268, y:380, lbl:"Seagard"},
-  'saltpans':          {x:358, y:418, lbl:"Saltpans"},
-  'riverlands':        {x:290, y:408, lbl:"The Riverlands"},
+  'riverrun':          {x:352, y:497, lbl:"Riverrun"},
+  'harrenhal':         {x:435, y:488, lbl:"Harrenhal"},
+  'the-twins':         {x:430, y:453, lbl:"The Twins"},
+  'seagard':           {x:366, y:465, lbl:"Seagard"},
+  'saltpans':          {x:465, y:476, lbl:"Saltpans"},
+  'riverlands':        {x:400, y:475, lbl:"The Riverlands"},
+  'oldstones':         {x:380, y:492, lbl:"Oldstones"},
+  'crossroads-inn':    {x:432, y:472, lbl:"The Crossroads Inn"},
+  'stoney-sept':       {x:349, y:511, lbl:"Stoney Sept"},
   // The Vale
-  'eyrie':             {x:376, y:378, lbl:"The Eyrie"},
-  'gulltown':          {x:396, y:400, lbl:"Gulltown"},
-  'vale':              {x:376, y:375, lbl:"The Vale"},
-  // Iron Islands  (~11%w, 43%h)
-  'pyke':              {x:196, y:432, lbl:"Pyke"},
-  'iron-islands':      {x:196, y:432, lbl:"Iron Islands"},
+  'eyrie':             {x:510, y:468, lbl:"The Eyrie"},
+  'gulltown':          {x:512, y:440, lbl:"Gulltown"},
+  'vale':              {x:505, y:456, lbl:"The Vale"},
+  // Iron Islands
+  'pyke':              {x:280, y:500, lbl:"Pyke"},
+  'iron-islands':      {x:280, y:500, lbl:"Iron Islands"},
   // Westerlands
-  'casterly-rock':     {x:214, y:432, lbl:"Casterly Rock"},
-  'lannisport':        {x:210, y:422, lbl:"Lannisport"},
-  // Crownlands  (~21%w, 47%h)
-  'kings-landing':     {x:375, y:470, lbl:"King's Landing"},
-  'dragonstone':       {x:415, y:468, lbl:"Dragonstone"},
+  'casterly-rock':     {x:281, y:495, lbl:"Casterly Rock"},
+  'lannisport':        {x:281, y:509, lbl:"Lannisport"},
+  // Crownlands
+  'kings-landing':     {x:420, y:557, lbl:"King's Landing"},
+  'dragonstone':       {x:519, y:518, lbl:"Dragonstone"},
+  'duskendale':        {x:442, y:514, lbl:"Duskendale"},
   // Stormlands
-  'storms-end':        {x:413, y:520, lbl:"Storm's End"},
+  'storms-end':        {x:502, y:608, lbl:"Storm's End"},
+  'griffin-roost':     {x:496, y:584, lbl:"Griffin's Roost"},
   // The Reach
-  'highgarden':        {x:232, y:490, lbl:"Highgarden"},
-  'oldtown':           {x:196, y:514, lbl:"Oldtown"},
-  'horn-hill':         {x:250, y:498, lbl:"Horn Hill"},
-  'the-reach':         {x:232, y:472, lbl:"The Reach"},
-  // Dorne  (~13–20%w, 54–59%h)
-  'sunspear':          {x:342, y:592, lbl:"Sunspear"},
-  'water-gardens':     {x:332, y:582, lbl:"Water Gardens"},
-  'starfall':          {x:232, y:570, lbl:"Starfall"},
-  'yronwood':          {x:360, y:542, lbl:"Yronwood"},
-  'dorne':             {x:286, y:570, lbl:"Dorne"},
+  'highgarden':        {x:345, y:598, lbl:"Highgarden"},
+  'oldtown':           {x:270, y:626, lbl:"Oldtown"},
+  'horn-hill':         {x:310, y:620, lbl:"Horn Hill"},
+  'the-reach':         {x:325, y:578, lbl:"The Reach"},
+  // Dorne
+  'sunspear':          {x:432, y:682, lbl:"Sunspear"},
+  'water-gardens':     {x:427, y:677, lbl:"Water Gardens"},
+  'starfall':          {x:305, y:664, lbl:"Starfall"},
+  'yronwood':          {x:450, y:652, lbl:"Yronwood"},
+  'dorne':             {x:378, y:668, lbl:"Dorne"},
   // At sea
-  'narrow-sea':        {x:432, y:440, lbl:"Narrow Sea"},
-  'sunset-sea':        {x:108, y:400, lbl:"Sunset Sea"},
-  'summer-sea':        {x:630, y:730, lbl:"Summer Sea"},
-  // Essos — Free Cities  (~25–36%w, 28–58%h)
-  'braavos':           {x:452, y:350, lbl:"Braavos"},
-  'pentos':            {x:450, y:430, lbl:"Pentos"},
-  'lorath':            {x:468, y:280, lbl:"Lorath"},
-  'norvos':            {x:520, y:370, lbl:"Norvos"},
-  'qohor':             {x:540, y:410, lbl:"Qohor"},
-  'myr':               {x:468, y:450, lbl:"Myr"},
-  'tyrosh':            {x:485, y:480, lbl:"Tyrosh"},
-  'lys':               {x:485, y:530, lbl:"Lys"},
-  'volantis':          {x:648, y:580, lbl:"Volantis"},
+  'narrow-sea':        {x:526, y:500, lbl:"Narrow Sea"},
+  'sunset-sea':        {x:175, y:480, lbl:"Sunset Sea"},
+  'summer-sea':        {x:500, y:780, lbl:"Summer Sea"},
+  // Essos — Free Cities  (click-measured on raster map dots)
+  'braavos':           {x:545, y:362, lbl:"Braavos"},
+  'pentos':            {x:582, y:552, lbl:"Pentos"},
+  'lorath':            {x:650, y:403, lbl:"Lorath"},
+  'norvos':            {x:647, y:509, lbl:"Norvos"},
+  'qohor':             {x:723, y:564, lbl:"Qohor"},
+  'myr':               {x:592, y:626, lbl:"Myr"},
+  'tyrosh':            {x:563, y:648, lbl:"Tyrosh"},
+  'lys':               {x:578, y:691, lbl:"Lys"},
+  'volantis':          {x:730, y:716, lbl:"Volantis"},
   // Essos interior
-  'vaes-dothrak':      {x:846, y:432, lbl:"Vaes Dothrak"},
-  'dothraki-sea':      {x:756, y:462, lbl:"Dothraki Sea"},
-  // Slaver's Bay  (~47–52%w, 59–63%h)
-  'astapor':           {x:846, y:632, lbl:"Astapor"},
-  'yunkai':            {x:898, y:620, lbl:"Yunkai"},
-  'meereen':           {x:938, y:594, lbl:"Meereen"},
-  'slavers-bay':       {x:898, y:605, lbl:"Slaver's Bay"},
+  'vaes-dothrak':      {x:932, y:481, lbl:"Vaes Dothrak"},
+  'dothraki-sea':      {x:820, y:490, lbl:"Dothraki Sea"},
+  // Slaver's Bay  (click-measured on raster map dots)
+  'astapor':           {x:920, y:709, lbl:"Astapor"},
+  'yunkai':            {x:937, y:663, lbl:"Yunkai"},
+  'meereen':           {x:969, y:589, lbl:"Meereen"},
+  'slavers-bay':       {x:940, y:650, lbl:"Slaver's Bay"},
   // Far Essos
-  'qarth':             {x:1134,y:652, lbl:"Qarth"},
-  'asshai':            {x:1620,y:732, lbl:"Asshai"},
-  'red-waste':         {x:1026,y:602, lbl:"Red Waste"},
-  'mantarys':          {x:720, y:572, lbl:"Mantarys"},
+  'qarth':             {x:1184,y:728, lbl:"Qarth"},
+  'asshai':            {x:1500,y:867, lbl:"Asshai"},
+  'red-waste':         {x:1060,y:680, lbl:"Red Waste"},
+  'mantarys':          {x:785, y:655, lbl:"Mantarys"},
+  'valyria':           {x:690, y:710, lbl:"Valyria (ruins)"},
   'unknown':           {x:900, y:200, lbl:"Location Unknown"},
-  'at-sea':            {x:360, y:720, lbl:"At Sea"},
-  // Additional specific locations
-  'skagos':            {x:398, y:228, lbl:"Skagos"},
-  'moat-cailin':       {x:286, y:368, lbl:"Moat Cailin"},
-  'moles-town':        {x:305, y:268, lbl:"Mole's Town"},
-  'griffin-roost':     {x:426, y:512, lbl:"Griffin's Roost"},
-  'oldstones':         {x:268, y:408, lbl:"Oldstones"},
-  'crossroads-inn':    {x:322, y:412, lbl:"The Crossroads Inn"},
-  'duskendale':        {x:394, y:455, lbl:"Duskendale"},
-  'deep-lake':         {x:262, y:258, lbl:"Deep Lake"},
-  'long-lake':         {x:283, y:308, lbl:"Long Lake"},
-  'stoney-sept':       {x:258, y:440, lbl:"Stoney Sept"},
-  'nightfort':         {x:286, y:262, lbl:"The Nightfort"},
-  'stepstones':        {x:440, y:550, lbl:"Stepstones"},
-  'valyria':           {x:616, y:548, lbl:"Valyria (ruins)"},
+  'at-sea':            {x:450, y:852, lbl:"At Sea"},
+  'stepstones':        {x:538, y:635, lbl:"Stepstones"},
 };
+
+// ── LOCATION LORE ─────────────────────────────────────────────────────
+const LOC_LORE = {
+  'castle-black':    {icon:'🏰', lore:"Headquarters of the Night's Watch. Jon Snow rises from steward to Lord Commander here. Ten thousand brothers once manned the Wall — fewer than a thousand remain."},
+  'winterfell':      {icon:'🐺', lore:"Seat of House Stark for eight thousand years. Where the story begins. The crypts hold the bones of Stark kings, and secrets older still."},
+  'the-twins':       {icon:'💀', lore:"Site of the Red Wedding. By bread and salt, guest right was broken — Robb Stark, Grey Wind, and Catelyn Tully were slain by treachery of House Frey and House Bolton."},
+  'kings-landing':   {icon:'👑', lore:"Capital of the Seven Kingdoms. Home of the Iron Throne, forged from the swords of Aegon's defeated enemies. A city of a million souls — scheming, starving, and surviving."},
+  'harrenhal':       {icon:'🔥', lore:"The largest castle in Westeros, half-melted by Aegon's dragons. Cursed — no house that holds it has prospered. Site of the Brotherhood and Roose Bolton's betrayal."},
+  'dragonstone':     {icon:'🐉', lore:"Ancient seat of House Targaryen, built in Valyrian style. Where Aegon planned his conquest. Stannis Baratheon's base of operations. Holds the ancestral Targaryen weapons."},
+  'pyke':            {icon:'🦑', lore:"Storm-battered seat of House Greyjoy on the Iron Islands. Balon Greyjoy has rebelled twice — the second time, he names himself King of the Isles and the North."},
+  'highgarden':      {icon:'🌹', lore:"Seat of House Tyrell in the fertile Reach. The richest lordship in Westeros. The Tyrells feed King's Landing — a power they use masterfully."},
+  'oldtown':         {icon:'🦉', lore:"Westeros's oldest and second-largest city. Home of the Citadel, where maesters are made. The Hightowers have held it since the Age of Heroes."},
+  'eyrie':           {icon:'🦅', lore:"Impregnable mountain fortress of House Arryn, accessible only in summer. Its sky cells and moon door are legendary. Lysa Arryn's eccentricities reign here."},
+  'vaes-dothrak':    {icon:'🌙', lore:"The only true city of the Dothraki — a city with no walls, by decree. The sacred horse god Dosh Khaleen rules here. No blood may be shed within its bounds."},
+  'astapor':         {icon:'⚔️',  lore:"City of the Good Masters. Producers of the Unsullied — slave soldiers trained from childhood to feel no pain. Daenerys trades a dragon for them, then frees them."},
+  'meereen':         {icon:'🔗', lore:"Largest city of Slaver's Bay. Daenerys conquers it and attempts to rule, crucifying the Great Masters. She remains as queen, struggling to end centuries of slavery."},
+  'braavos':         {icon:'🗡️',  lore:"The Secret City, founded by escaped slaves from Valyria. Home of the Iron Bank, the Faceless Men, and the Titan of Braavos. Arya Stark trains here."},
+  'pentos':          {icon:'🏛️', lore:"A free city where slavery is forbidden — in name. Magisters grow rich on servants by other names. Daenerys and Viserys begin their exile here with Illyrio Mopatis."},
+  'asshai':          {icon:'🌑', lore:"The city at the end of the world, where the shadows walk and no children are born. Melisandre comes from here. Even brave men's eyes slide away from it."},
+  'hardhome':        {icon:'❄️', lore:"A ruined wildling village on the Shivering Sea coast. Thousands of Free Folk sheltered here — until the Night King came with his army of the dead."},
+  'fist-first-men':  {icon:'⚡', lore:"A ring-fort atop a hill beyond the Wall. The Night's Watch makes camp here. The White Walkers come in the night — most of the 300 brothers die or are turned."},
+  'riverrun':        {icon:'🐟', lore:"Seat of House Tully, built at the confluence of three rivers. Can be flooded as a defense. Robb Stark uses it as his war camp. Jaime Lannister besieges it in the name of the king."},
+  'storms-end':      {icon:'⛈️', lore:"Impregnable seat of House Baratheon. Built by Durran Godsgrief in legend. Its massive curtain wall has never been breached. Davos smuggles onions here during Robert's Rebellion."},
+  'dreadfort':       {icon:'🩸', lore:"Seat of House Bolton in the far North. The Boltons once flayed their enemies alive — a tradition the Red King Ramsay continues. A place of fear even for other Northmen."},
+  'queenscrown':     {icon:'🏚️', lore:"A ruined village beyond the Wall where Jon Snow and Ygritte shelter. Jon must decide where his loyalties lie."},
+  'valyria':         {icon:'💥', lore:"Once the greatest empire in the world. Destroyed in the Doom four centuries ago. Only dragonlords and their mounts survived. Jorah Mormont and Tyrion sail through the Smoking Sea."},
+  'volantis':        {icon:'🌊', lore:"Oldest and proudest of the Free Cities. Three slaves for every free man. Serves Essos's largest fleet. Tyrion and Jorah pass through — Tyrion is captured."},
+  'yunkai':          {icon:'🏺', lore:"The Yellow City of Slaver's Bay. Yunkai produces bed slaves. Daenerys defeats their mercenary army but does not sack the city — she moves on to Meereen."},
+  'sunspear':        {icon:'☀️', lore:"Seat of House Martell in Dorne. A city of spires and domes. Prince Oberyn comes north to demand justice for Elia. When he fails, Dorne plots its own revenge."},
+  'castle-black':    {icon:'🏰', lore:"Headquarters of the Night's Watch."},
+  'moat-cailin':     {icon:'🏚️', lore:"Ruined ancient fortress guarding the Neck — the key to the North. Twenty towers, only three still standing. Impossible to take from the south. The Ironborn hold it briefly."},
+  'qarth':           {icon:'💎', lore:"The greatest city that ever was or will be — or so its citizens claim. Gateway between east and west. Daenerys comes here hungry and desperate; the Warlocks of Qarth steal her dragons."},
+};
+
+// ── HOUSE WORDS ───────────────────────────────────────────────────────
+const HOUSE_WORDS = {
+  stark:      '"Winter is Coming"',
+  lannister:  '"Hear Me Roar"',
+  baratheon:  '"Ours is the Fury"',
+  targaryen:  '"Fire and Blood"',
+  tyrell:     '"Growing Strong"',
+  martell:    '"Unbowed, Unbent, Unbroken"',
+  greyjoy:    '"We Do Not Sow"',
+  tully:      '"Family, Duty, Honor"',
+  arryn:      '"As High as Honor"',
+  bolton:     '"Our Blades Are Sharp"',
+  mormont:    '"Here We Stand"',
+  nighswatch: '"Night gathers, and now my watch begins."',
+  freefolk:   '"We do not kneel."',
+  stannis:    '"Ours is the Fury"',
+  sand:       '"Unbowed, Unbent, Unbroken"',
+  none:       '',
+};
+
+// ── JOURNEY TRAIL COLORS (one per book) ────────────────────────────────
+const TRAIL_COLORS = ['#f4c430','#c0392b','#27ae60','#9b59b6','#e67e22'];
+const TRAIL_BOOK_LABELS = ['AGoT','ACoK','ASoS','AFfC','ADwD'];
 
 // ── HOUSE COLOR GRADIENT IDs ───────────────────────────────────────────
 const HOUSE_GRAD = {
@@ -1052,13 +1230,6 @@ function render(){
   renderCreatures();
   drawMiniMap();
 
-  // ── 6. Death SFX detection ────────────────────────────────────────────
-  if(sfxReady){
-    const nowDead=new Set();
-    Object.entries(window.CHARS).forEach(([id,ch])=>{ if(charStateAt(ch,t).isDead) nowDead.add(id); });
-    nowDead.forEach(id=>{ if(!prevDeadSet.has(id)) playSwordClash(); });
-    prevDeadSet=nowDead;
-  }
 }
 
 function zoomToLoc(pos){
@@ -1134,15 +1305,6 @@ function updateUI(){
   }
   refreshPanelBio();
 
-  // Raven SFX when followed character changes location
-  if(sfxReady && followingId){
-    const fch=window.CHARS[followingId];
-    if(fch){
-      const floc=charStateAt(fch,t).loc;
-      if(prevFollowedLoc && prevFollowedLoc!==floc) playRavenCaw();
-      prevFollowedLoc=floc;
-    }
-  }
 }
 
 function refreshPanelBio(){
@@ -1266,6 +1428,105 @@ function moveTip(e){tipEl.style.left=(e.clientX+14)+'px';tipEl.style.top=(e.clie
 function hideTip(){tipEl.style.display='none';}
 window.addEventListener('mousemove',e=>{if(tipEl.style.display==='block') moveTip(e);});
 
+// ── JOURNEY TRAIL ─────────────────────────────────────────────────────
+function drawJourneyTrail(charId){
+  const g = document.getElementById('journey-trail');
+  g.innerHTML = '';
+  if(!charId) return;
+  const ch = window.CHARS[charId];
+  if(!ch || !ch.waypoints || ch.waypoints.length < 2) return;
+  const ns = 'http://www.w3.org/2000/svg';
+
+  // Resolve waypoints to map coords
+  const pts = ch.waypoints.map(wp => {
+    const loc = LOC[wp.loc]; if(!loc) return null;
+    return { x:loc.x, y:loc.y, book:wp.book, bookIdx:Math.min(Math.floor(wp.book),4), loc:wp.loc, confirmed:wp.confirmed };
+  }).filter(Boolean);
+
+  // Draw segments between consecutive different locations
+  for(let i = 0; i < pts.length-1; i++){
+    const a=pts[i], b=pts[i+1];
+    if(a.loc===b.loc) continue;
+    const col = TRAIL_COLORS[a.bookIdx];
+    const dx=b.x-a.x, dy=b.y-a.y, len=Math.sqrt(dx*dx+dy*dy);
+    if(len<2) continue;
+
+    // Dashed line
+    const line = document.createElementNS(ns,'line');
+    line.setAttribute('x1',a.x); line.setAttribute('y1',a.y);
+    line.setAttribute('x2',b.x); line.setAttribute('y2',b.y);
+    line.setAttribute('stroke',col); line.setAttribute('stroke-width','2.5');
+    line.setAttribute('stroke-dasharray','9,6'); line.setAttribute('opacity','0.72');
+    line.setAttribute('stroke-linecap','round');
+    g.appendChild(line);
+
+    // Arrowhead at midpoint
+    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+    const ang = Math.atan2(dy,dx)*180/Math.PI;
+    const arr=document.createElementNS(ns,'polygon');
+    arr.setAttribute('points','0,-4 9,0 0,4');
+    arr.setAttribute('fill',col); arr.setAttribute('opacity','0.95');
+    arr.setAttribute('transform',`translate(${mx},${my}) rotate(${ang})`);
+    g.appendChild(arr);
+  }
+
+  // Draw waypoint dots + start/end labels
+  const seenLocs = new Map(); // loc → first-visit bookIdx
+  pts.forEach((p,i)=>{
+    if(!seenLocs.has(p.loc)) seenLocs.set(p.loc, p.bookIdx);
+  });
+
+  let isFirst=true;
+  const drawnLocs = new Set();
+  pts.forEach((p,i)=>{
+    if(drawnLocs.has(p.loc)) return;
+    drawnLocs.add(p.loc);
+    const col = TRAIL_COLORS[p.bookIdx];
+    const r = isFirst ? 8 : (i===pts.length-1 ? 7 : 5);
+
+    const circ=document.createElementNS(ns,'circle');
+    circ.setAttribute('cx',p.x); circ.setAttribute('cy',p.y);
+    circ.setAttribute('r',r);
+    circ.setAttribute('fill',col);
+    circ.setAttribute('stroke','#0d0800'); circ.setAttribute('stroke-width','1.5');
+    circ.setAttribute('opacity', isFirst ? '1':'0.85');
+    g.appendChild(circ);
+
+    if(isFirst){
+      const lbl=document.createElementNS(ns,'text');
+      lbl.setAttribute('x',p.x+11); lbl.setAttribute('y',p.y-9);
+      lbl.setAttribute('font-size','11'); lbl.setAttribute('font-weight','bold');
+      lbl.setAttribute('fill',col); lbl.setAttribute('paint-order','stroke');
+      lbl.setAttribute('stroke','#0d0800'); lbl.setAttribute('stroke-width','3');
+      lbl.textContent='START'; g.appendChild(lbl);
+      isFirst=false;
+    }
+  });
+}
+
+function buildJourneyLog(ch){
+  if(!ch||!ch.waypoints||!ch.waypoints.length) return '';
+  // Group waypoints by book, show unique location changes
+  const items=[];
+  let lastLoc=null;
+  ch.waypoints.forEach(wp=>{
+    if(wp.loc===lastLoc) return;
+    lastLoc=wp.loc;
+    const loc=LOC[wp.loc];
+    const bkIdx=Math.min(Math.floor(wp.book),4);
+    const col=TRAIL_COLORS[bkIdx];
+    const lbl=loc?loc.lbl:wp.loc;
+    const prob=wp.confirmed===false?' (probable)':'';
+    items.push(`<div class="jl-stop">
+      <span class="jl-dot" style="background:${col}"></span>
+      <span class="jl-book" style="color:${col}">${TRAIL_BOOK_LABELS[bkIdx]}</span>
+      <span class="jl-loc">${lbl}${prob}</span>
+    </div>`);
+  });
+  return `<div class="jl-title">⚔ JOURNEY LOG <span class="jl-count">${items.length} stops</span></div>`
+    + `<div class="jl-list">${items.join('')}</div>`;
+}
+
 // ── CHARACTER PANEL ───────────────────────────────────────────────────
 function openPanel(id){
   openPanelId=id;
@@ -1278,6 +1539,7 @@ function openPanel(id){
   document.getElementById('char-aliases').textContent=
     ch.aliases&&ch.aliases.length?'AKA: '+ch.aliases.join(' · '):'';
   document.getElementById('char-house-display').textContent=ch.houseLabel||'';
+  document.getElementById('char-house-words').textContent=HOUSE_WORDS[ch.house]||'';
 
   const badge=document.getElementById('char-status-badge');
   if(st.isDead){badge.className='char-status-badge s-dead';badge.textContent='DECEASED';}
@@ -1318,6 +1580,27 @@ function openPanel(id){
   document.getElementById('char-current-status').textContent=
     bkBios[bk]?'📖 Book '+(bk+1)+': '+bkBios[bk]:'';
 
+  // POV chapters
+  const povDiv = document.getElementById('char-pov');
+  if(povDiv){
+    const pov = ch.pov;
+    if(pov && Object.keys(pov).length){
+      const BNAMES = ['AGoT','ACoK','ASoS','AFfC','ADwD'];
+      const total = Object.values(pov).reduce((a,b)=>a+b,0);
+      const books = Object.keys(pov).map(Number).sort();
+      const cards = books.map(bi=>`
+        <div class="pov-book">
+          <div class="pov-book-name">${BNAMES[bi]}</div>
+          <div class="pov-book-count">${pov[bi]}</div>
+          <div class="pov-book-ch">ch.</div>
+        </div>`).join('');
+      povDiv.innerHTML = `<div class="pov-title">📖 POV CHARACTER · ${total} CHAPTERS</div>`
+        + `<div class="pov-grid">${cards}</div>`;
+    } else {
+      povDiv.innerHTML='';
+    }
+  }
+
   // Connections / relations
   const relDiv=document.getElementById('char-relations');
   if(relDiv){
@@ -1335,16 +1618,34 @@ function openPanel(id){
     } else { relDiv.innerHTML=''; }
   }
 
+  // Journey log
+  const jlDiv = document.getElementById('char-journey-log');
+  if(jlDiv) jlDiv.innerHTML = buildJourneyLog(ch);
+
+  drawJourneyTrail(id);
   document.getElementById('char-panel').classList.add('open');
 }
-function closePanel(){openPanelId=null;document.getElementById('char-panel').classList.remove('open');}
+function closePanel(){
+  openPanelId=null;
+  document.getElementById('char-panel').classList.remove('open');
+  drawJourneyTrail(null);
+}
 
 function openLocPopup(locKey, items){
   const pop=document.getElementById('loc-popup');
   const loc=LOC[locKey]||{lbl:'Unknown'};
-  document.getElementById('loc-popup-title').textContent=loc.lbl+' ('+items.length+')';
+  const lore=LOC_LORE[locKey];
+  const count=items.length;
+  document.getElementById('loc-popup-title').innerHTML=
+    (lore?lore.icon+' ':'')+'<b>'+loc.lbl+'</b>'+(count?' &nbsp;<span style="font-size:.8em;color:#8b6914">('+count+' here)</span>':'');
   const list=document.getElementById('loc-popup-list');
   list.innerHTML='';
+  // Show lore blurb if available
+  if(lore){
+    const blurb=document.createElement('p');
+    blurb.className='lp-lore'; blurb.textContent=lore.lore;
+    list.appendChild(blurb);
+  }
   items.forEach(({id,ch,st})=>{
     const div=document.createElement('div');
     div.className='lp-item';
@@ -1375,6 +1676,54 @@ function openLocPopup(locKey, items){
   pop.style.display='block';
 }
 function closeLocPopup(){document.getElementById('loc-popup').style.display='none';}
+
+// ── LOCATION HITBOXES ─────────────────────────────────────────────────
+// Renders subtle clickable circles at every LOC position.
+// Clicking opens the loc popup with lore + current characters there.
+function buildLocHitboxes(){
+  const g = document.getElementById('loc-hitboxes');
+  if(!g) return;
+  g.innerHTML='';
+  const ns='http://www.w3.org/2000/svg';
+  Object.entries(LOC).forEach(([key,loc])=>{
+    // outer invisible hit-area
+    const hit=document.createElementNS(ns,'circle');
+    hit.setAttribute('cx',loc.x); hit.setAttribute('cy',loc.y);
+    hit.setAttribute('r','18'); hit.setAttribute('fill','transparent');
+    hit.setAttribute('cursor','pointer');
+    hit.setAttribute('class','loc-hit');
+    hit.dataset.loc=key;
+
+    // visible dot — only for lore locations; others get a tiny dot
+    const hasLore=!!LOC_LORE[key];
+    const dot=document.createElementNS(ns,'circle');
+    dot.setAttribute('cx',loc.x); dot.setAttribute('cy',loc.y);
+    dot.setAttribute('r', hasLore ? '4' : '2.5');
+    dot.setAttribute('fill', hasLore ? '#c8a050' : '#888870');
+    dot.setAttribute('stroke', hasLore ? '#0d0800' : 'none');
+    dot.setAttribute('stroke-width','1');
+    dot.setAttribute('opacity', hasLore ? '0.55' : '0.3');
+    dot.setAttribute('pointer-events','none');
+
+    hit.addEventListener('click', e=>{
+      e.stopPropagation();
+      // Gather chars currently at this loc
+      const now=t;
+      const items=[];
+      Object.entries(window.CHARS).forEach(([id,ch])=>{
+        const st=charStateAt(ch,now);
+        if(st.loc===key) items.push({id,ch,st});
+      });
+      openLocPopup(key, items);
+    });
+
+    g.appendChild(dot);
+    g.appendChild(hit);
+  });
+}
+
+// Build hitboxes once on load, after LOC and CHARS are defined
+window.addEventListener('load', ()=>{ setTimeout(buildLocHitboxes, 200); });
 
 // ── KEYBOARD SHORTCUTS ────────────────────────────────────────────────
 document.addEventListener('keydown',e=>{
@@ -1762,63 +2111,29 @@ function updateMusicBtn(){
   }
 }
 
-// ── SOUND EFFECTS ─────────────────────────────────────────────────────
-let sfxCtx=null;
-function getSFX(){
-  if(audioCtx&&audioCtx.state!=='closed') return audioCtx;
-  if(!sfxCtx||sfxCtx.state==='closed'){
-    try{ sfxCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; }
-  }
-  return sfxCtx;
-}
+// ── SOUND EFFECTS REMOVED — music only ───────────────────────────────
 
-function playSwordClash(){
-  const ctx=getSFX(); if(!ctx) return;
-  try{
-    const now=ctx.currentTime;
-    // Noise burst — metallic impact
-    const bufLen=Math.floor(ctx.sampleRate*0.09);
-    const buf=ctx.createBuffer(1,bufLen,ctx.sampleRate);
-    const d=buf.getChannelData(0);
-    for(let i=0;i<bufLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/bufLen,1.4);
-    const noise=ctx.createBufferSource(); noise.buffer=buf;
-    const hpf=ctx.createBiquadFilter(); hpf.type='highpass'; hpf.frequency.value=1400;
-    const ng=ctx.createGain(); ng.gain.setValueAtTime(0.22,now); ng.gain.exponentialRampToValueAtTime(0.001,now+0.1);
-    noise.connect(hpf); hpf.connect(ng); ng.connect(ctx.destination);
-    noise.start(now); noise.stop(now+0.1);
-    // Metallic ring tones
-    [680,1100,1750].forEach((f,i)=>{
-      const o=ctx.createOscillator(), g=ctx.createGain();
-      o.type='sine'; o.frequency.value=f;
-      g.gain.setValueAtTime(0.07/(i+1),now); g.gain.exponentialRampToValueAtTime(0.001,now+0.28-i*0.05);
-      o.connect(g); g.connect(ctx.destination);
-      o.start(now); o.stop(now+0.3);
-    });
-  }catch(e){}
-}
+// ── TAB SWITCHING ─────────────────────────────────────────────────────
+let currentTab = 'map';
+function switchTab(tab){
+  currentTab = tab;
+  const mapCont  = document.getElementById('map-container');
+  const tabRel   = document.getElementById('tab-relations');
+  const tabHist  = document.getElementById('tab-history');
+  const timeline = document.getElementById('timeline');
 
-function playRavenCaw(){
-  const ctx=getSFX(); if(!ctx) return;
-  try{
-    const now=ctx.currentTime;
-    [0, 0.25].forEach(off=>{
-      const car=ctx.createOscillator(), mod=ctx.createOscillator();
-      const modG=ctx.createGain(), env=ctx.createGain();
-      car.type='sawtooth'; car.frequency.value=340+Math.random()*30;
-      mod.frequency.value=285; modG.gain.value=160;
-      mod.connect(modG); modG.connect(car.frequency);
-      env.gain.setValueAtTime(0,now+off);
-      env.gain.linearRampToValueAtTime(0.055,now+off+0.04);
-      env.gain.exponentialRampToValueAtTime(0.001,now+off+0.15);
-      car.connect(env); env.connect(ctx.destination);
-      car.start(now+off); car.stop(now+off+0.17);
-      mod.start(now+off); mod.stop(now+off+0.17);
-    });
-  }catch(e){}
-}
+  mapCont.style.display  = tab==='map'       ? ''     : 'none';
+  tabRel.style.display   = tab==='relations' ? 'flex' : 'none';
+  tabHist.style.display  = tab==='history'   ? 'flex' : 'none';
+  timeline.style.display = tab==='map'       ? ''     : 'none';
 
-// Track state for SFX triggers
-let prevDeadSet=new Set(), prevFollowedLoc=null, sfxReady=false;
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tab===tab);
+  });
+
+  if(tab==='relations' && window.initRelationsGraph) window.initRelationsGraph();
+  if(tab==='history'   && window.renderHistoryTab)   window.renderHistoryTab();
+}
 
 // ── LANDING PAGE ──────────────────────────────────────────────────────
 function enterMap(){
@@ -1827,11 +2142,6 @@ function enterMap(){
   sp.style.opacity='0';
   setTimeout(()=>{ sp.style.display='none'; }, 600);
   startMusic();
-  // SFX armed after first user gesture (browser autoplay policy satisfied)
-  setTimeout(()=>{ sfxReady=true; prevDeadSet=new Set(); prevFollowedLoc=null;
-    // Pre-populate dead set so we don't fire on load
-    Object.entries(window.CHARS).forEach(([id,ch])=>{ if(charStateAt(ch,t).isDead) prevDeadSet.add(id); });
-  }, 800);
 }
 
 function initSpoilerParticles(){
@@ -1885,75 +2195,71 @@ function drawMiniMap(){
   // All coords derived from actual SVG city positions ÷ 10
   // Westeros: x≈13–44  y≈2–62 in mini-map space
   poly([
-    [14,2],[22,2],[32,2],[40,3],[43,4],   // north coast
-    [44,8],[42,16],[40,20],               // east coast, north section
-    [39,26],                             // Eastwatch (x:37.8,y:25.8)
-    [41,30],[42,34],                     // White Harbor latitude
-    [44,37],[44,41],                     // Vale bulge (Eyrie x:37.6, Gulltown x:39.6)
-    [43,44],[43,48],                     // Dragonstone (x:41.5,y:46.8)
-    [42,52],                             // Storm's End (x:41.3,y:52)
-    [40,56],[38,58],                     // SE coast
-    [36,62],[34,62],                     // Dorne east (Sunspear x:34.2,y:59.2)
-    [30,60],[24,58],[20,57],             // Dorne south & west (Starfall x:23.2,y:57)
-    [18,53],[19,52],                     // Oldtown (x:19.6,y:51.4)
-    [17,49],[18,45],[17,43],             // Reach → Westerlands
-    [16,39],[17,36],                     // Neck west (moat-cailin x:28.6,y:36.8)
-    [15,32],[14,26],[13,18],[13,10],     // NW coast going north
+    [27,2],[33,2],[42,2],[48,3],[51,4],   // north coast
+    [52,8],[50,16],[48,20],               // east coast, north section
+    [48,26],                             // Eastwatch (y≤26, unchanged)
+    [49,31],[50,36],                     // White Harbor latitude
+    [52,40],[52,45],                     // Vale bulge
+    [51,49],[51,54],                     // Dragonstone
+    [50,59],                             // Storm's End
+    [48,65],[47,67],                     // SE coast
+    [45,72],[43,72],                     // Dorne east
+    [40,70],[35,67],[32,66],             // Dorne south & west
+    [30,61],[31,59],                     // Oldtown
+    [29,56],[30,50],[29,48],             // Reach → Westerlands
+    [28,43],[29,39],                     // Neck west
+    [28,34],[27,26],[26,18],[26,10],     // NW coast going north
   ],'#c2b87e');
 
   // The Neck — boggy green-grey pinch (narrowest point)
-  poly([[16,36],[28,34],[30,38],[18,41]],'#7a9862');
+  poly([[28,39],[38,36],[40,41],[30,45]],'#7a9862');
 
-  // Bear Island — tiny offshore (x:23.2,y:29.6)
+  // Bear Island — tiny offshore
   ctx.fillStyle='#b6ae78';
-  ctx.beginPath(); ctx.ellipse(22,30,2.2,1.4,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(33,31,1.8,1.4,0,0,Math.PI*2); ctx.fill();
 
-  // Iron Islands — cluster (Pyke x:19.6,y:43.2)
+  // Iron Islands — cluster
   ctx.fillStyle='#aaa270';
-  [[14,43,2.5,1.4,-0.2],[16,45,2.8,1.5,0],[14,47,2.0,1.2,0.1]].forEach(([x,y,rx,ry,r])=>{
+  [[27,48,2.1,1.4,-0.2],[28,50,2.3,1.5,0],[27,53,1.7,1.2,0.1]].forEach(([x,y,rx,ry,r])=>{
     ctx.beginPath(); ctx.ellipse(x,y,rx,ry,r,0,Math.PI*2); ctx.fill();
   });
 
-  // The Wall — icy blue (Shadow Tower x:23.2 → Eastwatch x:37.8, y:26–27)
+  // The Wall — icy blue (y=26 unchanged)
   ctx.strokeStyle='rgba(190,228,255,.94)'; ctx.lineWidth=1.8;
-  ctx.beginPath(); ctx.moveTo(14,26); ctx.lineTo(42,26); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(27,26); ctx.lineTo(50,26); ctx.stroke();
 
   // ── ESSOS ─────────────────────────────────────────────────────────
-  // West coast: Braavos x:45.2,y:35 · Pentos x:45,y:43 · Myr x:46.8,y:45
-  // North coast estimated from Lorath x:46.8,y:28 eastward
-  // South:  Volantis x:64.8,y:58 · Astapor x:84.6,y:63 · Qarth x:113.4,y:65 · Asshai x:162,y:73
   poly([
-    [46,28],                             // NW — Lorath latitude
-    [50,22],[60,16],[76,12],             // north coast sweeping east
-    [98,9],[122,8],[148,9],[164,13],     // central-to-eastern north coast
-    [176,17],[178,28],                   // NE corner
-    [178,46],[175,58],                   // east coast
-    [168,72],[162,75],                   // Asshai area (x:162,y:73.2)
-    [146,76],[128,75],[112,73],          // south coast going west
-    [96,68],[88,65],                     // above Slaver's Bay
-    [74,62],[65,60],                     // Volantis / SW Essos (x:64.8,y:58)
-    [60,54],[56,48],[52,43],[50,36],[48,30], // west coast Free Cities
+    [53,29],                             // NW — Lorath latitude
+    [57,22],[65,16],[78,12],             // north coast sweeping east
+    [97,9],[117,8],[138,9],[152,13],     // central-to-eastern north coast
+    [162,17],[163,29],                   // NE corner
+    [163,52],[161,67],                   // east coast
+    [155,85],[150,89],                   // Asshai area
+    [137,90],[122,89],[108,87],          // south coast going west
+    [95,80],[88,76],                     // above Slaver's Bay
+    [77,72],[69,70],                     // Volantis / SW Essos
+    [65,62],[62,54],[58,48],[57,39],[55,31], // west coast Free Cities
   ],'#bbb47a');
 
   // Slaver's Bay — ocean inlet cut-out
-  // Cities on north coast: Astapor(85,63) Yunkai(90,62) Meereen(94,59)
-  poly([[85,62],[98,58],[118,62],[122,72],[106,74],[85,70]],'#2c5872');
+  poly([[86,72],[97,67],[113,72],[117,85],[103,88],[86,83]],'#2c5872');
 
-  // Dothraki Sea interior tint (Vaes Dothrak x:84.6,y:43.2)
+  // Dothraki Sea interior tint
   ctx.fillStyle='rgba(132,138,74,0.52)';
-  ctx.beginPath(); ctx.ellipse(100,32,44,14,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(98,34,37,18,0,0,Math.PI*2); ctx.fill();
 
-  // Red Waste — arid reddish region (SE of Slaver's Bay, near Qarth)
+  // Red Waste — arid reddish region
   ctx.fillStyle='rgba(145,90,50,0.44)';
-  ctx.beginPath(); ctx.ellipse(140,52,22,10,0.15,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(132,59,18,13,0.15,0,Math.PI*2); ctx.fill();
 
-  // Lorath island (x:46.8,y:28) — sits just north of mainland
+  // Lorath island — sits just north of mainland (y=25, unchanged)
   ctx.fillStyle='#b0a870';
-  ctx.beginPath(); ctx.ellipse(47,25,3.2,2,0.1,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(54,25,2.7,2,0.1,0,Math.PI*2); ctx.fill();
 
-  // Stepstones / Tyrosh island chain (between Westeros east coast and Essos)
+  // Stepstones / Tyrosh island chain
   ctx.fillStyle='#aaa46e';
-  [[45,48,2.2,1.4,0.3],[47,51,1.8,1.2,0],[46,54,1.6,1.1,0.1]].forEach(([x,y,rx,ry,r])=>{
+  [[53,54,1.8,1.4,0.3],[54,58,1.5,1.2,0],[53,62,1.3,1.1,0.1]].forEach(([x,y,rx,ry,r])=>{
     ctx.beginPath(); ctx.ellipse(x,y,rx,ry,r,0,Math.PI*2); ctx.fill();
   });
 
@@ -2071,6 +2377,9 @@ window.addEventListener('load',()=>{ initSpoilerParticles(); setTimeout(init,100
 <script src="chunk-additions.js"></script>
 <script src="chunk-creatures.js"></script>
 <script src="chunk-relations.js"></script>
+<script src="chunk-pov.js"></script>
+<script src="chunk-history.js"></script>
+<script src="chunk-graph.js"></script>
 
 </body>
 </html>

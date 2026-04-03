@@ -303,6 +303,7 @@ Object.assign(window.CHARS, {
     name: 'Doran Martell',
     initial: 'Do',
     gender: 'm',
+    photoUrl: 'https://thronesapi.com/assets/images/doran-martell.jpg',
     house: 'martell',
     houseLabel: 'House Martell — Prince of Dorne',
     aliases: ['Prince Doran'],

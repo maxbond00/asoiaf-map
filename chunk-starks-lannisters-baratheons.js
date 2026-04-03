@@ -236,6 +236,7 @@
 
   'osha': {
     name:'Osha', initial:'Os', gender:'f',
+    photoUrl:'https://thronesapi.com/assets/images/osha.jpg',
     house:'freefolk', houseLabel:'Free Folk — Wildling woman',
     aliases:[],
     _skin:'#a07050',_hair:'#2a2018',_eye:'#3a4030',
@@ -267,6 +268,7 @@
 
   'jojen-reed': {
     name:'Jojen Reed', initial:'Jo', gender:'m',
+    photoUrl:'https://thronesapi.com/assets/images/jojen-reed.jpg',
     house:'none', houseLabel:'House Reed of Greywater Watch',
     aliases:[],
     _skin:'#b09878',_hair:'#3a2010',_eye:'#4a5040',
@@ -420,6 +422,7 @@
 
   'myrcella': {
     name:'Myrcella Baratheon', initial:'My', gender:'f',
+    photoUrl:'https://thronesapi.com/assets/images/myrcella-baratheon.jpg',
     house:'lannister', houseLabel:'House Baratheon of King\'s Landing',
     aliases:[],
     _skin:'#d0b090',_hair:'#d4a820',_eye:'#50a850',
