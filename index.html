@@ -335,6 +335,79 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 .pov-book-name{font-size:.6em;color:#6a4a18;letter-spacing:.5px;margin-bottom:3px;}
 .pov-book-count{font-size:1.1em;color:#d4a820;font-weight:bold;line-height:1;}
 .pov-book-ch{font-size:.6em;color:#5a3a10;margin-top:2px;}
+
+/* ═══════════════════════════ MOBILE ═══════════════════════════ */
+@media (max-width: 768px) {
+  /* Header: hide long title, compact tab bar */
+  #header h1 { display: none; }
+  #header { padding: 5px 8px; gap: 6px; }
+  #tab-bar { margin-left: 0; gap: 2px; }
+  .tab-btn { padding: 4px 8px; font-size: 9px; letter-spacing: 0.5px; }
+  .header-right { gap: 6px; font-size: 10px; }
+  #char-count { display: none; }
+  #music-btn { padding: 4px 8px; font-size: 10px; }
+
+  /* Character panel: full width on mobile */
+  #char-panel { width: 100vw; right: -100vw; }
+  #char-panel.open { right: 0; }
+
+  /* Search: wider and repositioned */
+  #search-wrap { width: calc(100vw - 80px); top: 8px; left: 44px; }
+
+  /* Legend: hidden on small screens to save space */
+  #legend { display: none; }
+
+  /* Mini-map: smaller */
+  #mini-map-wrap { bottom: 70px; }
+  #mini-map { width: 120px; height: 68px; }
+
+  /* Timeline: more compact */
+  #timeline { padding: 6px 8px; gap: 6px; }
+  #book-markers .book-marker { font-size: 8px; letter-spacing: 0; }
+  #speed-control { display: none; }
+
+  /* Zoom controls */
+  #zoom-controls { top: 44px; left: 8px; }
+  .zoom-btn { width: 26px; height: 26px; font-size: 13px; }
+
+  /* Book display overlay */
+  #book-display { top: 6px; right: 8px; padding: 4px 8px; }
+  #book-num { font-size: 1.4em; }
+  #book-title { font-size: 7px; max-width: 90px; }
+
+  /* House filter */
+  #house-filter { bottom: 52px; gap: 3px; padding: 4px 7px; }
+  .hf-btn { width: 24px; height: 24px; font-size: 12px; }
+  .hf-btn.hf-all { width: 30px; font-size: 8px; }
+
+  /* Relations graph sidebar: collapse to bottom toolbar on mobile */
+  #graph-body { flex-direction: column; }
+  #graph-sidebar { width: 100%; height: auto; max-height: 90px; border-left: none; border-top: 1px solid #2a1a05; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; overflow-x: auto; padding: 6px 10px; }
+  #graph-sidebar .gsb-title { display: none; }
+  #graph-reset-btn { width: auto; margin-bottom: 0; padding: 3px 10px; white-space: nowrap; }
+  #graph-legend { display: flex; flex-wrap: wrap; gap: 4px; }
+  #graph-legend > div { margin: 0 !important; }
+  #graph-count { font-size: 0.65em; white-space: nowrap; }
+
+  /* Graph toolbar: scrollable */
+  #graph-toolbar { overflow-x: auto; flex-wrap: nowrap; padding: 5px 10px; gap: 6px; }
+  #graph-toolbar-title { font-size: 0.75em; white-space: nowrap; }
+  .ghf-btn { font-size: 9px; padding: 2px 7px; white-space: nowrap; flex-shrink: 0; }
+
+  /* History tab: tighter padding */
+  #history-content { padding: 20px 12px 40px; }
+  #history-title { font-size: 1.2em; letter-spacing: 3px; }
+
+  /* Character panel portrait smaller */
+  #char-portrait-img, #char-portrait-svg { width: 80px; height: 80px; }
+  #char-sigil-svg { width: 40px; height: 40px; }
+}
+
+@media (max-width: 400px) {
+  .tab-btn { padding: 3px 6px; font-size: 8px; }
+  #music-btn { display: none; }
+  .hf-btn { width: 20px; height: 20px; font-size: 10px; }
+}
 </style>
 </head>
 <body>
@@ -2131,7 +2204,13 @@ function switchTab(tab){
     b.classList.toggle('active', b.dataset.tab===tab);
   });
 
-  if(tab==='relations' && window.initRelationsGraph) window.initRelationsGraph();
+  if(tab==='relations' && window.initRelationsGraph){
+    window.initRelationsGraph();
+    // Patch touch support onto the graph canvas (once) for mobile pan/zoom
+    if(typeof addTouchAsMouse === 'function'){
+      addTouchAsMouse(document.getElementById('graph-canvas-wrap'));
+    }
+  }
   if(tab==='history'   && window.renderHistoryTab)   window.renderHistoryTab();
 }
 
@@ -2368,6 +2447,50 @@ function init(){
   }, 9000);
 }
 window.addEventListener('load',()=>{ initSpoilerParticles(); setTimeout(init,100); });
+
+// ── MOBILE TOUCH SUPPORT ───────────────────────────────────────────────
+// Converts touch events into synthetic mouse events so existing mouse
+// pan/zoom handlers on any element work transparently on touch screens.
+function addTouchAsMouse(el){
+  if(!el || el._touchPatched) return;
+  el._touchPatched = true;
+  function touchToMouse(type,touch){
+    el.dispatchEvent(new MouseEvent(type,{bubbles:true,cancelable:true,clientX:touch.clientX,clientY:touch.clientY}));
+  }
+  let lastPinchDist=null;
+  el.addEventListener('touchstart',e=>{
+    if(e.touches.length===1){e.preventDefault();touchToMouse('mousedown',e.touches[0]);}
+    else if(e.touches.length===2){e.preventDefault();lastPinchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}
+  },{passive:false});
+  el.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(e.touches.length===1){touchToMouse('mousemove',e.touches[0]);}
+    else if(e.touches.length===2){
+      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+      if(lastPinchDist){
+        const delta=(lastPinchDist-d)*3;
+        const mx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+        const my=(e.touches[0].clientY+e.touches[1].clientY)/2;
+        el.dispatchEvent(new WheelEvent('wheel',{bubbles:true,cancelable:true,deltaY:delta,clientX:mx,clientY:my}));
+      }
+      lastPinchDist=d;
+    }
+  },{passive:false});
+  el.addEventListener('touchend',e=>{
+    touchToMouse('mouseup',e.changedTouches[0]);
+    if(e.touches.length<2)lastPinchDist=null;
+  },{passive:false});
+}
+
+// Patch touch onto the main map SVG after the DOM is ready
+(function(){
+  function patchMapTouch(){
+    const worldSvg=document.getElementById('world-svg');
+    if(worldSvg) addTouchAsMouse(worldSvg);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',patchMapTouch);
+  else patchMapTouch();
+})();
 </script>
 
 <!-- ═══════════════════ CHARACTER DATA CHUNKS ═══════════════════ -->
