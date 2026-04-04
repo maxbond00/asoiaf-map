@@ -408,6 +408,16 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
   #music-btn { display: none; }
   .hf-btn { width: 20px; height: 20px; font-size: 10px; }
 }
+
+/* ── PORTRAIT MODE HINT (relations graph only) ── */
+#portrait-hint{display:none;position:absolute;inset:0;z-index:40;background:rgba(5,2,0,.92);flex-direction:column;align-items:center;justify-content:center;gap:16px;pointer-events:none;}
+#portrait-hint .ph-icon{font-size:3em;animation:ph-spin 2s ease-in-out infinite alternate;}
+#portrait-hint .ph-text{color:#d4a820;font-size:.9em;letter-spacing:2px;text-align:center;padding:0 24px;}
+@keyframes ph-spin{from{transform:rotate(-15deg);}to{transform:rotate(15deg);}}
+@media (max-width:640px) and (orientation:portrait){
+  #tab-graph #portrait-hint{display:flex;}
+  /* Still render the graph behind so it's ready when rotated */
+}
 </style>
 </head>
 <body>
@@ -606,6 +616,10 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
       </div>
     </div>
     <div id="graph-body">
+      <div id="portrait-hint">
+        <div class="ph-icon">📱</div>
+        <div class="ph-text">Rotate to landscape for the best experience</div>
+      </div>
       <div id="graph-canvas-wrap"></div>
       <div id="graph-sidebar">
         <div class="gsb-title">EDGE KEY</div>

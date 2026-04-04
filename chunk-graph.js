@@ -70,56 +70,59 @@ function buildGraph(){
 }
 
 // ── FORCE SIMULATION ─────────────────────────────────────────────────────────
-function runSimulation(nodes, edges, iterations){
+// Runs LIVE via requestAnimationFrame so nodes visibly settle on screen.
+function startLiveSimulation(nodes, edges, nodeById, onTick){
   const REPULSE = 9000;
   const SPRING_LEN = 130;
-  const SPRING_K = 0.06;
-  const CENTER_K = 0.008;
-  const DAMP = 0.82;
+  const SPRING_K   = 0.06;
+  const CENTER_K   = 0.008;
+  const DAMP       = 0.82;
+  const MAX_ITER   = 380;
   const cx = 500, cy = 380;
+  let iter = 0;
 
-  for(let iter = 0; iter < iterations; iter++){
-    const alpha = Math.max(0.05, 1 - iter / iterations);
+  function step(){
+    if(iter >= MAX_ITER) return;
+    // Run several physics steps per animation frame for speed early on
+    const batch = iter < 80 ? 6 : iter < 200 ? 3 : 1;
+    for(let b = 0; b < batch && iter < MAX_ITER; b++, iter++){
+      const alpha = Math.max(0.04, 1 - iter / MAX_ITER);
 
-    // Repulsion
-    for(let i = 0; i < nodes.length; i++){
-      for(let j = i+1; j < nodes.length; j++){
-        const a = nodes[i], b = nodes[j];
-        const dx = b.x - a.x, dy = b.y - a.y;
-        const d2 = dx*dx + dy*dy + 1;
-        const f = alpha * REPULSE / d2;
-        const d = Math.sqrt(d2);
-        const nx = dx/d * f, ny = dy/d * f;
-        a.vx -= nx; a.vy -= ny;
-        b.vx += nx; b.vy += ny;
+      for(let i = 0; i < nodes.length; i++){
+        for(let j = i+1; j < nodes.length; j++){
+          const a = nodes[i], b2 = nodes[j];
+          const dx = b2.x - a.x, dy = b2.y - a.y;
+          const d2 = dx*dx + dy*dy + 1;
+          const f  = alpha * REPULSE / d2;
+          const d  = Math.sqrt(d2);
+          const nx = dx/d*f, ny = dy/d*f;
+          a.vx -= nx; a.vy -= ny;
+          b2.vx += nx; b2.vy += ny;
+        }
       }
+
+      edges.forEach(e => {
+        const a = nodeById[e.source], b2 = nodeById[e.target];
+        if(!a || !b2) return;
+        const dx = b2.x - a.x, dy = b2.y - a.y;
+        const d  = Math.sqrt(dx*dx + dy*dy) || 1;
+        const f  = alpha * SPRING_K * (d - SPRING_LEN) / d;
+        a.vx += dx*f; a.vy += dy*f;
+        b2.vx -= dx*f; b2.vy -= dy*f;
+      });
+
+      nodes.forEach(n => {
+        n.vx += alpha * CENTER_K * (cx - n.x);
+        n.vy += alpha * CENTER_K * (cy - n.y);
+        n.vx *= DAMP; n.vy *= DAMP;
+        n.x  += n.vx; n.y  += n.vy;
+      });
     }
 
-    // Spring attraction along edges
-    const nodeById = {};
-    nodes.forEach(n => { nodeById[n.id] = n; });
-    edges.forEach(e => {
-      const a = nodeById[e.source], b = nodeById[e.target];
-      if(!a || !b) return;
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const d = Math.sqrt(dx*dx + dy*dy) || 1;
-      const f = alpha * SPRING_K * (d - SPRING_LEN) / d;
-      a.vx += dx * f; a.vy += dy * f;
-      b.vx -= dx * f; b.vy -= dy * f;
-    });
-
-    // Center gravity
-    nodes.forEach(n => {
-      n.vx += alpha * CENTER_K * (cx - n.x);
-      n.vy += alpha * CENTER_K * (cy - n.y);
-    });
-
-    // Apply + dampen
-    nodes.forEach(n => {
-      n.vx *= DAMP; n.vy *= DAMP;
-      n.x  += n.vx; n.y  += n.vy;
-    });
+    onTick();
+    requestAnimationFrame(step);
   }
+  requestAnimationFrame(step);
 }
 
 // ── SVG HELPERS ──────────────────────────────────────────────────────────────
@@ -141,7 +144,6 @@ window.initRelationsGraph = function(){
   if(!wrap) return;
 
   const { nodes, edges } = buildGraph();
-  runSimulation(nodes, edges, 320);
 
   // Build edge lookup per node for hover highlighting
   const adjMap = {};
@@ -492,6 +494,9 @@ window.initRelationsGraph = function(){
   };
 
   wrap.appendChild(svg);
+
+  // Start live physics simulation — nodes visibly settle after render
+  startLiveSimulation(nodes, edges, nodeById, updatePositions);
 };
 
 // ── COLOUR HELPERS ───────────────────────────────────────────────────────────

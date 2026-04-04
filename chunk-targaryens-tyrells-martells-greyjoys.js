@@ -71,6 +71,27 @@ Object.assign(window.CHARS, {
     ],
   },
 
+  'khal-drogo': {
+    name: 'Khal Drogo',
+    initial: 'KD',
+    gender: 'm',
+    house: 'none',
+    houseLabel: 'The Dothraki — Khal of the Great Khalasar',
+    aliases: ['The Great Khal', 'The Stallion Who Mounts the World (prophesied)'],
+    photoUrl: 'https://thronesapi.com/assets/images/khal-drogo.jpg',
+    deathBook: 0,
+    bio: 'The mightiest Khal of the Dothraki, with a khalasar of forty thousand warriors. Sold Daenerys\' hand in exchange by her brother Viserys. Despite a brutal beginning, he and Daenerys developed genuine love. A minor wound became infected; Daenerys allowed a maegi to use blood magic to save him, leaving him braindead. She smothered him to end his suffering.',
+    bookBios: {
+      0: 'Weds Daenerys at Pentos. Kills Viserys with molten gold. A festering wound and a maegi\'s blood magic leave him braindead; Daenerys smothers him.',
+    },
+    waypoints: [
+      { book: 0.0,  loc: 'pentos',       confirmed: true },
+      { book: 0.4,  loc: 'dothraki-sea', confirmed: true },
+      { book: 0.55, loc: 'vaes-dothrak', confirmed: true },
+      { book: 0.7,  loc: 'dothraki-sea', confirmed: true },
+    ],
+  },
+
   'jorah-mormont': {
     name: 'Jorah Mormont',
     initial: 'Jr',
