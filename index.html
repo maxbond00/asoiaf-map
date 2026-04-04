@@ -310,20 +310,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 
 /* ── ASK TAB ── */
 #tab-ask{flex:1;display:none;position:relative;background:linear-gradient(160deg,#040200 0%,#0a0500 60%,#050200 100%);}
-#ask-key-gate{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:linear-gradient(160deg,#040200,#090400);}
-#ask-key-box{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:420px;width:90%;text-align:center;}
-.ask-raven{font-size:3em;filter:drop-shadow(0 0 12px rgba(212,168,32,.4));animation:raven-bob 3s ease-in-out infinite;}
-@keyframes raven-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-#ask-key-title{font-size:1.3em;color:#d4a820;letter-spacing:6px;}
-#ask-key-sub{font-size:.78em;color:#6a4a18;line-height:1.7;letter-spacing:.5px;}
-#ask-key-input{width:100%;background:#0d0600;border:1px solid #4a2a08;color:#d4a820;padding:10px 14px;border-radius:4px;font-family:'Palatino Linotype',serif;font-size:.85em;letter-spacing:1px;outline:none;transition:border-color .2s;}
-#ask-key-input:focus{border-color:#d4a820;box-shadow:0 0 10px rgba(212,168,32,.15);}
-#ask-key-hint{font-size:.72em;color:#4a2a08;}
-#ask-key-hint a{color:#8b6914;text-decoration:none;}
-#ask-key-hint a:hover{color:#d4a820;}
-#ask-key-btn{background:#1a0d00;border:1px solid #d4a820;color:#d4a820;padding:8px 28px;border-radius:3px;cursor:pointer;font-family:'Palatino Linotype',serif;font-size:.88em;letter-spacing:2px;transition:all .2s;}
-#ask-key-btn:hover{background:#3a1a00;box-shadow:0 0 14px rgba(212,168,32,.3);}
-#ask-chat{display:flex;flex-direction:column;height:100%;display:none;}
+#ask-chat{display:flex;flex-direction:column;height:100%;}
 #ask-header{background:linear-gradient(to right,#0a0500,#150a00,#0a0500);border-bottom:1px solid #2a1a05;padding:9px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 #ask-header-title{font-size:.78em;color:#8b6914;letter-spacing:1.5px;}
 .ask-ctrl-btn{background:#1a0d00;border:1px solid #3a2008;color:#6a4a18;padding:4px 10px;border-radius:3px;cursor:pointer;font-size:.7em;letter-spacing:1px;font-family:'Palatino Linotype',serif;transition:all .2s;}
@@ -690,24 +677,12 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 
   <!-- ═══════════════════════ ASK THE MAESTER TAB ══════════════════════ -->
   <div id="tab-ask">
-    <!-- API key gate -->
-    <div id="ask-key-gate">
-      <div id="ask-key-box">
-        <div class="ask-raven">🐦‍⬛</div>
-        <div id="ask-key-title">THE MAESTER'S TOWER</div>
-        <div id="ask-key-sub">Enter your Anthropic API key to unlock the knowledge of a thousand ravens.<br>Your key is stored only in your browser and never sent anywhere but Anthropic.</div>
-        <input id="ask-key-input" type="password" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
-        <div id="ask-key-hint">Get a free key at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a></div>
-        <button id="ask-key-btn" onclick="askSaveKey()">ENTER THE TOWER</button>
-      </div>
-    </div>
-    <!-- Chat interface -->
+    <!-- Chat interface (no key gate — API key lives on the server) -->
     <div id="ask-chat">
       <div id="ask-header">
         <span id="ask-header-title">⚔ THE MAESTER'S TOWER — Ask anything about the world of Ice &amp; Fire</span>
         <div style="display:flex;gap:8px;align-items:center">
           <button class="ask-ctrl-btn" onclick="askNewChat()" title="New conversation">✦ NEW</button>
-          <button class="ask-ctrl-btn" onclick="askForgetKey()" title="Remove API key">🔑 KEY</button>
         </div>
       </div>
       <div id="ask-messages">
