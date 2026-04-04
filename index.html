@@ -677,13 +677,20 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 
   <!-- ═══════════════════════ ASK THE MAESTER TAB ══════════════════════ -->
   <div id="tab-ask">
-    <!-- Chat interface (no key gate — API key lives on the server) -->
     <div id="ask-chat">
       <div id="ask-header">
         <span id="ask-header-title">⚔ THE MAESTER'S TOWER — Ask anything about the world of Ice &amp; Fire</span>
         <div style="display:flex;gap:8px;align-items:center">
           <button class="ask-ctrl-btn" onclick="askNewChat()" title="New conversation">✦ NEW</button>
+          <button class="ask-ctrl-btn" onclick="askForgetKey()" id="ask-key-btn-hdr" style="display:none">🔑</button>
         </div>
+      </div>
+      <!-- Shown only when server endpoint isn't deployed and no user key is set -->
+      <div id="ask-key-prompt" style="display:none;align-items:center;justify-content:center;padding:14px 18px;background:rgba(10,5,0,.7);border-bottom:1px solid #2a1a05;gap:10px;flex-wrap:wrap;">
+        <span style="font-size:.76em;color:#6a4a18;letter-spacing:.5px;">No server key configured — enter your Anthropic key to use this tab:</span>
+        <input id="ask-key-input-field" type="password" placeholder="sk-ant-api03-…" style="background:#0d0600;border:1px solid #4a2a08;color:#d4a820;padding:6px 10px;border-radius:3px;font-family:inherit;font-size:.8em;width:260px;outline:none;" onkeydown="if(event.key==='Enter')askSaveKey()">
+        <button onclick="askSaveKey()" style="background:#1a0d00;border:1px solid #d4a820;color:#d4a820;padding:6px 14px;border-radius:3px;cursor:pointer;font-family:inherit;font-size:.8em;">SAVE</button>
+        <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="font-size:.7em;color:#4a2a08;text-decoration:none;">Get a key →</a>
       </div>
       <div id="ask-messages">
         <div id="ask-suggestions">
