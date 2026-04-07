@@ -1,17 +1,30 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 // CHUNK — THE MAESTER'S TOWER: ASOIAF AI Chat
 // Primary: calls /api/ask (Vercel Edge Function — key server-side, no friction)
-// Fallback: if endpoint not deployed, lets user supply their own API key.
+// Fallback: lets user supply their own Anthropic, OpenAI, or Gemini key.
 // ═══════════════════════════════════════════════════════════════════════════════
 (function(){
 
 const SERVER_URL  = '/api/ask';
-const DIRECT_URL  = 'https://api.anthropic.com/v1/messages';
 const KEY_STORAGE = 'asoiaf_ask_key';
+
+// Provider endpoints
+const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
+const OPENAI_URL    = 'https://api.openai.com/v1/chat/completions';
+// Gemini URL is built dynamically (key goes in query string)
+const GEMINI_BASE   = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:streamGenerateContent';
 
 let conversationHistory = [];
 let streaming           = false;
 let serverAvailable     = null; // null = untested, true/false after first attempt
+
+// ── Detect provider from key prefix ──────────────────────────────────────────
+function detectProvider(key){
+  if(key.startsWith('sk-ant-')) return 'anthropic';
+  if(key.startsWith('sk-'))     return 'openai';
+  if(key.startsWith('AIza'))    return 'gemini';
+  return null;
+}
 
 // ── Called when tab opens ────────────────────────────────────────────────────
 window.askTabOpened = function(){
@@ -29,7 +42,7 @@ function showKeyPrompt(show){
 window.askSaveKey = function(){
   const val = (document.getElementById('ask-key-input-field')||{}).value||'';
   const trimmed = val.trim();
-  if(!trimmed.startsWith('sk-ant-')){
+  if(!detectProvider(trimmed)){
     const f = document.getElementById('ask-key-input-field');
     if(f){ f.style.borderColor='#c83030'; setTimeout(()=>f.style.borderColor='',1800); }
     return;
@@ -104,14 +117,12 @@ window.askSend = async function(){
         body: JSON.stringify({ messages: conversationHistory }),
       });
 
-      if(resp.ok && resp.headers.get('content-type')||''.includes('event-stream')){
+      if(resp.ok && (resp.headers.get('content-type')||'').includes('event-stream')){
         serverAvailable = true;
-        fullText = await streamSSE(resp, bubble, cursor);
+        fullText = await streamSSE(resp, bubble, cursor, 'anthropic');
       } else if(resp.status === 404 || resp.status === 501 || resp.status === 405){
-        // Endpoint not deployed — fall through to direct API
         serverAvailable = false;
       } else {
-        // Some other server error
         serverAvailable = false;
         const txt = await resp.text().catch(()=>'');
         let msg = `Server error ${resp.status}`;
@@ -121,7 +132,7 @@ window.askSend = async function(){
     }
 
     if(serverAvailable === false && !fullText){
-      // ── Fall back to direct Anthropic API with user key ──────────────────
+      // ── Fall back to direct API with user key ────────────────────────────
       const key = localStorage.getItem(KEY_STORAGE);
       if(!key){
         cursor.remove();
@@ -133,22 +144,61 @@ window.askSend = async function(){
         return;
       }
 
-      const resp2 = await fetch(DIRECT_URL, {
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'x-api-key': key,
-          'anthropic-version':'2023-06-01',
-          'anthropic-dangerous-direct-browser-access':'true',
-        },
-        body: JSON.stringify({
-          model:'claude-haiku-4-5-20251001',
-          max_tokens:1200,
-          stream:true,
-          system: SYSTEM_PROMPT,
-          messages: conversationHistory,
-        }),
-      });
+      const provider = detectProvider(key);
+      let resp2;
+
+      if(provider === 'anthropic'){
+        resp2 = await fetch(ANTHROPIC_URL, {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'x-api-key': key,
+            'anthropic-version':'2023-06-01',
+            'anthropic-dangerous-direct-browser-access':'true',
+          },
+          body: JSON.stringify({
+            model:'claude-haiku-4-5-20251001',
+            max_tokens:1200,
+            stream:true,
+            system: SYSTEM_PROMPT,
+            messages: conversationHistory,
+          }),
+        });
+      } else if(provider === 'openai'){
+        resp2 = await fetch(OPENAI_URL, {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'Authorization': `Bearer ${key}`,
+          },
+          body: JSON.stringify({
+            model:'gpt-4o-mini',
+            max_tokens:1200,
+            stream:true,
+            messages:[
+              { role:'system', content: SYSTEM_PROMPT },
+              ...conversationHistory,
+            ],
+          }),
+        });
+      } else if(provider === 'gemini'){
+        // Gemini roles: 'user' and 'model'
+        const geminiMsgs = conversationHistory.map(m=>({
+          role: m.role==='assistant' ? 'model' : 'user',
+          parts:[{ text: m.content }],
+        }));
+        resp2 = await fetch(`${GEMINI_BASE}?alt=sse&key=${encodeURIComponent(key)}`, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            systemInstruction:{ parts:[{ text: SYSTEM_PROMPT }] },
+            contents: geminiMsgs,
+            generationConfig:{ maxOutputTokens:1200 },
+          }),
+        });
+      } else {
+        throw new Error('Unrecognised key format. Use an Anthropic (sk-ant-…), OpenAI (sk-…), or Gemini (AIza…) key.');
+      }
 
       if(!resp2.ok){
         const errTxt = await resp2.text().catch(()=>'');
@@ -158,7 +208,7 @@ window.askSend = async function(){
         throw new Error(msg);
       }
 
-      fullText = await streamSSE(resp2, bubble, cursor);
+      fullText = await streamSSE(resp2, bubble, cursor, provider);
     }
 
     cursor.remove();
@@ -175,8 +225,8 @@ window.askSend = async function(){
   document.getElementById('ask-input')?.focus();
 };
 
-// ── SSE stream reader ─────────────────────────────────────────────────────────
-async function streamSSE(resp, bubble, cursor){
+// ── SSE stream reader — handles all three provider formats ────────────────────
+async function streamSSE(resp, bubble, cursor, provider){
   const reader  = resp.body.getReader();
   const decoder = new TextDecoder();
   let fullText  = '';
@@ -191,11 +241,22 @@ async function streamSSE(resp, bubble, cursor){
     for(const line of lines){
       if(!line.startsWith('data: ')) continue;
       const raw = line.slice(6).trim();
-      if(raw==='[DONE]') break;
+      if(raw==='[DONE]') continue;
       try{
         const ev = JSON.parse(raw);
-        if(ev.type==='content_block_delta' && ev.delta?.type==='text_delta'){
-          fullText += ev.delta.text;
+        let chunk = '';
+
+        if(provider === 'anthropic'){
+          if(ev.type==='content_block_delta' && ev.delta?.type==='text_delta')
+            chunk = ev.delta.text;
+        } else if(provider === 'openai'){
+          chunk = ev.choices?.[0]?.delta?.content || '';
+        } else if(provider === 'gemini'){
+          chunk = ev.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        }
+
+        if(chunk){
+          fullText += chunk;
           renderMarkdown(bubble, fullText, cursor);
           scrollToBottom();
         }
@@ -238,8 +299,8 @@ function scrollToBottom(){
 }
 
 function notDeployedMessage(){
-  return `<span style="color:#8b6914">The Maester's Tower needs a Vercel deployment to work without an API key.<br>
-  <span style="font-size:.9em;color:#5a3a10">Enter your own Anthropic API key below, or deploy to Vercel with your key to make it free for all visitors.</span></span>`;
+  return `<span style="color:#8b6914">No server key found. Enter your own API key below to chat.<br>
+  <span style="font-size:.9em;color:#5a3a10">Anthropic, OpenAI, and Gemini keys are all accepted.</span></span>`;
 }
 
 function buildSuggestions(){
@@ -283,7 +344,7 @@ function escHtml(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ── Compact system prompt (also used for direct API fallback) ─────────────────
+// ── System prompt (used for direct API fallback) ──────────────────────────────
 const SYSTEM_PROMPT=`You are a master maester and lore scholar of A Song of Ice and Fire by George R.R. Martin. You have encyclopedic knowledge of all five published novels (AGoT, ACoK, ASoS, AFfC, ADwD), The World of Ice and Fire, Fire & Blood, the Dunk & Egg tales, and published Winds of Winter sample chapters.
 
 Discuss characters, history, geography, magic, houses, and all major theories (R+L=J, Azor Ahai/TPTWP, the Hooded Man, Euron's sorcery, Young Griff's heritage, the Others, CLEGANEBOWL, etc.). Distinguish canon from theory. Be enthusiastic, treat the user as a fellow fan, use markdown for clarity. No spoiler warnings needed — this audience has read everything.`;

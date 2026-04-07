@@ -21,16 +21,31 @@ The Ask tab uses Claude (by Anthropic) to answer lore questions. The API key is 
 
 ### What you need
 - A free [Vercel](https://vercel.com) account
-- A free [Anthropic](https://console.anthropic.com) account (you'll need to add a small credit — roughly $5 lasts thousands of questions at ~$0.001 each)
+- An API key from **one** of these providers (your choice):
+  - [Anthropic](https://console.anthropic.com) — key starts with `sk-ant-` — ~$0.001/query with claude-haiku
+  - [OpenAI](https://platform.openai.com/api-keys) — key starts with `sk-` — ~$0.002/query with gpt-4o-mini
+  - [Google Gemini](https://aistudio.google.com/apikey) — key starts with `AIza` — free tier available
 
 ---
 
-### Step 1 — Get an Anthropic API key
+### Step 1 — Get an API key
 
-1. Go to [console.anthropic.com](https://console.anthropic.com) and sign up (free)
-2. Click **API Keys** in the left sidebar
-3. Click **Create Key**, give it a name (e.g. `asoiaf-map`), copy the key — it starts with `sk-ant-`
-4. Go to **Billing** and add a small credit ($5 is plenty)
+Pick any one provider:
+
+**Anthropic (recommended — cheapest)**
+1. Go to [console.anthropic.com](https://console.anthropic.com) and sign up
+2. Click **API Keys → Create Key**, copy the `sk-ant-…` key
+3. Add a small credit under **Billing** ($5 lasts thousands of chats)
+
+**OpenAI**
+1. Go to [platform.openai.com/api-keys](https://platform.openai.com/api-keys) and sign up
+2. Click **Create new secret key**, copy the `sk-…` key
+3. Add credit under **Billing**
+
+**Google Gemini**
+1. Go to [aistudio.google.com/apikey](https://aistudio.google.com/apikey) and sign in
+2. Click **Create API key**, copy the `AIza…` key
+3. Gemini has a free tier — no billing required to start
 
 ---
 
