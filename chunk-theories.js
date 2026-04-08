@@ -367,6 +367,10 @@
       #grrm-watch-cards { flex-direction:column; }
       .wow-card { min-width:0; }
     }
+    @media(max-width:380px){
+      #theories-grid { grid-template-columns:1fr; }
+      .wow-vote-row { flex-wrap:wrap; justify-content:center; }
+    }
     `;
     document.head.appendChild(s);
   }

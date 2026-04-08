@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>A Song of Ice and Fire — Character Map</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -376,18 +376,35 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 .pov-book-ch{font-size:.6em;color:#5a3a10;margin-top:2px;}
 
 /* ═══════════════════════════ MOBILE ═══════════════════════════ */
+
+/* ── Safe-area insets (iPhone notch / Dynamic Island / home-bar) ── */
+#header    { padding-top: max(7px, env(safe-area-inset-top)); padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+#timeline  { padding-bottom: max(9px, env(safe-area-inset-bottom)); padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+#char-panel{ padding-top: max(18px, env(safe-area-inset-top)); padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+
+/* ── Map rotate nudge (portrait portrait, dismissable) ── */
+#map-rotate-nudge { display:none; position:absolute; bottom:74px; left:50%; transform:translateX(-50%); z-index:60; background:rgba(10,5,0,.92); border:1px solid #8b6914; border-radius:20px; padding:6px 10px 6px 14px; align-items:center; gap:8px; font-size:11px; color:#d4a820; white-space:nowrap; box-shadow:0 2px 12px rgba(0,0,0,.5); animation:nudge-in .4s cubic-bezier(.34,1.56,.64,1) both; }
+#map-rotate-nudge #map-rotate-text { letter-spacing:.5px; }
+#map-rotate-dismiss { background:none; border:none; color:#6a4a10; cursor:pointer; font-size:13px; padding:0 2px; line-height:1; transition:color .15s; }
+#map-rotate-dismiss:hover { color:#d4a820; }
+@keyframes nudge-in { from{opacity:0;transform:translateX(-50%) translateY(12px);}to{opacity:1;transform:translateX(-50%) translateY(0);} }
+
 @media (max-width: 768px) {
   /* Header: hide long title, compact tab bar */
   #header h1 { display: none; }
-  #header { padding: 5px 8px; gap: 6px; }
-  #tab-bar { margin-left: 0; gap: 2px; }
-  .tab-btn { padding: 4px 8px; font-size: 9px; letter-spacing: 0.5px; }
-  .header-right { gap: 6px; font-size: 10px; }
+  #header { padding: max(5px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 5px max(8px, env(safe-area-inset-left)); gap: 6px; }
+  #tab-bar { margin-left: 0; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #tab-bar::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 4px 8px; font-size: 9px; letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0; }
+  .header-right { gap: 6px; font-size: 10px; flex-shrink: 0; }
   #char-count { display: none; }
-  #music-btn { padding: 4px 8px; font-size: 10px; }
+  #music-btn { padding: 4px 8px; font-size: 10px; flex-shrink: 0; }
 
-  /* Character panel: full width on mobile */
-  #char-panel { width: 100vw; right: -100vw; }
+  /* iOS: prevent zoom on input focus — keep font-size ≥ 16px */
+  #search-input { font-size: 16px; }
+
+  /* Character panel: full width on mobile, smooth iOS scroll */
+  #char-panel { width: 100vw; right: -100vw; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
   #char-panel.open { right: 0; }
 
   /* Search: wider and repositioned */
@@ -400,28 +417,28 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
   #mini-map-wrap { bottom: 70px; }
   #mini-map { width: 120px; height: 68px; }
 
-  /* Timeline: more compact */
-  #timeline { padding: 6px 8px; gap: 6px; }
+  /* Timeline: more compact, safe-area bottom */
+  #timeline { padding: 6px max(8px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); gap: 6px; }
   #book-markers .book-marker { font-size: 8px; letter-spacing: 0; }
   #speed-control { display: none; }
 
-  /* Zoom controls */
+  /* Zoom controls: bigger touch targets */
   #zoom-controls { top: 44px; left: 8px; }
-  .zoom-btn { width: 26px; height: 26px; font-size: 13px; }
+  .zoom-btn { width: 34px; height: 34px; font-size: 14px; }
 
   /* Book display overlay */
   #book-display { top: 6px; right: 8px; padding: 4px 8px; }
   #book-num { font-size: 1.4em; }
   #book-title { font-size: 7px; max-width: 90px; }
 
-  /* House filter */
+  /* House filter: bigger touch targets */
   #house-filter { bottom: 52px; gap: 3px; padding: 4px 7px; }
-  .hf-btn { width: 24px; height: 24px; font-size: 12px; }
-  .hf-btn.hf-all { width: 30px; font-size: 8px; }
+  .hf-btn { width: 32px; height: 32px; font-size: 14px; }
+  .hf-btn.hf-all { width: 36px; font-size: 8px; }
 
   /* Relations graph sidebar: collapse to bottom toolbar on mobile */
   #graph-body { flex-direction: column; }
-  #graph-sidebar { width: 100%; height: auto; max-height: 90px; border-left: none; border-top: 1px solid #2a1a05; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; overflow-x: auto; padding: 6px 10px; }
+  #graph-sidebar { width: 100%; height: auto; max-height: 90px; border-left: none; border-top: 1px solid #2a1a05; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; overflow-x: auto; padding: 6px 10px; -webkit-overflow-scrolling: touch; }
   #graph-sidebar .gsb-title { display: none; }
   #graph-reset-btn { width: auto; margin-bottom: 0; padding: 3px 10px; white-space: nowrap; }
   #graph-legend { display: flex; flex-wrap: wrap; gap: 4px; }
@@ -429,26 +446,41 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
   #graph-count { font-size: 0.65em; white-space: nowrap; }
 
   /* Graph toolbar: scrollable */
-  #graph-toolbar { overflow-x: auto; flex-wrap: nowrap; padding: 5px 10px; gap: 6px; }
+  #graph-toolbar { overflow-x: auto; flex-wrap: nowrap; padding: 5px 10px; gap: 6px; -webkit-overflow-scrolling: touch; }
   #graph-toolbar-title { font-size: 0.75em; white-space: nowrap; }
   .ghf-btn { font-size: 9px; padding: 2px 7px; white-space: nowrap; flex-shrink: 0; }
 
-  /* History tab: tighter padding */
+  /* History tab: tighter padding, iOS scroll */
   #history-content { padding: 20px 12px 40px; }
   #history-title { font-size: 1.2em; letter-spacing: 3px; }
+  #tab-history { -webkit-overflow-scrolling: touch; }
 
   /* Character panel portrait smaller */
   #char-portrait-img, #char-portrait-svg { width: 80px; height: 80px; }
   #char-sigil-svg { width: 40px; height: 40px; }
+
+  /* Theories: iOS scroll */
+  #theories-grid { -webkit-overflow-scrolling: touch; }
 }
 
 @media (max-width: 400px) {
   .tab-btn { padding: 3px 6px; font-size: 8px; }
   #music-btn { display: none; }
-  .hf-btn { width: 20px; height: 20px; font-size: 10px; }
+  .hf-btn { width: 28px; height: 28px; font-size: 13px; }
 }
 
-/* ── PORTRAIT MODE HINT (relations graph only) ── */
+/* ── Portrait mode: rotate nudge shown for both map and graph ── */
+@media (max-width: 768px) and (orientation: portrait) {
+  /* Show the soft map nudge banner */
+  #map-rotate-nudge { display: flex; }
+  /* House filter: move up to avoid home-bar overlap */
+  #house-filter { bottom: max(52px, calc(42px + env(safe-area-inset-bottom))); }
+  /* Mini-map: avoid timeline/safe-area overlap */
+  #mini-map-wrap { bottom: max(70px, calc(60px + env(safe-area-inset-bottom))); }
+  /* Theories: single column on narrow portrait screens */
+}
+
+/* ── PORTRAIT MODE HINT (relations graph — full overlay) ── */
 #portrait-hint{display:none;position:absolute;inset:0;z-index:40;background:rgba(5,2,0,.92);flex-direction:column;align-items:center;justify-content:center;gap:16px;pointer-events:none;}
 #portrait-hint .ph-icon{font-size:3em;animation:ph-spin 2s ease-in-out infinite alternate;}
 #portrait-hint .ph-text{color:#d4a820;font-size:.9em;letter-spacing:2px;text-align:center;padding:0 24px;}
@@ -731,6 +763,13 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
       <span>📍 FOLLOWING</span>
       <span class="follow-name" id="follow-name"></span>
       <button class="follow-stop" onclick="stopFollowing()" title="Stop following">✕</button>
+    </div>
+
+    <!-- Rotate nudge (portrait mobile only) -->
+    <div id="map-rotate-nudge">
+      <span>📱→🔄</span>
+      <span id="map-rotate-text">Rotate for the best view</span>
+      <button id="map-rotate-dismiss" onclick="document.getElementById('map-rotate-nudge').style.display='none'" title="Dismiss">✕</button>
     </div>
 
     <!-- Search bar -->
@@ -2691,6 +2730,50 @@ function addTouchAsMouse(el){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',patchMapTouch);
   else patchMapTouch();
+})();
+
+// ── SWIPE-RIGHT TO CLOSE CHAR PANEL (mobile) ──────────────────────────────
+(function(){
+  const panel = document.getElementById('char-panel');
+  if(!panel) return;
+  let startX = 0, startY = 0, dragging = false;
+  panel.addEventListener('touchstart', e => {
+    if(e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    dragging = true;
+  }, {passive:true});
+  panel.addEventListener('touchmove', e => {
+    if(!dragging || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = Math.abs(e.touches[0].clientY - startY);
+    // Only intercept clear rightward horizontal swipes
+    if(dx > 12 && dy < 60) panel.style.transform = `translateX(${Math.min(dx, 280)}px)`;
+  }, {passive:true});
+  panel.addEventListener('touchend', e => {
+    if(!dragging) return;
+    dragging = false;
+    const dx = e.changedTouches[0].clientX - startX;
+    if(dx > 90){
+      panel.style.transform = '';
+      if(window.closePanel) window.closePanel();
+    } else {
+      panel.style.transform = '';
+    }
+  }, {passive:true});
+})();
+
+// ── AUTO-HIDE ROTATE NUDGE WHEN DEVICE ROTATES TO LANDSCAPE ───────────────
+(function(){
+  function checkOrientation(){
+    const nudge = document.getElementById('map-rotate-nudge');
+    if(!nudge) return;
+    if(window.innerWidth > window.innerHeight){
+      nudge.style.display = 'none'; // landscape — hide it
+    }
+  }
+  window.addEventListener('resize', checkOrientation);
+  window.addEventListener('orientationchange', checkOrientation);
 })();
 </script>
 
