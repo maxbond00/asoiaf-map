@@ -119,7 +119,8 @@ window.askSend = async function(){
 
       if(resp.ok && (resp.headers.get('content-type')||'').includes('event-stream')){
         serverAvailable = true;
-        fullText = await streamSSE(resp, bubble, cursor, 'anthropic');
+        const provider = resp.headers.get('x-ai-provider') || 'anthropic';
+        fullText = await streamSSE(resp, bubble, cursor, provider);
       } else if(resp.status === 404 || resp.status === 501 || resp.status === 405){
         serverAvailable = false;
       } else {
