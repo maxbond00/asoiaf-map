@@ -1,7 +1,0 @@
-[[edge_functions]]
-  path = "/api/ask"
-  function = "ask"
-
-[[edge_functions]]
-  path = "/api/ask-status"
-  function = "ask-status"
