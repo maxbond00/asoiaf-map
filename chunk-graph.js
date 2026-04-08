@@ -16,9 +16,11 @@ const REL_TYPE_COLORS = {
   'Son':'#60a8e0','Daughter':'#60a8e0','Father':'#60a8e0','Mother':'#60a8e0',
   'Brother':'#70c070','Sister':'#70c070',
   'Best friend':'#c8c840','Friend':'#c8c840','Advisor':'#c8c840',
+  'Kills':'#dc143c','Killed':'#dc143c',
   'Rival':'#c83030','Enemy':'#c83030','Nemesis / Killer':'#c83030','Hated brother':'#c83030',
   'Kingsguard':'#9870c0','Protector':'#9870c0','Sworn to':'#9870c0','Oath-bound companion':'#9870c0',
   'Warg-bond':'#80c880','Dragon-mother':'#c84020',
+  'Betrayed':'#d4780a','Betrayer':'#d4780a','Captor':'#d4780a',
   default:'#8b6914',
 };
 
@@ -196,13 +198,16 @@ window.initRelationsGraph = function(){
     const a = nodeById[e.source], b = nodeById[e.target];
     if(!a || !b) return;
     const col = relColor(e.types[0]);
-    const line = mk('line',{
+    const isKill = e.types.some(t => /kills|killed/i.test(t));
+    const lineAttrs = {
       x1:a.x, y1:a.y, x2:b.x, y2:b.y,
-      stroke: col, 'stroke-width':'1.5',
-      'stroke-opacity':'0.45',
+      stroke: col, 'stroke-width': isKill ? '2.2' : '1.5',
+      'stroke-opacity': isKill ? '0.7' : '0.45',
       'marker-end':'url(#arr)',
       'data-src':e.source, 'data-tgt':e.target,
-    });
+    };
+    if(isKill) lineAttrs['stroke-dasharray'] = '7,4';
+    const line = mk('line', lineAttrs);
     edgeG.appendChild(line);
     edgeEls.set(`${e.source}|${e.target}`, line);
 
@@ -249,12 +254,27 @@ window.initRelationsGraph = function(){
         cp.appendChild(mk('circle',{cx:n.x, cy:n.y, r:NODE_R}));
         clipDefs.appendChild(cp);
       }
-      grp.appendChild(mk('image',{
+      const imgEl = mk('image',{
         href:ch.photoUrl, x:n.x-NODE_R, y:n.y-NODE_R,
         width:NODE_R*2, height:NODE_R*2,
         'clip-path':`url(#gcp-${n.id})`,
         'preserveAspectRatio':'xMidYMin slice',
-      }));
+      });
+      imgEl.addEventListener('error', () => {
+        imgEl.remove();
+        const inner = mk('circle',{cx:n.x, cy:n.y, r:NODE_R, fill:`url(#${gradId})`});
+        const ref = grp.children[1] || null;
+        grp.insertBefore(inner, ref);
+        const init = mk('text',{
+          x:n.x, y:n.y,
+          'text-anchor':'middle','dominant-baseline':'central',
+          'font-size':'10','fill':'#fff','font-weight':'bold',
+          'font-family':"'Palatino Linotype',serif",
+        });
+        init.textContent = ch.initial || (ch.name||'?').charAt(0);
+        grp.insertBefore(init, ref);
+      });
+      grp.appendChild(imgEl);
     } else {
       const inner = mk('circle',{cx:n.x, cy:n.y, r:NODE_R, fill:`url(#${gradId})`});
       grp.appendChild(inner);

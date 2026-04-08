@@ -82,6 +82,24 @@
     'grey-worm':         [{id:'missandei',type:'Lover'},{id:'daenerys',type:'Commander / Sworn to'}],
     'rhaegal':           [{id:'daenerys',type:'Dragon-mother'},{id:'drogon',type:'Brother'},{id:'viserion',type:'Brother'}],
     'viserion':          [{id:'daenerys',type:'Dragon-mother'},{id:'drogon',type:'Brother'},{id:'rhaegal',type:'Brother'}],
+
+    // ── Kills relationships ────────────────────────────────────────────────
+    // Entries are kept directional: the killer gets 'Kills', the killed gets 'Killed'
+    // (The graph deduplicates edges, so only one edge appears per pair.)
+    'tyrion-lannister':  [{id:'tywin-lannister',type:'Kills'},{id:'shae',type:'Kills'},{id:'cersei-lannister',type:'Sister'},{id:'jaime-lannister',type:'Brother'},{id:'bronn',type:'Sellsword / Friend'},{id:'varys',type:'Unlikely ally'},{id:'sansa-stark',type:'Forced wife'},{id:'podrick-payne',type:'Squire'}],
+    'ramsay-bolton':     [{id:'roose-bolton',type:'Father / Kills'},{id:'theon-greyjoy',type:'Prisoner / Toy'},{id:'rickon-stark',type:'Kills'}],
+    'roose-bolton':      [{id:'ramsay-bolton',type:'Son'},{id:'robb-stark',type:'Kills'}],
+    'joffrey':           [{id:'cersei-lannister',type:'Mother'},{id:'robert-baratheon',type:'Father (believed)'},{id:'jaime-lannister',type:'True father'},{id:'sansa-stark',type:'Ex-betrothed'},{id:'margaery-tyrell',type:'Wife'},{id:'tommen',type:'Brother'},{id:'myrcella',type:'Sister'},{id:'ned-stark',type:'Orders execution of'}],
+    'jon-snow':          [{id:'ghost',type:'Direwolf'},{id:'ned-stark',type:'Father (believed)'},{id:'ygritte',type:'Lover'},{id:'samwell-tarly',type:'Best friend'},{id:'stannis-baratheon',type:'Unlikely ally'},{id:'tormund',type:'Ally'},{id:'jeor-mormont',type:'Commander'},{id:'benjen-stark',type:'Uncle'},{id:'qhorin-halfhand',type:'Kills (as ordered)'}],
+
+    // ── New characters ─────────────────────────────────────────────────────
+    'high-sparrow':      [{id:'cersei-lannister',type:'Jailer / Enemy'},{id:'margaery-tyrell',type:'Prisoner / Accused'},{id:'tommen',type:'Influenced'},{id:'lancel-lannister',type:'Confessor'}],
+    'qyburn':            [{id:'cersei-lannister',type:'Ally / Spymaster'},{id:'gregor-clegane',type:'Resurrected'},{id:'jaime-lannister',type:'Treated wounds'}],
+    'ilyn-payne':        [{id:'ned-stark',type:'Kills (by royal order)'},{id:'joffrey',type:'Serves / Executioner'},{id:'cersei-lannister',type:'Serves'}],
+    'lancel-lannister':  [{id:'cersei-lannister',type:'Cousin / Former lover'},{id:'high-sparrow',type:'Confessor / Follower'},{id:'kevan-lannister',type:'Father'}],
+    'pycelle':           [{id:'cersei-lannister',type:'Ally'},{id:'tywin-lannister',type:'Loyalist'},{id:'varys',type:'Rival'},{id:'qyburn',type:'Replaced by'}],
+    'craster':           [{id:'gilly',type:'Daughter / Wife'},{id:'samwell-tarly',type:'Reluctant ally'}],
+    'quentyn-martell':   [{id:'doran-martell',type:'Father'},{id:'arianne-martell',type:'Sister'},{id:'daenerys',type:'Sought to wed'}],
   };
   Object.entries(R).forEach(([id,rels])=>{
     if(window.CHARS&&window.CHARS[id]) window.CHARS[id].relations=rels;

@@ -457,6 +457,139 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
   #tab-graph #portrait-hint{display:flex;}
   /* Still render the graph behind so it's ready when rotated */
 }
+
+/* ═══════════════════════════ LIGHT THEME ═══════════════════════════ */
+/* Applied after enterMap() — landing page stays dark. */
+body.light-theme { background:#f5eed8; color:#3a2a10; }
+
+/* Character panel */
+body.light-theme #char-panel { background:linear-gradient(160deg,#f5eed8 0%,#ede0c0 50%,#f0e8d0 100%); border-left-color:#c8a870; }
+body.light-theme #char-panel-close { border-color:#8b6914; color:#6a3a08; }
+body.light-theme #char-panel-close:hover { background:#e0cfa0; }
+body.light-theme #char-name { color:#6a3a08; }
+body.light-theme #char-aliases { color:#8b5a20; }
+body.light-theme #char-house-display { color:#5a4020; }
+body.light-theme #char-location-text { color:#6a4820; }
+body.light-theme #char-divider { border-top-color:#c8a870; }
+body.light-theme #char-bio { color:#4a3010; }
+body.light-theme #char-current-status { color:#5a3a10; border-top-color:#c8a870; }
+body.light-theme #char-portrait-img { border-color:#8b6914; }
+body.light-theme #char-portrait-svg { border-color:#8b6914; }
+body.light-theme .rel-chip { border-color:#c8a870; background:rgba(0,0,0,.03); }
+body.light-theme .rel-chip:hover { background:rgba(139,105,20,.15); }
+body.light-theme .rel-name { color:#6a3a08; }
+body.light-theme .rel-type { color:#8b5a20; }
+body.light-theme #char-pov { border-top-color:#c8a870; }
+body.light-theme .pov-book { background:#ede0c0; border-color:#c8a870; }
+body.light-theme .pov-book-name { color:#8b5a20; }
+body.light-theme .pov-book-count { color:#6a3a08; }
+body.light-theme .pov-book-ch { color:#8b6030; }
+body.light-theme #char-journey-log { border-top-color:#c8a870; }
+body.light-theme .jl-title { color:#8b5a20; }
+body.light-theme .jl-loc { color:#6a4020; }
+body.light-theme .jl-book { color:#8b6030; }
+
+/* Timeline bar (keep dark — it's dramatic and below the map) */
+/* Header stays dark intentionally */
+
+/* Map overlay widgets */
+body.light-theme #book-display { background:rgba(245,238,216,.97); border-color:#8b6914; }
+body.light-theme #book-num { color:#6a3a08; }
+body.light-theme #book-title { color:#8b6914; }
+body.light-theme #legend { background:rgba(245,238,216,.96); border-color:#c8a870; }
+body.light-theme #legend-title { color:#6a3a08; }
+body.light-theme .leg { color:#5a4020; }
+body.light-theme #tooltip { background:rgba(245,238,216,.97); border-color:#8b6914; color:#4a2808; }
+body.light-theme #follow-indicator { background:rgba(245,238,216,.96); border-color:#8b6914; color:#4a2808; }
+body.light-theme #follow-indicator .follow-stop { color:#8b6914; }
+body.light-theme #follow-indicator .follow-stop:hover { color:#5a2808; }
+body.light-theme .zoom-btn { background:rgba(245,238,216,.96); border-color:#c8a870; color:#6a3a08; }
+body.light-theme .zoom-btn:hover { background:rgba(235,220,190,.98); }
+body.light-theme #house-filter { background:rgba(245,238,216,.93); border-color:#c8a870; }
+body.light-theme .hf-btn { color:#7a5a28; border-color:rgba(0,0,0,.18); }
+body.light-theme .hf-btn.active { border-color:#8b6914; background:rgba(139,105,20,.15); }
+
+/* Search */
+body.light-theme #search-input-row { background:rgba(245,238,216,.96); border-color:#8b6914; }
+body.light-theme #search-input { color:#4a2808; }
+body.light-theme #search-input::placeholder { color:#b09060; }
+body.light-theme #search-icon { color:#8b6914; }
+body.light-theme #search-clear { color:#8b6914; }
+body.light-theme #search-results { background:rgba(245,238,216,.99); border-color:#c8a870; }
+body.light-theme .sr-item:hover, body.light-theme .sr-item.sr-active { background:rgba(139,105,20,.13); }
+body.light-theme .sr-item { border-bottom-color:rgba(139,105,20,.25); }
+body.light-theme .sr-name { color:#4a2808; }
+body.light-theme .sr-loc { color:#8b6030; }
+body.light-theme .sr-no { color:#8b6030; }
+
+/* Location popup */
+body.light-theme #loc-popup { background:linear-gradient(160deg,#f5eed8,#ede0c0); border-color:#8b6914; }
+body.light-theme #loc-popup-header { border-bottom-color:#c8a870; }
+body.light-theme #loc-popup-title { color:#6a3a08; }
+body.light-theme #loc-popup-close { border-color:#8b6914; color:#6a3a08; }
+body.light-theme #loc-popup-close:hover { background:#e0cfa0; }
+body.light-theme .lp-item:hover { background:rgba(139,105,20,.13); }
+body.light-theme .lp-name { color:#6a4020; }
+body.light-theme .lp-lore { color:#5a3a10; border-bottom-color:#c8a870; }
+body.light-theme .lp-status { color:#8b6030; }
+
+/* Relations graph */
+body.light-theme #tab-relations { background:#f0e8d0; }
+body.light-theme #graph-toolbar { background:linear-gradient(to right,#ede0c0,#f0e8d0,#ede0c0); border-bottom-color:#c8a870; }
+body.light-theme #graph-toolbar-title { color:#6a3a08; }
+body.light-theme #graph-count { color:#8b6030; }
+body.light-theme .ghf-btn { color:#6a4020; border-color:rgba(0,0,0,.18); }
+body.light-theme .ghf-btn:hover { border-color:#8b6914; color:#4a2008; }
+body.light-theme .ghf-btn.active { border-color:#8b6914; color:#4a2008; background:rgba(139,105,20,.13); }
+body.light-theme #graph-sidebar { background:rgba(240,228,200,.97); border-left-color:#c8a870; }
+body.light-theme .gsb-title { color:#8b6030; }
+body.light-theme #graph-reset-btn { background:#ede0c0; border-color:#c8a870; color:#6a3a08; }
+body.light-theme #graph-reset-btn:hover { border-color:#8b6914; color:#4a2008; }
+body.light-theme #graph-canvas-wrap { background:#f5eed8; }
+
+/* History tab */
+body.light-theme #tab-history { background:linear-gradient(180deg,#f5eed8 0%,#f0e8d0 100%); }
+body.light-theme #history-title { color:#6a3a08; }
+body.light-theme #history-sub { color:#8b6030; }
+body.light-theme .hist-era-name { color:#5a2808; }
+body.light-theme .hist-era-period { color:#8b6030; }
+body.light-theme .hist-event-title { color:#6a3a08; }
+body.light-theme .hist-event-desc { color:#5a4020; }
+body.light-theme .hist-event-year { color:#8b6030; }
+body.light-theme .hist-events::before { background:linear-gradient(to bottom,rgba(139,105,20,.5),rgba(139,105,20,.1)); }
+
+/* Theories tab */
+body.light-theme #tab-theories { background:linear-gradient(180deg,#f5eed8 0%,#f0e8d0 100%) !important; color:#3a2a10 !important; }
+body.light-theme #theories-header { background:rgba(245,238,216,.98) !important; border-bottom-color:#c8a870 !important; }
+body.light-theme #theories-title { color:#6a3a08 !important; }
+body.light-theme #theories-subtitle { color:#8b6030 !important; }
+body.light-theme #theories-progress-wrap { background:#e0cfa0 !important; border-color:#c8a870 !important; }
+body.light-theme #theories-progress-bar { background:#c8a870 !important; }
+body.light-theme #theories-progress-label { color:#6a4020 !important; }
+body.light-theme .t-filter { background:transparent !important; border-color:#c8a870 !important; color:#8b6030 !important; }
+body.light-theme .t-filter:hover { border-color:#8b6914 !important; color:#5a3010 !important; }
+body.light-theme .t-filter.active { background:#ede0c0 !important; border-color:#8b6914 !important; color:#5a2808 !important; }
+body.light-theme #theories-grid { background:transparent !important; }
+body.light-theme .theory-card { background:#f0e8d0 !important; border-color:#c8a870 !important; }
+body.light-theme .theory-card:hover { background:#e8d8b0 !important; border-color:#8b6914 !important; box-shadow:0 2px 12px rgba(0,0,0,.15) !important; }
+body.light-theme .tc-cat { color:#8b6030 !important; }
+body.light-theme .tc-rank { color:#b09060 !important; }
+body.light-theme .tc-name { color:#5a2808 !important; }
+body.light-theme .tc-count { color:#8b6030 !important; }
+body.light-theme .tc-unvoted { color:#c8a870 !important; border-color:#c8a870 !important; }
+body.light-theme .theory-card:hover .tc-unvoted { color:#8b6914 !important; border-color:#8b6914 !important; }
+/* GRRM Watch light */
+body.light-theme #grrm-watch-wrap { background:rgba(245,238,216,.98) !important; border-bottom-color:#c8a870 !important; }
+body.light-theme #grrm-watch-title { color:#6a3a08 !important; }
+body.light-theme #grrm-watch-sub { color:#8b6030 !important; }
+body.light-theme .wow-card { background:#f0e8d0 !important; border-color:#c8a870 !important; }
+body.light-theme .wow-label { color:#8b6914 !important; }
+body.light-theme .wow-sub { color:#6a4820 !important; }
+body.light-theme .wow-meter { background:#e0cfa0 !important; }
+body.light-theme .wow-btn { background:#ede0c0 !important; border-color:#c8a870 !important; color:#6a4020 !important; }
+body.light-theme .wow-vote-hint { color:#b09060 !important; }
+body.light-theme #grrm-watch-note { color:#b09060 !important; }
+/* Theory modal stays dark (it's an overlay) */
 </style>
 </head>
 <body>
@@ -1687,6 +1820,14 @@ function openPanel(id){
     img.id='char-portrait-img';
     img.src=ch.photoUrl;
     img.alt=ch.name;
+    img.onerror=function(){
+      this.style.display='none';
+      const svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svgEl.id='char-portrait-svg';
+      svgEl.setAttribute('viewBox','0 0 100 100');
+      svgEl.innerHTML=buildPortrait(ch);
+      wrap.insertBefore(svgEl, wrap.firstChild);
+    };
     wrap.appendChild(img);
   } else {
     const svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -2279,6 +2420,7 @@ function enterMap(){
   sp.style.transition='opacity .6s ease';
   sp.style.opacity='0';
   setTimeout(()=>{ sp.style.display='none'; }, 600);
+  document.body.classList.add('light-theme');
   startMusic();
 }
 

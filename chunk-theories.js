@@ -104,6 +104,7 @@
         <div id="theories-legend">${VERDICTS.map(v=>`<span class="tleg" style="border-color:${VC[v]};color:${VC[v]}">${VL[v]}</span>`).join('')}</div>
         <div id="theories-filters">${filterPills}</div>
       </div>
+      ${buildGRRMWatch()}
       <div id="theories-grid">${sorted().map((th,i) => cardHTML(th, i+1)).join('')}</div>
     `;
   }
@@ -335,6 +336,26 @@
     .tm-nav-btn { background:none; border:1px solid #2a1a05; color:#4a2a08; padding:5px 14px; border-radius:3px; cursor:pointer; font-family:inherit; font-size:.68em; letter-spacing:1px; transition:border-color .15s,color .15s; }
     .tm-nav-btn:hover { border-color:#6a3a10; color:#8a5a20; }
 
+    /* GRRM Watch */
+    #grrm-watch-wrap { flex-shrink:0; background:rgba(8,4,0,.97); border-bottom:1px solid #2a1a05; padding:14px 20px 16px; }
+    #grrm-watch-header { display:flex; align-items:baseline; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+    #grrm-watch-title { font-size:.95em; font-weight:bold; color:#d4a820; letter-spacing:2px; }
+    #grrm-watch-sub { font-size:.67em; color:#4a2a08; letter-spacing:.3px; }
+    #grrm-watch-cards { display:flex; gap:12px; flex-wrap:wrap; }
+    .wow-card { background:#0d0700; border:1px solid #2a1a05; border-radius:5px; padding:12px 14px; min-width:180px; flex:1; display:flex; flex-direction:column; gap:5px; }
+    .wow-label { font-size:.65em; color:#8b6914; letter-spacing:1px; font-weight:bold; text-transform:uppercase; }
+    .wow-sub { font-size:.72em; color:#a07830; line-height:1.3; }
+    .wow-pct { font-size:2em; font-weight:bold; line-height:1; margin:4px 0 2px; }
+    .wow-pct-sign { font-size:.5em; opacity:.8; }
+    .wow-meter { height:6px; background:#160b00; border-radius:3px; overflow:hidden; margin-bottom:4px; }
+    .wow-fill { height:100%; border-radius:3px; transition:width .4s; }
+    .wow-vote-row { display:flex; align-items:center; gap:6px; }
+    .wow-btn { background:#0a0500; border:1px solid #2a1a05; color:#6a3a10; padding:3px 9px; border-radius:3px; cursor:pointer; font-family:inherit; font-size:.64em; letter-spacing:.3px; transition:border-color .15s,color .15s; flex-shrink:0; }
+    .wow-up:hover { border-color:#4a8a30; color:#4a8a30; }
+    .wow-dn:hover { border-color:#8a3020; color:#8a3020; }
+    .wow-vote-hint { font-size:.58em; color:#2e1606; flex:1; text-align:center; }
+    #grrm-watch-note { font-size:.57em; color:#2e1606; margin-top:10px; font-style:italic; letter-spacing:.2px; }
+
     @media(max-width:540px){
       #theories-grid { grid-template-columns:1fr 1fr; gap:7px; padding:8px; }
       #theories-title-row { flex-wrap:wrap; }
@@ -343,9 +364,68 @@
       #tm-btns { gap:4px; }
       .tm-btn { padding:5px 7px; font-size:.65em; }
       .tm-rl { width:105px; }
+      #grrm-watch-cards { flex-direction:column; }
+      .wow-card { min-width:0; }
     }
     `;
     document.head.appendChild(s);
+  }
+
+  // ── GRRM Watch (prediction market widget) ───────────────────────────────
+  const WOW_KEY = 'asoiaf_wow_votes';
+  const WOW_SEEDS = {
+    wow2026: { label:'THE WINDS OF WINTER',     sub:'Released in 2026',           pct:28 },
+    wowever: { label:'THE WINDS OF WINTER',     sub:'Released in our lifetime',    pct:71 },
+    ados:    { label:'A DREAM OF SPRING',        sub:'Published before GRRM retires', pct:45 },
+  };
+
+  function getWowVotes(){ try{ return JSON.parse(localStorage.getItem(WOW_KEY)||'{}'); }catch(_){ return {}; } }
+  function saveWowVotes(v){ localStorage.setItem(WOW_KEY, JSON.stringify(v)); }
+
+  function getWowPct(id){
+    const v = getWowVotes();
+    const raw = WOW_SEEDS[id].pct + (v[id]||0);
+    return Math.max(1, Math.min(99, raw));
+  }
+
+  window._voteWow = function(id, dir){
+    const v = getWowVotes();
+    v[id] = (v[id]||0) + dir;
+    const raw = WOW_SEEDS[id].pct + v[id];
+    if(raw < 1)  v[id] = 1  - WOW_SEEDS[id].pct;
+    if(raw > 99) v[id] = 99 - WOW_SEEDS[id].pct;
+    saveWowVotes(v);
+    const el = document.getElementById('grrm-watch-cards');
+    if(el) el.innerHTML = _wowCardsHTML();
+  };
+
+  function _wowCardsHTML(){
+    return Object.entries(WOW_SEEDS).map(([id, info]) => {
+      const pct = getWowPct(id);
+      const col = pct >= 60 ? '#4a8a30' : pct >= 35 ? '#c8a820' : '#8a3020';
+      return `<div class="wow-card">
+        <div class="wow-label">${info.label}</div>
+        <div class="wow-sub">${info.sub}</div>
+        <div class="wow-pct" style="color:${col}">${pct}<span class="wow-pct-sign">%</span></div>
+        <div class="wow-meter"><div class="wow-fill" style="width:${pct}%;background:${col}"></div></div>
+        <div class="wow-vote-row">
+          <button class="wow-btn wow-up" onclick="window._voteWow('${id}',1)" title="More likely">▲ Optimist</button>
+          <span class="wow-vote-hint">nudges ±1%</span>
+          <button class="wow-btn wow-dn" onclick="window._voteWow('${id}',-1)" title="Less likely">▼ Skeptic</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function buildGRRMWatch(){
+    return `<div id="grrm-watch-wrap">
+      <div id="grrm-watch-header">
+        <span id="grrm-watch-title">🐉 GRRM WATCH</span>
+        <span id="grrm-watch-sub">Community prediction market — vote to move the needle</span>
+      </div>
+      <div id="grrm-watch-cards">${_wowCardsHTML()}</div>
+      <div id="grrm-watch-note">Inspired by Kalshi / Manifold Markets. Odds are community-driven estimates, not financial instruments.</div>
+    </div>`;
   }
 
   // ── Theory data ──────────────────────────────────────────────────────────
