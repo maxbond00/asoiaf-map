@@ -6,11 +6,31 @@
 (function(){
   'use strict';
 
-  const VERDICTS = ['canon','likely','unsure','unlikely','noway'];
-  const VL = { canon:'⚜ CANON', likely:'✔ LIKELY', unsure:'⚖ UNSURE', unlikely:'✘ UNLIKELY', noway:'💀 NO WAY' };
-  const VC = { canon:'#c8a820', likely:'#4a8a30', unsure:'#7a6a20', unlikely:'#8a3020', noway:'#5a1808' };
+  // Verdicts — 'mystery' score is neutral (3) and excluded from likelihood sort
+  const VERDICTS = ['canon','likely','unsure','unlikely','noway','mystery'];
+  const VL = {
+    canon:   '⚜ CANON',
+    likely:  '✔ LIKELY',
+    unsure:  '⚖ UNSURE',
+    unlikely:'✘ UNLIKELY',
+    noway:   '💀 NO WAY',
+    mystery: '🌫 WILL NEVER KNOW',
+  };
+  const VC = {
+    canon:   '#c8a820',
+    likely:  '#4a8a30',
+    unsure:  '#7a6a20',
+    unlikely:'#8a3020',
+    noway:   '#5a1808',
+    mystery: '#6a5a9a',
+  };
+  // 'mystery' doesn't affect likelihood score — only canon→noway verdicts do
+  const SCORE_VERDICTS = ['canon','likely','unsure','unlikely','noway'];
   const VS = { canon:5, likely:4, unsure:3, unlikely:2, noway:1 };
-  const VOTES_KEY = 'asoiaf_theory_votes_v1';
+
+  const VOTES_KEY = 'asoiaf_theory_votes_v1'; // same key — mystery just adds a new value
+
+  let _activeFilter = 'All';
 
   function getUserVotes(){ try{ return JSON.parse(localStorage.getItem(VOTES_KEY)||'{}'); }catch(_){ return {}; } }
   function saveUserVotes(v){ localStorage.setItem(VOTES_KEY, JSON.stringify(v)); }
@@ -26,11 +46,17 @@
   function getScore(th){
     const t = getTotals(th);
     let sum = 0, count = 0;
-    VERDICTS.forEach(v=>{ sum += VS[v]*(t[v]||0); count += (t[v]||0); });
+    // Mystery votes intentionally excluded — they're a meta-verdict not a likelihood judgment
+    SCORE_VERDICTS.forEach(v=>{ sum += VS[v]*(t[v]||0); count += (t[v]||0); });
     return count ? sum/count : 3;
   }
 
-  function sorted(){ return [...THEORIES].sort((a,b)=>getScore(b)-getScore(a)); }
+  function sorted(){
+    const list = _activeFilter === 'All'
+      ? [...THEORIES]
+      : THEORIES.filter(t => t.category === _activeFilter);
+    return list.sort((a,b) => getScore(b) - getScore(a));
+  }
 
   function consensusLabel(score){
     if(score >= 4.5) return { label:'⚜ CANON TIER',       color: VC.canon    };
@@ -40,7 +66,7 @@
     return                   { label:'💀 MOSTLY DEBUNKED', color: VC.noway    };
   }
 
-  // ── Main render (called once when tab first opens) ───────────────────────
+  // ── Main render ──────────────────────────────────────────────────────────
   window.renderTheoriesTab = function(){
     const tab = document.getElementById('tab-theories');
     if(!tab || tab.dataset.rendered) return;
@@ -48,50 +74,87 @@
     injectStyles();
     tab.innerHTML = buildTabHTML();
     buildModal();
+    document.addEventListener('keydown', e => { if(e.key==='Escape') window._closeTheory(); });
   };
+
+  function getCategories(){
+    const cats = [...new Set(THEORIES.map(t=>t.category))];
+    return ['All', ...cats];
+  }
 
   function buildTabHTML(){
     const uv = getUserVotes();
     const voted = Object.keys(uv).length;
+    const pct = Math.round(voted / THEORIES.length * 100);
+    const cats = getCategories();
+    const filterPills = cats.map(c =>
+      `<button class="t-filter${c===_activeFilter?' active':''}" onclick="window._filterTheories('${c}')">${c}</button>`
+    ).join('');
+
     return `
       <div id="theories-header">
-        <div id="theories-title">⚗ THE FAN THEORY TRIBUNAL</div>
-        <div id="theories-subtitle">Click any card to read the theory and cast your verdict — sorted from most to least likely by fan consensus</div>
+        <div id="theories-title-row">
+          <div id="theories-title">⚗ THE FAN THEORY TRIBUNAL</div>
+          <div id="theories-progress-wrap" title="${voted} of ${THEORIES.length} voted">
+            <div id="theories-progress-bar" style="width:${pct}%"></div>
+            <span id="theories-progress-label">${voted}/${THEORIES.length} voted</span>
+          </div>
+        </div>
+        <div id="theories-subtitle">Click any card to read and cast your verdict — sorted by fan consensus</div>
         <div id="theories-legend">${VERDICTS.map(v=>`<span class="tleg" style="border-color:${VC[v]};color:${VC[v]}">${VL[v]}</span>`).join('')}</div>
+        <div id="theories-filters">${filterPills}</div>
       </div>
-      <div id="theories-meta"><span id="theories-voted-count">${voted ? `You've voted on ${voted} of ${THEORIES.length} theories` : `Vote on all ${THEORIES.length} theories below`}</span></div>
-      <div id="theories-grid">${sorted().map(cardHTML).join('')}</div>
+      <div id="theories-grid">${sorted().map((th,i) => cardHTML(th, i+1)).join('')}</div>
     `;
   }
 
-  function cardHTML(th){
+  window._filterTheories = function(cat){
+    _activeFilter = cat;
+    document.querySelectorAll('.t-filter').forEach(b => b.classList.toggle('active', b.textContent===cat));
+    refreshGrid();
+  };
+
+  function cardHTML(th, rank){
     const uv = getUserVotes();
     const uVote = uv[th.id];
     const t = getTotals(th);
-    const total = VERDICTS.reduce((s,v)=>s+(t[v]||0), 0);
+    const allVerdicts = VERDICTS;
+    const total = allVerdicts.reduce((s,v)=>s+(t[v]||0), 0);
     const score = getScore(th);
     const con = consensusLabel(score);
-    const bar = VERDICTS.map(v=>{
-      const pct = total ? Math.round((t[v]||0)/total*100) : 20;
-      return `<div class="tc-seg" style="width:${pct}%;background:${VC[v]}" title="${VL[v]}: ${t[v]||0}"></div>`;
+    const bar = allVerdicts.map(v=>{
+      const pct = total ? Math.round((t[v]||0)/total*100) : Math.round(100/allVerdicts.length);
+      return pct > 0 ? `<div class="tc-seg" style="width:${pct}%;background:${VC[v]}" title="${VL[v]}: ${t[v]||0}"></div>` : '';
     }).join('');
-    const badge = uVote ? `<span class="tc-badge" style="border-color:${VC[uVote]};color:${VC[uVote]}">${VL[uVote]}</span>` : '';
-    return `<div class="theory-card" onclick="window._openTheory('${th.id}')">
-      <div class="tc-top"><span class="tc-cat">${th.category}</span>${badge}</div>
+    const badge = uVote
+      ? `<span class="tc-badge" style="border-color:${VC[uVote]};color:${VC[uVote]}">${VL[uVote]}</span>`
+      : `<span class="tc-unvoted">VOTE</span>`;
+    return `<div class="theory-card${uVote?' voted':''}" onclick="window._openTheory('${th.id}')">
+      <div class="tc-top">
+        <span class="tc-cat">${th.category}</span>
+        <span class="tc-rank">#${rank}</span>
+      </div>
       <div class="tc-name">${th.name}</div>
       <div class="tc-con" style="color:${con.color}">${con.label}</div>
       <div class="tc-bar">${bar}</div>
-      <div class="tc-count">${total.toLocaleString()} votes</div>
+      <div class="tc-bottom">
+        <span class="tc-count">${total.toLocaleString()} votes</span>
+        ${badge}
+      </div>
     </div>`;
   }
 
   function refreshGrid(){
     const grid = document.getElementById('theories-grid');
-    if(grid) grid.innerHTML = sorted().map(cardHTML).join('');
+    if(grid) grid.innerHTML = sorted().map((th,i)=>cardHTML(th,i+1)).join('');
+    // Update progress
     const uv = getUserVotes();
     const voted = Object.keys(uv).length;
-    const el = document.getElementById('theories-voted-count');
-    if(el) el.textContent = voted ? `You've voted on ${voted} of ${THEORIES.length} theories` : `Vote on all ${THEORIES.length} theories below`;
+    const pct = Math.round(voted / THEORIES.length * 100);
+    const bar = document.getElementById('theories-progress-bar');
+    const lbl = document.getElementById('theories-progress-label');
+    if(bar) bar.style.width = pct + '%';
+    if(lbl) lbl.textContent = `${voted}/${THEORIES.length} voted`;
   }
 
   // ── Modal ────────────────────────────────────────────────────────────────
@@ -104,13 +167,20 @@
     m.onclick = e => { if(e.target === m) window._closeTheory(); };
     m.innerHTML = `
       <div id="tm-box">
-        <button id="tm-close" onclick="window._closeTheory()">✕</button>
+        <button id="tm-close" onclick="window._closeTheory()" title="Close (Esc)">✕</button>
         <div id="tm-cat"></div>
         <div id="tm-title"></div>
         <div id="tm-blurb"></div>
         <div id="tm-vote-label">CAST YOUR VERDICT:</div>
-        <div id="tm-btns">${VERDICTS.map(v=>`<button class="tm-btn" data-v="${v}" onclick="window._castVote('${v}')" style="--vc:${VC[v]}">${VL[v]}</button>`).join('')}</div>
+        <div id="tm-btns">
+          ${VERDICTS.map(v=>`<button class="tm-btn" data-v="${v}" onclick="window._castVote('${v}')" style="--vc:${VC[v]}">${VL[v]}</button>`).join('')}
+        </div>
+        <div id="tm-tally-head">CURRENT TALLY</div>
         <div id="tm-tally"></div>
+        <div id="tm-nav">
+          <button class="tm-nav-btn" onclick="window._navTheory(-1)">◀ PREV</button>
+          <button class="tm-nav-btn" onclick="window._navTheory(1)">NEXT ▶</button>
+        </div>
       </div>`;
     document.body.appendChild(m);
   }
@@ -119,19 +189,46 @@
     const th = THEORIES.find(t=>t.id===id);
     if(!th) return;
     _modalId = id;
-    document.getElementById('tm-cat').textContent   = th.category;
-    document.getElementById('tm-title').textContent  = th.name;
-    document.getElementById('tm-blurb').textContent  = th.blurb;
-    refreshModal(th);
+    _populateModal(th);
     const m = document.getElementById('theory-modal');
     m.style.display = 'flex';
     requestAnimationFrame(()=> m.classList.add('open'));
   };
 
+  function _populateModal(th){
+    document.getElementById('tm-cat').textContent  = th.category;
+    document.getElementById('tm-title').textContent = th.name;
+    document.getElementById('tm-blurb').textContent = th.blurb;
+    refreshModal(th);
+  }
+
   window._closeTheory = function(){
     const m = document.getElementById('theory-modal');
+    if(!m || m.style.display==='none') return;
     m.classList.remove('open');
     setTimeout(()=>{ m.style.display='none'; }, 200);
+  };
+
+  window._navTheory = function(dir){
+    const list = sorted();
+    const idx  = list.findIndex(t=>t.id===_modalId);
+    const next = list[(idx + dir + list.length) % list.length];
+    _modalId = next.id;
+    // Animate box
+    const box = document.getElementById('tm-box');
+    box.style.opacity = '0';
+    box.style.transform = `translateX(${dir*30}px)`;
+    setTimeout(()=>{
+      _populateModal(next);
+      box.style.transition = 'none';
+      box.style.transform = `translateX(${-dir*30}px)`;
+      box.style.opacity = '0';
+      requestAnimationFrame(()=>{
+        box.style.transition = '';
+        box.style.transform = '';
+        box.style.opacity = '1';
+      });
+    }, 150);
   };
 
   window._castVote = function(verdict){
@@ -156,6 +253,7 @@
     const rows = VERDICTS.map(v=>{
       const cnt = t[v]||0;
       const pct = total ? Math.round(cnt/total*100) : 0;
+      if(!cnt) return '';
       return `<div class="tm-row">
         <span class="tm-rl" style="color:${VC[v]}">${VL[v]}</span>
         <div class="tm-bw"><div class="tm-bf" style="width:${pct}%;background:${VC[v]}"></div></div>
@@ -173,50 +271,78 @@
     s.id = 'theory-css';
     s.textContent = `
     #tab-theories { display:flex; flex-direction:column; height:100%; overflow:hidden; background:#0a0500; color:#c8a050; }
-    #theories-header { padding:18px 22px 12px; border-bottom:1px solid #2a1a05; background:rgba(8,4,0,.95); flex-shrink:0; }
-    #theories-title { font-size:1.15em; font-weight:bold; letter-spacing:2px; color:#d4a820; margin-bottom:5px; }
-    #theories-subtitle { font-size:.73em; color:#5a3a10; letter-spacing:.4px; margin-bottom:10px; }
-    #theories-legend { display:flex; gap:7px; flex-wrap:wrap; }
-    .tleg { font-size:.65em; border:1px solid; padding:2px 7px; border-radius:2px; letter-spacing:.5px; }
-    #theories-meta { padding:7px 22px; font-size:.72em; color:#3a2008; border-bottom:1px solid #180d00; flex-shrink:0; letter-spacing:.4px; }
-    #theories-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; padding:14px 18px; overflow-y:auto; flex:1; }
-    .theory-card { background:#0d0700; border:1px solid #241505; border-radius:4px; padding:13px 13px 9px; cursor:pointer; transition:border-color .15s,background .15s; display:flex; flex-direction:column; gap:5px; }
-    .theory-card:hover { border-color:#6a3a10; background:#120900; }
-    .tc-top { display:flex; justify-content:space-between; align-items:center; gap:4px; }
-    .tc-cat { font-size:.62em; color:#3a2008; letter-spacing:1px; text-transform:uppercase; }
-    .tc-badge { font-size:.58em; border:1px solid; padding:1px 5px; border-radius:2px; letter-spacing:.3px; white-space:nowrap; }
-    .tc-name { font-size:.88em; color:#d4a820; font-weight:bold; letter-spacing:.4px; line-height:1.3; }
-    .tc-con { font-size:.67em; letter-spacing:.7px; }
-    .tc-bar { display:flex; height:4px; border-radius:2px; overflow:hidden; gap:1px; margin:2px 0; }
-    .tc-seg { height:100%; min-width:1px; }
-    .tc-count { font-size:.6em; color:#3a1a06; letter-spacing:.2px; }
 
-    #theory-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.78); z-index:9000; align-items:center; justify-content:center; padding:20px; opacity:0; transition:opacity .2s; }
+    /* Header */
+    #theories-header { padding:14px 20px 10px; border-bottom:1px solid #2a1a05; background:rgba(8,4,0,.97); flex-shrink:0; }
+    #theories-title-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:4px; }
+    #theories-title { font-size:1.1em; font-weight:bold; letter-spacing:2px; color:#d4a820; }
+    #theories-progress-wrap { position:relative; height:16px; background:#1a0d00; border-radius:8px; overflow:hidden; width:140px; flex-shrink:0; border:1px solid #2a1a05; }
+    #theories-progress-bar { height:100%; background:#4a2a08; border-radius:8px; transition:width .4s; }
+    #theories-progress-label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.6em; color:#8a5a20; letter-spacing:.5px; }
+    #theories-subtitle { font-size:.71em; color:#4a2a08; letter-spacing:.3px; margin-bottom:8px; }
+    #theories-legend { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+    .tleg { font-size:.62em; border:1px solid; padding:2px 7px; border-radius:2px; letter-spacing:.4px; }
+
+    /* Category filters */
+    #theories-filters { display:flex; gap:5px; flex-wrap:wrap; }
+    .t-filter { background:transparent; border:1px solid #2a1a05; color:#4a2a08; padding:3px 10px; border-radius:2px; cursor:pointer; font-family:inherit; font-size:.65em; letter-spacing:.5px; transition:all .15s; }
+    .t-filter:hover { border-color:#6a3a10; color:#8a5a20; }
+    .t-filter.active { background:#1a0d00; border-color:#d4a820; color:#d4a820; }
+
+    /* Grid */
+    #theories-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; padding:14px 16px; overflow-y:auto; flex:1; }
+
+    /* Cards */
+    .theory-card { background:#0c0600; border:1px solid #1e1205; border-radius:4px; padding:12px 12px 10px; cursor:pointer; transition:border-color .15s,background .15s,box-shadow .15s; display:flex; flex-direction:column; gap:6px; }
+    .theory-card:hover { border-color:#5a3010; background:#110800; box-shadow:0 2px 12px rgba(0,0,0,.4); }
+    .theory-card.voted { border-color:#2a1a05; }
+    .tc-top { display:flex; justify-content:space-between; align-items:center; }
+    .tc-cat { font-size:.6em; color:#3a2008; letter-spacing:1px; text-transform:uppercase; }
+    .tc-rank { font-size:.6em; color:#2a1505; letter-spacing:.5px; }
+    .tc-name { font-size:.9em; color:#d4a820; font-weight:bold; letter-spacing:.3px; line-height:1.35; flex:1; }
+    .tc-con { font-size:.65em; letter-spacing:.6px; }
+    .tc-bar { display:flex; height:5px; border-radius:3px; overflow:hidden; gap:1px; }
+    .tc-seg { height:100%; min-width:2px; transition:width .3s; }
+    .tc-bottom { display:flex; justify-content:space-between; align-items:center; margin-top:1px; }
+    .tc-count { font-size:.59em; color:#2e1606; }
+    .tc-badge { font-size:.58em; border:1px solid; padding:1px 5px; border-radius:2px; letter-spacing:.2px; white-space:nowrap; }
+    .tc-unvoted { font-size:.58em; color:#2a1605; letter-spacing:1px; border:1px dashed #2a1605; padding:1px 5px; border-radius:2px; }
+    .theory-card:hover .tc-unvoted { color:#6a3a10; border-color:#6a3a10; }
+
+    /* Modal */
+    #theory-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.82); z-index:9000; align-items:center; justify-content:center; padding:20px; opacity:0; transition:opacity .2s; }
     #theory-modal.open { opacity:1; }
-    #tm-box { background:#0d0700; border:1px solid #4a2a08; border-radius:6px; max-width:580px; width:100%; padding:26px 28px 22px; position:relative; max-height:90vh; overflow-y:auto; }
-    #tm-close { position:absolute; top:10px; right:12px; background:none; border:none; color:#4a2a08; font-size:1.1em; cursor:pointer; padding:4px 6px; }
+    #tm-box { background:#0d0700; border:1px solid #4a2a08; border-radius:5px; max-width:600px; width:100%; padding:26px 28px 20px; position:relative; max-height:90vh; overflow-y:auto; transition:opacity .15s,transform .15s; }
+    #tm-close { position:absolute; top:10px; right:12px; background:none; border:none; color:#3a2008; font-size:1.1em; cursor:pointer; padding:4px 7px; border-radius:3px; transition:color .1s; }
     #tm-close:hover { color:#d4a820; }
-    #tm-cat { font-size:.65em; color:#4a2a08; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:5px; }
-    #tm-title { font-size:1.25em; color:#d4a820; font-weight:bold; letter-spacing:.8px; margin-bottom:13px; line-height:1.3; }
-    #tm-blurb { font-size:.84em; color:#a07830; line-height:1.75; margin-bottom:18px; border-left:2px solid #2a1a05; padding-left:14px; }
-    #tm-vote-label { font-size:.66em; color:#4a2a08; letter-spacing:1.5px; margin-bottom:9px; }
-    #tm-btns { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:18px; }
-    .tm-btn { background:#0a0500; border:1px solid var(--vc); color:var(--vc); padding:7px 12px; border-radius:3px; cursor:pointer; font-family:inherit; font-size:.73em; letter-spacing:.4px; transition:background .15s,opacity .15s; opacity:.55; }
-    .tm-btn:hover { opacity:.85; background:#170d00; }
+    #tm-cat { font-size:.63em; color:#4a2a08; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+    #tm-title { font-size:1.2em; color:#d4a820; font-weight:bold; letter-spacing:.7px; margin-bottom:12px; line-height:1.35; padding-right:24px; }
+    #tm-blurb { font-size:.84em; color:#a07830; line-height:1.8; margin-bottom:18px; border-left:2px solid #2a1a05; padding-left:14px; }
+    #tm-vote-label { font-size:.63em; color:#4a2a08; letter-spacing:1.5px; margin-bottom:8px; }
+    #tm-btns { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
+    .tm-btn { background:#0a0500; border:1px solid var(--vc); color:var(--vc); padding:7px 11px; border-radius:3px; cursor:pointer; font-family:inherit; font-size:.71em; letter-spacing:.3px; transition:background .12s,opacity .12s; opacity:.5; }
+    .tm-btn:hover { opacity:.88; background:#160b00; }
     .tm-btn.chosen { opacity:1; background:rgba(255,255,255,.05); font-weight:bold; box-shadow:0 0 0 1px var(--vc); }
-    .tm-row { display:flex; align-items:center; gap:7px; margin-bottom:5px; }
-    .tm-rl { width:130px; font-size:.7em; letter-spacing:.3px; flex-shrink:0; }
-    .tm-bw { flex:1; height:6px; background:#180d00; border-radius:3px; overflow:hidden; }
-    .tm-bf { height:100%; border-radius:3px; transition:width .35s; }
-    .tm-rp { width:32px; font-size:.7em; color:#5a3a10; text-align:right; flex-shrink:0; }
-    .tm-rc { width:58px; font-size:.64em; color:#3a1a06; flex-shrink:0; }
-    .tm-tot { font-size:.66em; color:#3a1a06; margin-top:9px; letter-spacing:.3px; }
-    @media(max-width:520px){
-      #theories-grid { grid-template-columns:1fr 1fr; gap:7px; padding:9px; }
+    #tm-tally-head { font-size:.62em; color:#4a2a08; letter-spacing:1.5px; margin-bottom:8px; }
+    .tm-row { display:flex; align-items:center; gap:7px; margin-bottom:6px; }
+    .tm-rl { width:145px; font-size:.69em; letter-spacing:.2px; flex-shrink:0; }
+    .tm-bw { flex:1; height:7px; background:#160b00; border-radius:4px; overflow:hidden; }
+    .tm-bf { height:100%; border-radius:4px; transition:width .35s; }
+    .tm-rp { width:32px; font-size:.69em; color:#5a3a10; text-align:right; flex-shrink:0; }
+    .tm-rc { width:60px; font-size:.63em; color:#3a1a06; flex-shrink:0; }
+    .tm-tot { font-size:.64em; color:#3a1a06; margin-top:10px; padding-top:8px; border-top:1px solid #1a0d00; letter-spacing:.3px; }
+    #tm-nav { display:flex; justify-content:space-between; margin-top:16px; padding-top:12px; border-top:1px solid #1a0d00; }
+    .tm-nav-btn { background:none; border:1px solid #2a1a05; color:#4a2a08; padding:5px 14px; border-radius:3px; cursor:pointer; font-family:inherit; font-size:.68em; letter-spacing:1px; transition:border-color .15s,color .15s; }
+    .tm-nav-btn:hover { border-color:#6a3a10; color:#8a5a20; }
+
+    @media(max-width:540px){
+      #theories-grid { grid-template-columns:1fr 1fr; gap:7px; padding:8px; }
+      #theories-title-row { flex-wrap:wrap; }
+      #theories-progress-wrap { width:100px; }
       #tm-box { padding:18px 14px 16px; }
-      #tm-btns { gap:5px; }
-      .tm-btn { padding:5px 7px; font-size:.66em; }
-      .tm-rl { width:95px; }
+      #tm-btns { gap:4px; }
+      .tm-btn { padding:5px 7px; font-size:.65em; }
+      .tm-rl { width:105px; }
     }
     `;
     document.head.appendChild(s);
