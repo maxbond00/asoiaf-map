@@ -501,7 +501,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
       <button class="tab-btn active" data-tab="map"       onclick="switchTab('map')">🗺 MAP</button>
       <button class="tab-btn"        data-tab="relations" onclick="switchTab('relations')">🕸 RELATIONS</button>
       <button class="tab-btn"        data-tab="history"   onclick="switchTab('history')">📜 HISTORY</button>
-      <button class="tab-btn"        data-tab="ask"       onclick="switchTab('ask')">💬 ASK</button>
+      <button class="tab-btn"        data-tab="theories"  onclick="switchTab('theories')">⚗ THEORIES</button>
     </div>
     <div class="header-right">
       <span id="char-count" style="color:#5a3a10"></span>
@@ -675,49 +675,8 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
     </div>
   </div>
 
-  <!-- ═══════════════════════ ASK THE MAESTER TAB ══════════════════════ -->
-  <div id="tab-ask">
-    <div id="ask-chat">
-      <div id="ask-header">
-        <span id="ask-header-title">⚔ THE MAESTER'S TOWER — Ask anything about the world of Ice &amp; Fire</span>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="ask-ctrl-btn" onclick="askNewChat()" title="New conversation">✦ NEW</button>
-          <button class="ask-ctrl-btn" onclick="askForgetKey()" id="ask-key-btn-hdr" style="display:none">🔑</button>
-        </div>
-      </div>
-      <!-- Shown only when server endpoint isn't deployed and no user key is set -->
-      <div id="ask-key-prompt" style="display:none;align-items:center;justify-content:center;padding:14px 18px;background:rgba(10,5,0,.7);border-bottom:1px solid #2a1a05;gap:10px;flex-wrap:wrap;">
-        <span style="font-size:.76em;color:#6a4a18;letter-spacing:.5px;">Enter an API key — Anthropic, OpenAI, or Gemini accepted:</span>
-        <input id="ask-key-input-field" type="password" placeholder="sk-ant-… / sk-… / AIza…" style="background:#0d0600;border:1px solid #4a2a08;color:#d4a820;padding:6px 10px;border-radius:3px;font-family:inherit;font-size:.8em;width:270px;outline:none;" onkeydown="if(event.key==='Enter')askSaveKey()">
-        <button onclick="askSaveKey()" style="background:#1a0d00;border:1px solid #d4a820;color:#d4a820;padding:6px 14px;border-radius:3px;cursor:pointer;font-family:inherit;font-size:.8em;">SAVE</button>
-        <span style="font-size:.7em;color:#4a2a08;">Get a key:
-          <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:#6a4a18;text-decoration:none;">Anthropic</a> ·
-          <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" style="color:#6a4a18;text-decoration:none;">OpenAI</a> ·
-          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:#6a4a18;text-decoration:none;">Gemini</a>
-        </span>
-      </div>
-      <div id="ask-messages">
-        <div id="ask-suggestions">
-          <div class="ask-sug-title">QUESTIONS TO BEGIN WITH</div>
-          <div id="ask-sug-grid">
-            <button class="ask-sug" onclick="askSuggest(this)">Is R+L=J actually confirmed in the books?</button>
-            <button class="ask-sug" onclick="askSuggest(this)">Who is the Hooded Man in Winterfell?</button>
-            <button class="ask-sug" onclick="askSuggest(this)">What is the Azor Ahai prophecy and who fulfils it?</button>
-            <button class="ask-sug" onclick="askSuggest(this)">Explain the history of the Targaryens before the conquest</button>
-            <button class="ask-sug" onclick="askSuggest(this)">What are Euron Greyjoy's true powers and goals?</button>
-            <button class="ask-sug" onclick="askSuggest(this)">What happened during the Dance of Dragons?</button>
-            <button class="ask-sug" onclick="askSuggest(this)">Is Aegon Targaryen (Young Griff) real or a Blackfyre pretender?</button>
-            <button class="ask-sug" onclick="askSuggest(this)">Who are the Others and what do they want?</button>
-          </div>
-        </div>
-      </div>
-      <div id="ask-input-row">
-        <textarea id="ask-input" placeholder="Ask about lore, history, theories, characters…" rows="1" onkeydown="askKeydown(event)" oninput="askAutoResize(this)"></textarea>
-        <button id="ask-send-btn" onclick="askSend()">▶</button>
-      </div>
-      <div id="ask-footer">Covers all five books · All spoilers · Powered by Claude</div>
-    </div>
-  </div>
+  <!-- ═══════════════════════ THEORIES TAB ══════════════════════════════ -->
+  <div id="tab-theories" style="display:none;flex-direction:column;height:100%;overflow:hidden;"></div>
 
   <!-- ═══════════════════════ HISTORY TIMELINE TAB ══════════════════════ -->
   <div id="tab-history">
@@ -2288,18 +2247,17 @@ function updateMusicBtn(){
 let currentTab = 'map';
 function switchTab(tab){
   currentTab = tab;
-  const mapCont  = document.getElementById('map-container');
-  const tabRel   = document.getElementById('tab-relations');
-  const tabHist  = document.getElementById('tab-history');
-  const tabAsk   = document.getElementById('tab-ask');
-  const timeline = document.getElementById('timeline');
+  const mapCont   = document.getElementById('map-container');
+  const tabRel    = document.getElementById('tab-relations');
+  const tabHist   = document.getElementById('tab-history');
+  const tabTheory = document.getElementById('tab-theories');
+  const timeline  = document.getElementById('timeline');
 
-  mapCont.style.display  = tab==='map'       ? ''     : 'none';
-  tabRel.style.display   = tab==='relations' ? 'flex' : 'none';
-  tabHist.style.display  = tab==='history'   ? 'flex' : 'none';
-  tabAsk.style.display   = tab==='ask'       ? 'flex' : 'none';
-  timeline.style.display = tab==='map'       ? ''     : 'none';
-  if(tab==='ask' && window.askTabOpened) window.askTabOpened();
+  mapCont.style.display   = tab==='map'       ? ''     : 'none';
+  tabRel.style.display    = tab==='relations' ? 'flex' : 'none';
+  tabHist.style.display   = tab==='history'   ? 'flex' : 'none';
+  tabTheory.style.display = tab==='theories'  ? 'flex' : 'none';
+  timeline.style.display  = tab==='map'       ? ''     : 'none';
 
   document.querySelectorAll('.tab-btn').forEach(b=>{
     b.classList.toggle('active', b.dataset.tab===tab);
@@ -2307,12 +2265,12 @@ function switchTab(tab){
 
   if(tab==='relations' && window.initRelationsGraph){
     window.initRelationsGraph();
-    // Patch touch support onto the graph canvas (once) for mobile pan/zoom
     if(typeof addTouchAsMouse === 'function'){
       addTouchAsMouse(document.getElementById('graph-canvas-wrap'));
     }
   }
-  if(tab==='history'   && window.renderHistoryTab)   window.renderHistoryTab();
+  if(tab==='history'  && window.renderHistoryTab)  window.renderHistoryTab();
+  if(tab==='theories' && window.renderTheoriesTab) window.renderTheoriesTab();
 }
 
 // ── LANDING PAGE ──────────────────────────────────────────────────────
@@ -2604,7 +2562,7 @@ function addTouchAsMouse(el){
 <script src="chunk-pov.js"></script>
 <script src="chunk-history.js"></script>
 <script src="chunk-graph.js"></script>
-<script src="chunk-ask.js"></script>
+<script src="chunk-theories.js"></script>
 
 </body>
 </html>
