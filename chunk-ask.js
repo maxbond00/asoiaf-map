@@ -128,6 +128,12 @@ window.askSend = async function(){
         const txt = await resp.text().catch(()=>'');
         let msg = `Server error ${resp.status}`;
         try{ msg = JSON.parse(txt)?.error?.message || msg; }catch(_){}
+        // Give actionable guidance for common server-key errors
+        if(msg.toLowerCase().includes('api key not valid') || msg.toLowerCase().includes('invalid') || resp.status === 401 || resp.status === 403){
+          msg = `Server API key rejected (${msg}). Go to your Netlify/Vercel dashboard → Environment Variables and check that GEMINI_API_KEY is set correctly with no extra spaces.`;
+        } else if(resp.status === 500 && msg.toLowerCase().includes('no api key')){
+          msg = 'No API key is set on the server. Go to your Netlify/Vercel dashboard → Environment Variables and add GEMINI_API_KEY.';
+        }
         throw new Error(msg);
       }
     }
