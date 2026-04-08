@@ -40,8 +40,8 @@ export default async function handler(req) {
     content: String(m.content || '').slice(0, 4000),
   }));
 
-  const geminiKey    = Deno.env.get('GEMINI_API_KEY');
-  const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY');
+  const geminiKey    = (Deno.env.get('GEMINI_API_KEY') || '').trim();
+  const anthropicKey = (Deno.env.get('ANTHROPIC_API_KEY') || '').trim();
 
   if (geminiKey) {
     // ── Gemini (free tier) ─────────────────────────────────────────────────
