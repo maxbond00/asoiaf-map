@@ -495,12 +495,12 @@
     // ── IDENTITY ──────────────────────────────────────────────────────────
     {
       id:'rlj', name:'R+L=J', category:'Identity',
-      blurb:'Jon Snow is not Ned Stark\'s bastard but the son of Prince Rhaegar Targaryen and Lyanna Stark. Ned made a death-bed promise to Lyanna to protect the child. The three Kingsguard at the Tower of Joy were stationed there not to guard Lyanna, but to protect a royal heir. This is the most universally accepted theory in fandom history — the show confirmed it, and the books have foreshadowed it on virtually every page Ned appears.',
+      blurb:'Jon Snow is not Ned Stark\'s bastard but the son of Prince Rhaegar Targaryen and Lyanna Stark. Ned made a death-bed promise to Lyanna to protect the child. The three Kingsguard at the Tower of Joy were stationed there not to guard Lyanna, but to protect a royal heir. The books have foreshadowed it on virtually every page Ned appears — from the crypts of Winterfell to his final chapters in King\'s Landing.',
       seeds:{ canon:4400, likely:750, unsure:90, unlikely:25, noway:15 },
     },
     {
       id:'benjen-coldhands', name:'Coldhands is Benjen Stark', category:'Identity',
-      blurb:'The mysterious hooded figure who saves Sam and Gilly north of the Wall is Benjen Stark, kept animate by the Children of the Forest\'s magic after being stabbed with a White Walker\'s ice sword. GRRM denied it in a margin note on an early manuscript — but that note may have been written to mislead. The show made them the same person, and the book evidence (Coldhands knowing Bran by name, his familiarity with the Night\'s Watch) is suggestive.',
+      blurb:'The mysterious hooded figure who saves Sam and Gilly north of the Wall is Benjen Stark, kept animate by the Children of the Forest\'s magic. GRRM denied it in a margin note on an early manuscript — but that note may have been written to mislead, and editors have suggested it was a joke answer. The book evidence remains compelling: Coldhands knows Bran by name, knows Night\'s Watch customs, and rides a great elk — behavior consistent with a former ranger.',
       seeds:{ canon:700, likely:1800, unsure:900, unlikely:500, noway:200 },
     },
     {
@@ -547,7 +547,7 @@
     },
     {
       id:'dany-aa', name:'Daenerys is Azor Ahai / TPTWP', category:'Prophecy',
-      blurb:'Daenerys was born during a storm (Stormborn), is associated with fire and rebirth (hatching the dragons at her husband\'s pyre), and has consistently risen after apparent destruction. Her three dragons could be her Lightbringer — or she herself is the sword. The show version of her arc (burning King\'s Landing) suggests a darker fulfillment of the fire prophecy than fans originally expected, which GRRM may mirror.',
+      blurb:'Daenerys was born during a storm (Stormborn), is associated with fire and rebirth (hatching the dragons at her husband\'s pyre), and has consistently risen after apparent destruction. Her three dragons could be her Lightbringer — or she herself is the sword. Her visions in the House of the Undying and Quaithe\'s cryptic warnings suggest a darker fulfillment of the fire prophecy than fans originally hoped.',
       seeds:{ canon:180, likely:1900, unsure:2100, unlikely:650, noway:280 },
     },
     {
@@ -557,7 +557,7 @@
     },
     {
       id:'valonqar-jaime', name:'Cersei\'s Valonqar = Jaime', category:'Prophecy',
-      blurb:'Maggy the Frog prophesied that the "valonqar" (High Valyrian for "little brother") would wrap his hands around Cersei\'s pale throat and choke the life from her. Cersei assumes Tyrion — but Jaime was born after her, making him also a little brother. His arc toward Cersei\'s death has been building since Season 1, and his golden hand could be used as the choking instrument. The irony of being killed by her twin is quintessentially GRRM.',
+      blurb:'Maggy the Frog prophesied that the "valonqar" (High Valyrian for "little brother") would wrap his hands around Cersei\'s pale throat and choke the life from her. Cersei assumes Tyrion — but Jaime was born moments after her, making him also a little brother. His golden hand could be used as the choking instrument. The irony of being killed by her twin is quintessentially GRRM.',
       seeds:{ canon:90, likely:2500, unsure:1000, unlikely:450, noway:180 },
     },
     {
@@ -572,7 +572,7 @@
     },
     {
       id:'maggy-full', name:'Maggy\'s Full Prophecy Will Be Fulfilled', category:'Prophecy',
-      blurb:'Every line of Maggy the Frog\'s prophecy for young Cersei has a plausible path to fulfillment: the queen more beautiful casting her down (Margaery? Daenerys? Sansa?), all three of her children dying with gold shrouds (done in the show, well-foreshadowed in the books), and the valonqar. The show omitted the valonqar clause; the books include it. GRRM has a near-perfect track record of fulfilling prophecies — usually in unexpected ways.',
+      blurb:'Every line of Maggy the Frog\'s prophecy for young Cersei has a plausible path to fulfillment: the queen more beautiful casting her down (Margaery? Daenerys? Sansa?), all three of her children dying with gold shrouds (foreshadowed throughout the books), and the valonqar. The valonqar clause appears in the books but has not yet been fulfilled. GRRM has a near-perfect track record of fulfilling prophecies — usually in unexpected ways.',
       seeds:{ canon:100, likely:2000, unsure:1100, unlikely:350, noway:120 },
     },
     {
@@ -606,7 +606,7 @@
     // ── MAGIC & LORE ──────────────────────────────────────────────────────
     {
       id:'cotf-made-others', name:'The Children of the Forest Created the White Walkers', category:'Magic & Lore',
-      blurb:'The Others did not arise naturally — they were created as a weapon by the Children of the Forest during their war against the First Men. A human was captured and had an obsidian dagger driven into his heart, transforming him into the first White Walker. The Children, unable to control what they made, are partly responsible for the Long Night. This is confirmed in the TV show and is strongly hinted at in the books through Bran\'s greensight.',
+      blurb:'The Others did not arise naturally — they were created as a weapon by the Children of the Forest during their war against the First Men. A human may have been transformed through obsidian and ancient magic, and the Children, unable to control what they made, are partly responsible for the Long Night. This is strongly hinted at in the books through Bran\'s greensight visions and the broader parallels between the Children\'s pacts and magical corruption. [Note: explicitly confirmed only in the TV show so far.]',
       seeds:{ canon:650, likely:1900, unsure:1000, unlikely:280, noway:80 },
     },
     {
@@ -616,7 +616,7 @@
     },
     {
       id:'bran-past', name:'Bran Can Alter the Past Through the Weirwood Network', category:'Magic & Lore',
-      blurb:'Bran witnesses past events through the greenseer network, but there are hints he can interact with the past — most notably when young Ned appears to hear Bran\'s voice at the Tower of Joy. If Bran can whisper into the past, he may have already shaped history (for example, the Mad King\'s recurring command to "burn them all" may be Bran calling for dragonglass or wildfire against the Others from a future/past interaction gone wrong).',
+      blurb:'Bran witnesses past events through the greenseer network, but there are hints he can interact with the past — most notably when Ned appears to hear something in a vision sequence in ADwD. If Bran can whisper into the past, he may have already shaped history (for example, the Mad King\'s recurring command to "burn them all" may be Bran calling for dragonglass or wildfire against the Others from a future/past interaction gone wrong).',
       seeds:{ canon:80, likely:1000, unsure:1700, unlikely:900, noway:500 },
     },
     {
@@ -641,7 +641,7 @@
     },
     {
       id:'horn-winter', name:'The Horn of Winter Will Bring Down the Wall', category:'Magic & Lore',
-      blurb:'The Horn of Joramun, if truly found (or if the horn Sam found at the Fist of the First Men is the real one, not the decoy), can collapse the Wall when blown. Mance Rayder claimed to have it and destroyed it before capture — but may have kept the real one hidden. The Wall has to fall for the final act of the story to begin; this is presumably how. The show used it as a dragon (Viserion) but the books have been building the Horn plot carefully.',
+      blurb:'The Horn of Joramun, if truly found (or if the horn Sam found at the Fist of the First Men is the real one, not the decoy), can collapse the Wall when blown. Mance Rayder claimed to have it and destroyed it before capture — but may have kept the real one hidden. The Wall has to fall for the final act of the story to begin, and the books have been carefully building the Horn of Winter plot across multiple POV threads.',
       seeds:{ canon:100, likely:1700, unsure:1800, unlikely:450, noway:180 },
     },
     {
@@ -678,7 +678,7 @@
     },
     {
       id:'sansa-littlefinger', name:'Sansa Will Outplay Littlefinger and Destroy Him', category:'Politics',
-      blurb:'Sansa began as Littlefinger\'s pawn, but has been learning his game from the inside. By ADwD she is beginning to understand manipulation, social performance, and the power of narrative. GRRM has called Sansa\'s arc one of learning to play the game of thrones — and the most satisfying end point for a student is surpassing their teacher. Littlefinger\'s death at Sansa\'s indirect hands was foreshadowed in the show, and the book setup points similarly.',
+      blurb:'Sansa began as Littlefinger\'s pawn, but has been learning his game from the inside. By ADwD she is beginning to understand manipulation, social performance, and the power of narrative. GRRM has called Sansa\'s arc one of learning to play the game of thrones — and the most satisfying end point for a student is surpassing their teacher. Her Alayne chapters show a girl becoming a player, not a piece.',
       seeds:{ canon:100, likely:1850, unsure:1200, unlikely:380, noway:170 },
     },
     {
@@ -695,7 +695,7 @@
     // ── ENDGAME ───────────────────────────────────────────────────────────
     {
       id:'dany-burns-kl', name:'Daenerys Will Burn King\'s Landing', category:'Endgame',
-      blurb:'Daenerys\'s family history, her visions in the House of the Undying, and her increasing willingness to use dragonfire as a political tool all point toward a moment where she mirrors her father. The show did it; the book has been building the foreshadowing since book one (the Mad King\'s wildfire caches remain under King\'s Landing). Whether it is a choice, a trap, or a prophecy fulfilled against her will — the Mother of Dragons burning the city is arguably the most foreshadowed event in the series.',
+      blurb:'Daenerys\'s family history, her visions in the House of the Undying, and her increasing willingness to use dragonfire as a political tool all point toward a moment where she mirrors her father. The Mad King\'s wildfire caches remain under King\'s Landing. Whether it is a choice, a trap, or a prophecy fulfilled against her will — the Mother of Dragons burning the city is arguably the most foreshadowed event in the series.',
       seeds:{ canon:90, likely:1650, unsure:1800, unlikely:620, noway:290 },
     },
     {
@@ -710,7 +710,7 @@
     },
     {
       id:'cleganebowl', name:'CLEGANEBOWL — Sandor vs. Gregor in Trial by Combat', category:'Endgame',
-      blurb:'"GET HYPE." If the Hound is alive on the Quiet Isle, and if Cersei demands trial by combat with Ser Robert Strong (Gregor Clegane reanimated by Qyburn), the Faith Militant would need a champion. The Elder Brother noted the Hound\'s fighting skills. Sandor\'s life of violence may culminate in one final, cathartic fight against his monstrous brother. The show did it. The foreshadowing in the books (Sandor\'s resentment of Gregor, the gravedigger setup) points the same direction.',
+      blurb:'"GET HYPE." If the Hound is alive on the Quiet Isle, and if Cersei demands trial by combat with Ser Robert Strong (Gregor Clegane reanimated by Qyburn), the Faith Militant would need a champion. The Elder Brother noted the Hound\'s fighting skills. Sandor\'s resentment of Gregor, the gravedigger setup on the Quiet Isle, and Cersei\'s mounting legal jeopardy all set the stage for one final, cathartic brotherly confrontation.',
       seeds:{ canon:190, likely:2900, unsure:1050, unlikely:380, noway:140 },
     },
     {
