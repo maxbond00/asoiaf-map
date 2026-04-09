@@ -11,7 +11,7 @@ Object.assign(window.CHARS, {
 
   'daario-naharis': {
     name: 'Daario Naharis',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BY2ExMDJmNzMtMDVmZi00MDNlLWI1NzYtOTkxOTdlOWU4YzE4XkEyXkFqcGdeQXVyNTcxMzMwNTA@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BY2ExMDJmNzMtMDVmZi00MDNlLWI1NzYtOTkxOTdlOWU4YzE4XkEyXkFqcGdeQXVyNTcxMzMwNTA@._V1._SX100_SY140_.jpg',
     initial: 'Da',
     gender: 'm',
     house: 'none',
@@ -58,7 +58,7 @@ Object.assign(window.CHARS, {
 
   'shae': {
     name: 'Shae',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTkwMTA0NTY5NF5BMl5BanBnXkFtZTcwNjk2ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTkwMTA0NTY5NF5BMl5BanBnXkFtZTcwNjk2ODg4OQ@@._V1._SX100_SY140_.jpg',
     initial: 'Sh',
     gender: 'f',
     house: 'none',
@@ -81,7 +81,7 @@ Object.assign(window.CHARS, {
   'dontos-hollard': {
     name: 'Ser Dontos Hollard',
     initial: 'DH',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNzUzYzg5NGUtOWE5Zi00Y2MwLTg2YzQtMDZlOWE1NDZjZmFkXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BNzUzYzg5NGUtOWE5Zi00Y2MwLTg2YzQtMDZlOWE1NDZjZmFkXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     gender: 'm',
     house: 'none',
     houseLabel: 'Disgraced knight — Sansa\'s unlikely protector',
@@ -107,7 +107,7 @@ Object.assign(window.CHARS, {
   'maester-luwin': {
     name: 'Maester Luwin',
     initial: 'ML',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BODcwMjg0MDQ5MF5BMl5BanBnXkFtZTcwMTk2NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BODcwMjg0MDQ5MF5BMl5BanBnXkFtZTcwMTk2NDk4OQ@@._V1._SX100_SY140_.jpg',
     gender: 'm',
     house: 'none',
     houseLabel: 'Winterfell — Maester',
@@ -150,7 +150,7 @@ Object.assign(window.CHARS, {
 
   'ellaria-sand': {
     name: 'Ellaria Sand',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNWQ0ZDE5NDUtNDVmZi00ZTI5LTkyOTgtNDhiNjMwZjY3ZjgwXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BNWQ0ZDE5NDUtNDVmZi00ZTI5LTkyOTgtNDhiNjMwZjY3ZjgwXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     initial: 'El',
     gender: 'f',
     house: 'martell',

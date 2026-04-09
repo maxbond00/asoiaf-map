@@ -11,7 +11,7 @@ Object.assign(window.CHARS, {
 
   'jeor-mormont': {
     name: 'Jeor Mormont',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BODAwODYyNzk0NV5BMl5BanBnXkFtZTcwNDI2NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BODAwODYyNzk0NV5BMl5BanBnXkFtZTcwNDI2NDk4OQ@@._V1._SX100_SY140_.jpg',
     initial: 'Jm',
     gender: 'm',
     house: 'mormont',
@@ -34,7 +34,7 @@ Object.assign(window.CHARS, {
 
   'samwell-tarly': {
     name: 'Samwell Tarly',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTQyODYyOTczMF5BMl5BanBnXkFtZTcwNjY0ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTQyODYyOTczMF5BMl5BanBnXkFtZTcwNjY0ODg4OQ@@._V1._SX100_SY140_.jpg',
     initial: 'Sm',
     gender: 'm',
     house: 'none',
@@ -63,7 +63,7 @@ Object.assign(window.CHARS, {
 
   'alliser-thorne': {
     name: 'Alliser Thorne',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMjAxMjExMjA3M15BMl5BanBnXkFtZTcwMjI1ODg5NA@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMjAxMjExMjA3M15BMl5BanBnXkFtZTcwMjI1ODg5NA@@._V1._SX100_SY140_.jpg',
     initial: 'Al',
     gender: 'm',
     house: 'nighswatch',
@@ -92,7 +92,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Night\'s Watch — Ranger',
     aliases: ['The Halfhand'],
     portrait: 'default-male',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BODM1MzJmZmUtZWI2MS00YjliLWJhNTItZmMzNmQ1YzA0ZjlmXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BODM1MzJmZmUtZWI2MS00YjliLWJhNTItZmMzNmQ1YzA0ZjlmXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     deathBook: 1,
     bio: 'The most celebrated ranger of the Night\'s Watch. Lost the fingers of his sword hand to a wildling axe. Orders Jon Snow to kill him so Jon can convincingly infiltrate Mance Rayder\'s army.',
     bookBios: {
@@ -109,7 +109,7 @@ Object.assign(window.CHARS, {
 
   'mance-rayder': {
     name: 'Mance Rayder',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTU3NzQyNjAwNF5BMl5BanBnXkFtZTcwODcyMTEwOQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTU3NzQyNjAwNF5BMl5BanBnXkFtZTcwODcyMTEwOQ@@._V1._SX100_SY140_.jpg',
     isKing: true,
     initial: 'MR',
     gender: 'm',
@@ -134,7 +134,7 @@ Object.assign(window.CHARS, {
 
   'ygritte': {
     name: 'Ygritte',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTg0NDA1Njk3Nl5BMl5BanBnXkFtZTcwOTQ2NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTg0NDA1Njk3Nl5BMl5BanBnXkFtZTcwOTQ2NDk4OQ@@._V1._SX100_SY140_.jpg',
     initial: 'Yg',
     gender: 'f',
     house: 'freefolk',
@@ -155,7 +155,7 @@ Object.assign(window.CHARS, {
 
   'tormund': {
     name: 'Tormund Giantsbane',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTc1OTU3NjUzNF5BMl5BanBnXkFtZTcwNDE0NzE5OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTc1OTU3NjUzNF5BMl5BanBnXkFtZTcwNDE0NzE5OQ@@._V1._SX100_SY140_.jpg',
     initial: 'Tg',
     gender: 'm',
     house: 'freefolk',
@@ -198,7 +198,7 @@ Object.assign(window.CHARS, {
 
   'roose-bolton': {
     name: 'Roose Bolton',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTQyMjE3MTExN15BMl5BanBnXkFtZTcwMTI3NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTQyMjE3MTExN15BMl5BanBnXkFtZTcwMTI3NDk4OQ@@._V1._SX100_SY140_.jpg',
     initial: 'RB',
     gender: 'm',
     house: 'bolton',
@@ -224,7 +224,7 @@ Object.assign(window.CHARS, {
 
   'ramsay-bolton': {
     name: 'Ramsay Bolton',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMzM5Nzk3NTU5N15BMl5BanBnXkFtZTgwNzczMjk5NTE@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMzM5Nzk3NTU5N15BMl5BanBnXkFtZTgwNzczMjk5NTE@._V1._SX100_SY140_.jpg',
     initial: 'Ra',
     gender: 'm',
     house: 'bolton',
@@ -271,7 +271,7 @@ Object.assign(window.CHARS, {
 
   'high-sparrow': {
     name: 'The High Sparrow',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTcyOTk0MjExMF5BMl5BanBnXkFtZTgwODk5Njk5NzE@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTcyOTk0MjExMF5BMl5BanBnXkFtZTgwODk5Njk5NzE@._V1._SX100_SY140_.jpg',
     initial: 'HS',
     gender: 'm',
     house: 'none',
@@ -297,7 +297,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Tarly — Lord of Horn Hill',
     aliases: ['Lord Randyll'],
     portrait: 'default-male',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMjIwMTY0NTc4N15BMl5BanBnXkFtZTgwNTMyNzYwOTE@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMjIwMTY0NTc4N15BMl5BanBnXkFtZTgwNTMyNzYwOTE@._V1._SX100_SY140_.jpg',
     bio: 'Lord of Horn Hill, one of the finest military commanders in Westeros and Mace Tyrell\'s best general. Harsh, honour-obsessed father who sent Sam to the Wall to rid himself of his "unworthy" heir.',
     bookBios: {
       1: 'Fights for the Tyrells at the Blackwater.',
@@ -316,7 +316,7 @@ Object.assign(window.CHARS, {
 
   'jaqen-hghar': {
     name: "Jaqen H'ghar",
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTA1MjI5MzYwNzNeQTJeQWpwZ15BbWU3MDkxNDcxOTk@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTA1MjI5MzYwNzNeQTJeQWpwZ15BbWU3MDkxNDcxOTk@._V1._SX100_SY140_.jpg',
     initial: 'Jq',
     gender: 'm',
     house: 'none',
@@ -337,7 +337,7 @@ Object.assign(window.CHARS, {
 
   'syrio-forel': {
     name: 'Syrio Forel',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMjE2OTA3NDY5Nl5BMl5BanBnXkFtZTcwMDg0ODg5NA@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMjE2OTA3NDY5Nl5BMl5BanBnXkFtZTcwMDg0ODg5NA@@._V1._SX100_SY140_.jpg',
     initial: 'Sy',
     gender: 'm',
     house: 'none',
@@ -413,7 +413,7 @@ Object.assign(window.CHARS, {
 
   'pycelle': {
     name: 'Grand Maester Pycelle',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMjEyNDA4MzQ3MF5BMl5BanBnXkFtZTcwNTM3ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMjEyNDA4MzQ3MF5BMl5BanBnXkFtZTcwNTM3ODg4OQ@@._V1._SX100_SY140_.jpg',
     initial: 'Py',
     gender: 'm',
     house: 'none',
@@ -435,7 +435,7 @@ Object.assign(window.CHARS, {
 
   'qyburn': {
     name: 'Qyburn',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BZGEzNDY2YjktMDM1ZS00MTI1LWEyYmMtNTdiMzczNmY4ZWEzXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BZGEzNDY2YjktMDM1ZS00MTI1LWEyYmMtNTdiMzczNmY4ZWEzXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     initial: 'Qy',
     gender: 'm',
     house: 'none',
@@ -456,7 +456,7 @@ Object.assign(window.CHARS, {
 
   'gregor-clegane': {
     name: 'Gregor Clegane',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTU3OTg2MTM2MF5BMl5BanBnXkFtZTcwNDk1NzE5OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTU3OTg2MTM2MF5BMl5BanBnXkFtZTcwNDk1NzE5OQ@@._V1._SX100_SY140_.jpg',
     initial: 'Gr',
     gender: 'm',
     house: 'lannister',
@@ -484,7 +484,7 @@ Object.assign(window.CHARS, {
   'ilyn-payne': {
     name: 'Ser Ilyn Payne',
     initial: 'IP',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BOGY5ZGE1OGUtODYwNS00OTVlLWE1MWItMzI5NDBmYWIwZTI4XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BOGY5ZGE1OGUtODYwNS00OTVlLWE1MWItMzI5NDBmYWIwZTI4XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     gender: 'm',
     house: 'lannister',
     houseLabel: 'House Lannister — King\'s Justice',
@@ -512,7 +512,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Kingsguard',
     aliases: ['Ser Balon'],
     portrait: 'balon-swann',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTQwMjEwNDQ1MF5BMl5BanBnXkFtZTcwMzAxODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTQwMjEwNDQ1MF5BMl5BanBnXkFtZTcwMzAxODg4OQ@@._V1._SX100_SY140_.jpg',
     bio: 'One of the more honourable members of Joffrey\'s Kingsguard. Sent to Dorne to deliver Gregor Clegane\'s skull to Doran Martell as part of the peace agreement, and to bring Myrcella home.',
     bookBios: {
       4: 'Arrives in Dorne to deliver Gregor\'s skull. Accompanies Myrcella\'s party.',
@@ -531,7 +531,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Martell — Captain of the Guard',
     aliases: ['Captain of the Guard'],
     portrait: 'default-male',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNWFkNTAwNzctOGQ2ZS00OTMyLWE3NDYtOGUwM2E1MzVlYjI0XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BNWFkNTAwNzctOGQ2ZS00OTMyLWE3NDYtOGUwM2E1MzVlYjI0XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     bio: 'Doran Martell\'s Norvoshi captain of the guard. Devoted, silent, and lethal with his longaxe. The reader sees Dornish events partly through his limited but loyal perspective.',
     bookBios: {
       3: 'Protects Doran at the Water Gardens. Arrests Arianne after the Queenmaker plot.',
@@ -545,7 +545,7 @@ Object.assign(window.CHARS, {
 
   'gilly': {
     name: 'Gilly',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTYzOTQxMTA3MF5BMl5BanBnXkFtZTcwODM5NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTYzOTQxMTA3MF5BMl5BanBnXkFtZTcwODM5NDk4OQ@@._V1._SX100_SY140_.jpg',
     initial: 'Gi',
     gender: 'f',
     house: 'none',
@@ -567,7 +567,7 @@ Object.assign(window.CHARS, {
 
   'hot-pie': {
     name: 'Hot Pie',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BOTQyNTI4NDg4M15BMl5BanBnXkFtZTcwNDk4NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BOTQyNTI4NDg4M15BMl5BanBnXkFtZTcwNDk4NDk4OQ@@._V1._SX100_SY140_.jpg',
     initial: 'HP',
     gender: 'm',
     house: 'none',
@@ -597,7 +597,7 @@ Object.assign(window.CHARS, {
     name: 'Hizdahr zo Loraq',
     isKing: true,
     initial: 'Hz',
-    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNWQ4YjdmZjItYmExNi00YmNlLWJjZmYtNWEwMmEzNGFjYmFjXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://m.media-amazon.com/images/M/MV5BNWQ4YjdmZjItYmExNi00YmNlLWJjZmYtNWEwMmEzNGFjYmFjXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     gender: 'm',
     house: 'none',
     houseLabel: 'Great Master of Meereen — King-Consort',
