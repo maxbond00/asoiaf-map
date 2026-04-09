@@ -77,6 +77,7 @@ Object.assign(window.CHARS, {
     isKing: true,
     deathBook: 0,
     bio: 'Daenerys\'s older brother. Arrogant, cruel, and obsessed with reclaiming the Iron Throne. He sold Daenerys to Drogo in exchange for an army. His cruelty and impatience led to his death — Drogo poured molten gold over his head, giving him "the golden crown he wanted."',
+    background:'Daenerys\'s older brother — the self-styled heir of House Targaryen. Arrogant and brittle, he has spent his entire life in exile dreaming of reclaiming the Iron Throne, and sold his sister as a bride to fund that dream.',
     bookBios: {
       0: 'Travels with Daenerys and the Dothraki. Becomes violent and erratic. Killed by Khal Drogo with a crown of molten gold.',
     },
@@ -97,6 +98,7 @@ Object.assign(window.CHARS, {
     photoUrl: 'img/khal-drogo.jpg',
     deathBook: 0,
     bio: 'The mightiest Khal of the Dothraki, with a khalasar of forty thousand warriors. Sold Daenerys\' hand in exchange by her brother Viserys. Despite a brutal beginning, he and Daenerys developed genuine love. A minor wound became infected; Daenerys allowed a maegi to use blood magic to save him, leaving him braindead. She smothered him to end his suffering.',
+    background:'The mightiest Khal of the Dothraki, commanding a khalasar of forty thousand warriors. Undefeated in battle, utterly at home in the saddle, and a force of nature by any measure.',
     bookBios: {
       0: 'Weds Daenerys at Pentos. Kills Viserys with molten gold. A festering wound and a maegi\'s blood magic leave him braindead; Daenerys smothers him.',
     },
@@ -118,6 +120,7 @@ Object.assign(window.CHARS, {
     portrait: 'jorah',
     photoUrl: 'img/jorah-mormont.jpg',
     bio: 'Exiled from Westeros for selling poachers into slavery. Began as a spy for Robert, reporting on Daenerys, but fell in love with her and became her most devoted protector. Banished by Daenerys when his treachery was revealed. Contracted greyscale.',
+    background:'Exiled lord of Bear Island, son of Lord Commander Jeor Mormont of the Night\'s Watch. Fled Westeros to escape a death sentence after selling poachers into slavery. A knight-errant drifting through the Free Cities.',
     bookBios: {
       0: 'Serves as spy and protector to Daenerys among the Dothraki.',
       1: 'Continues with Daenerys through Qarth. His loyalty deepens.',
@@ -148,6 +151,7 @@ Object.assign(window.CHARS, {
     photoUrl: 'img/barristan-selmy.jpg',
     deathBook: 4,
     bio: 'The greatest living knight in Westeros. Served three kings on the Kingsguard before being dismissed by Joffrey. Traveled to Essos in disguise, found Daenerys, and became her Lord Commander. Ran Meereen in her absence. Killed in a Sons of the Harpy ambush.',
+    background:'Ser Barristan the Bold — widely considered the greatest living knight in Westeros. Served three kings faithfully on the Kingsguard. The living embodiment of chivalric honour.',
     bookBios: {
       0: 'Lord Commander of the Kingsguard. Dismissed by Joffrey.',
       1: 'Travels to Essos disguised as Arstan Whitebeard.',
@@ -175,6 +179,7 @@ Object.assign(window.CHARS, {
     portrait: 'missandei',
     photoUrl: 'img/missandei.jpg',
     bio: 'A former slave from Naath, translator of nineteen languages. Freed by Daenerys at Astapor, she becomes one of her most trusted confidantes and handmaidens.',
+    background:'A young girl from the peaceful island of Naath, taken as a slave. Gifted with languages — she speaks nineteen fluently. Currently a slave-interpreter in Astapor.',
     bookBios: {
       2: 'Freed by Daenerys at Astapor; becomes her handmaiden and translator.',
       3: 'At Daenerys\'s side in Meereen.',
@@ -197,6 +202,7 @@ Object.assign(window.CHARS, {
     portrait: 'grey-worm',
     photoUrl: 'img/grey-worm.jpg',
     bio: 'Commander of the Unsullied, freed slave soldiers. Devoted and disciplined warrior who leads Daenerys\'s army. Develops a bond with Missandei.',
+    background:'A soldier of the Unsullied — the elite slave army of Astapor, trained from birth to feel no fear. He has risen to command his unit, choosing the name Grey Worm as his lucky name.',
     bookBios: {
       2: 'Freed by Daenerys at Astapor; leads the Unsullied.',
       3: 'Commands Daenerys\'s armies in Meereen.',
@@ -219,6 +225,7 @@ Object.assign(window.CHARS, {
     aliases: [],
     portrait: 'illyrio',
     bio: 'Enormously wealthy cheese merchant and Magister of Pentos. Secret ally of Varys and the Targaryen restoration plot. Sheltered Viserys and Daenerys and arranged her marriage to Drogo. His true agenda — seating a controlled king on the Iron Throne — remains partly concealed.',
+    background:'An enormously wealthy Magister of Pentos with connections across the Free Cities. Has taken Viserys and Daenerys under his hospitality — his reasons for doing so remain his own.',
     bookBios: {
       0: 'Hosts Daenerys and Viserys in Pentos. Arranges her sale to Drogo.',
       3: 'Still in Pentos. Receives Tyrion after his flight from King\'s Landing.',
@@ -245,6 +252,7 @@ Object.assign(window.CHARS, {
     portrait: 'olenna',
     photoUrl: 'img/olenna-tyrell.jpg',
     bio: 'Sharp-tongued matriarch of House Tyrell, grandmother of Margaery and Loras. The true political power of Highgarden. Masterminded the poisoning of Joffrey at the Purple Wedding to protect Margaery from his cruelty.',
+    background:'The sharp-tongued matriarch of House Tyrell — grandmother of Margaery and Loras. Has been running Highgarden from behind the scenes for decades while the men take credit.',
     bookBios: {
       1: 'Arrives in King\'s Landing to negotiate Margaery\'s betrothal to Renly, then Joffrey.',
       2: 'In King\'s Landing. Poisons Joffrey at his wedding feast.',
@@ -270,6 +278,7 @@ Object.assign(window.CHARS, {
     photoUrl: 'img/margaery-tyrell.jpg',
     isKing: true,
     bio: 'Granddaughter of Olenna, she was married to Renly Baratheon (marriage unconsummated), then betrothed to Joffrey, then married Tommen. A skilled political operator who cultivates the smallfolk\'s love. Imprisoned by the Faith Militant in AFfC.',
+    background:'Granddaughter of Olenna Tyrell — beautiful, charming, and far more politically astute than she lets on. Betrothed to Renly Baratheon.',
     bookBios: {
       1: 'Wife of Renly Baratheon. Flees to Highgarden after his death.',
       2: 'Betrothed to Joffrey. Comes to King\'s Landing.',
@@ -295,6 +304,7 @@ Object.assign(window.CHARS, {
     portrait: 'loras',
     photoUrl: 'img/loras-tyrell.jpg',
     bio: 'The most celebrated tourney knight of his generation. Secret lover of Renly Baratheon. After Renly\'s death, his grief drives him toward reckless bravery. Severely wounded during the siege of Dragonstone.',
+    background:'Ser Loras Tyrell — the Knight of Flowers, the most celebrated tourney knight of his generation. Beautiful, skilled, and beloved by the smallfolk.',
     bookBios: {
       0: 'Jousts at King\'s Landing. Renly\'s lover.',
       1: 'Mourns Renly. Joins Tywin\'s relief force at the Blackwater.',
@@ -320,6 +330,7 @@ Object.assign(window.CHARS, {
     aliases: ['Lord Oaf of Highgarden (mockingly)'],
     portrait: 'mace-tyrell',
     bio: 'Lord of Highgarden and head of House Tyrell. A proud but not especially clever lord, his power comes from his armies and his family (especially his mother Olenna). Named Hand of the King under Tommen.',
+    background:'Lord of Highgarden and head of House Tyrell — proud, somewhat pompous, and not especially clever. The power of House Tyrell flows from his armies and his sharp-tongued mother Olenna.',
     bookBios: {
       1: 'Commands the Tyrell army that rescues King\'s Landing at the Blackwater.',
       2: 'At King\'s Landing.',
@@ -346,6 +357,7 @@ Object.assign(window.CHARS, {
     aliases: ['Prince Doran'],
     portrait: 'doran',
     bio: 'Prince of Dorne and older brother of Oberyn and Elia. Afflicted with gout and confined to a wheelchair. Patient, calculating, concealing a decades-long plan for Targaryen restoration and revenge against the Lannisters.',
+    background:'Lord of Sunspear and Prince of Dorne. Afflicted with gout and confined to a wheelchair. Patient to the point of being mistaken for weak — a chess player surrounded by people who want to fight.',
     bookBios: {
       3: 'Rules from the Water Gardens. Tries to control his volatile Sand Snakes after Oberyn\'s death.',
       4: 'Reveals his secret Targaryen alliance to Arianne. Sends his son Quentyn to court Daenerys.',
@@ -367,6 +379,7 @@ Object.assign(window.CHARS, {
     photoUrl: 'img/oberyn-martell.jpg',
     deathBook: 2,
     bio: 'Youngest prince of Dorne. Bisexual, brilliant, and deadly with a spear. His sister Elia was murdered by Gregor Clegane during the Sack of King\'s Landing. He champions Tyrion in trial by combat against Ser Gregor, but his obsession with a full confession costs him his life.',
+    background:'The Red Viper — Prince Doran\'s younger brother. Bisexual, brilliant, and deadly with a spear. A renowned warrior and passionate man who holds a deep personal grudge against House Lannister for what happened to his sister Elia.',
     bookBios: {
       2: 'Arrives in King\'s Landing for Joffrey\'s wedding. Champions Tyrion. Mortally wounded by Ser Gregor Clegane, who crushes his skull.',
     },
@@ -384,6 +397,7 @@ Object.assign(window.CHARS, {
     aliases: [],
     portrait: 'arianne',
     bio: 'Eldest child of Doran and heir to Dorne. Passionate, politically ambitious, and resentful of her father\'s secrecy. Tried to crown Myrcella Baratheon as queen; her plot failed, resulting in Myrcella\'s injury and her co-conspirators\' imprisonment.',
+    background:'Prince Doran\'s eldest child and heir to Dorne. Passionate, confident, and frustrated by her father\'s secrecy — she believes he is doing nothing while Elia\'s murderers walk free.',
     bookBios: {
       3: 'Plots the Queenmaker scheme to crown Myrcella. Captured and imprisoned by her father. Learns of his true plans.',
       4: 'Reconciled with her father. Learning Doran\'s secret agenda.',
@@ -404,6 +418,7 @@ Object.assign(window.CHARS, {
     portrait: 'default-male',
     deathBook: 4,
     bio: 'Second child of Doran. Sent secretly to Essos to court Daenerys Targaryen on behalf of his father\'s Targaryen alliance. Reaches Meereen but Daenerys has married Hizdahr. Attempts to claim a dragon and is burned alive by Rhaegal and Viserion.',
+    background:'Prince Doran\'s second child. Bookish and earnest, fostered at Yronwood as part of an alliance compact. A dutiful son carrying a secret mission from his father.',
     bookBios: {
       4: 'Travels to Meereen with two Dornish companions. Proposes to Daenerys on his father\'s behalf. Attempts to tame a dragon and is fatally burned.',
     },
@@ -422,6 +437,7 @@ Object.assign(window.CHARS, {
     portrait: 'nymeria-sand',
     photoUrl: 'img/nymeria-sand.jpg',
     bio: 'Second of the Sand Snakes, daughters of Oberyn Martell. Uses a whip. Deadly, calculating, and beautiful. Imprisoned by Doran after Oberyn\'s death when she pushes for war.',
+    background:'Second of the Sand Snakes. Cool, calculating, and beautiful. The most politically minded of Oberyn\'s daughters.',
     bookBios: {
       3: 'Demands war against the Lannisters. Imprisoned at Sunspear.',
       4: 'Released by Doran. Sent to King\'s Landing with Obara to pursue their father\'s agenda.',
@@ -443,6 +459,7 @@ Object.assign(window.CHARS, {
     portrait: 'obara-sand',
     photoUrl: 'img/obara-sand.jpg',
     bio: 'Eldest of the Sand Snakes. Fierce warrior who uses a spear and shield. Hot-tempered and hungry for war against the Lannisters.',
+    background:'Eldest of the Sand Snakes, daughter of Oberyn Martell. A fierce, hot-tempered warrior who has chosen the spear — her father\'s weapon.',
     bookBios: {
       3: 'Demands war. Imprisoned.',
       4: 'Released. Sent to the Reach (to Oldtown area) on a secret mission.',
@@ -464,6 +481,7 @@ Object.assign(window.CHARS, {
     portrait: 'tyene-sand',
     photoUrl: 'img/tyene-sand.jpg',
     bio: 'Third Sand Snake; daughter of Oberyn and a septa. Uses daggers coated in the Long Farewell poison. Appears sweet and devout but is lethal. Sent to infiltrate the Faith of the Seven in King\'s Landing.',
+    background:'Third of the Sand Snakes — daughters of Oberyn Martell. Sweet-faced and seemingly devout, which only makes her more dangerous. A student of poisons.',
     bookBios: {
       3: 'Imprisoned at Sunspear.',
       4: 'Sent to King\'s Landing to join the Faith as a novice, with Nymeria.',
@@ -490,6 +508,7 @@ Object.assign(window.CHARS, {
     isKing: true,
     deathBook: 2,
     bio: 'Lord of the Iron Islands who once rebelled against Robert Baratheon and lost. A proud, cold man obsessed with the Old Way. When Robb Stark\'s back is turned, he invades the North. Falls from a bridge at Pyke in a storm — likely murdered by Euron\'s faceless assassin.',
+    background:'Lord of the Iron Islands. A proud, cold man obsessed with the Old Way — raiding, reaving, and paying the iron price. Once rebelled against Robert Baratheon and lost everything for it.',
     bookBios: {
       0: 'At Pyke. Receives Theon back as a ward.',
       1: 'Declares himself King and invades the North while Robb fights in the Riverlands.',
@@ -512,6 +531,7 @@ Object.assign(window.CHARS, {
     portrait: 'theon',
     photoUrl: 'img/theon-greyjoy.jpg',
     bio: 'Ward (hostage) of House Stark for years. Betrays Robb Stark to prove himself to his father, capturing Winterfell. Tortured and psychologically broken by Ramsay Bolton into becoming "Reek." Eventually helps Jeyne Poole (posing as Arya) escape Winterfell.',
+    background:'Ward (hostage) of House Stark, taken as a child after Balon Greyjoy\'s failed rebellion. Raised at Winterfell, he is neither fully Stark nor fully Greyjoy — caught between two worlds, belonging to neither.',
     bookBios: {
       0: 'Ward at Winterfell. Goes to Robb\'s muster.',
       1: 'Sent to Pyke to negotiate with Balon. Betrays Robb, captures Winterfell. Taken prisoner by Ramsay Bolton.',
@@ -540,6 +560,7 @@ Object.assign(window.CHARS, {
     portrait: 'yara',
     photoUrl: 'img/yara-greyjoy.jpg',
     bio: 'Balon\'s daughter and finest captain. Bold, irreverent, and militarily capable. She sails to rescue Theon from the Dreadfort but he refuses to come. After Balon\'s death she competes in the Kingsmoot and loses to Euron. Captured by Stannis at Deepwood Motte.',
+    background:'Balon Greyjoy\'s daughter and the finest captain on the Iron Islands. Bold, irreverent, and respected by her crew in a culture that rarely respects women.',
     bookBios: {
       1: 'Leads Greyjoy raids in the North.',
       2: 'Holds the North for her father.',
@@ -565,6 +586,7 @@ Object.assign(window.CHARS, {
     photoUrl: 'img/euron-greyjoy.jpg',
     isKing: true,
     bio: 'Balon\'s younger brother — mad, terrifying, and brilliant. Banished years ago for raping Victarion\'s salt wife. Returns after Balon\'s (suspicious) death, wins the Kingsmoot with his dragonhorn and promises of conquest. His ambitions seem limitless.',
+    background:'Balon\'s younger brother — mad, terrifying, brilliant, and unreadable. He was banished years ago for some terrible transgression, and has been sailing the world\'s most dangerous waters ever since.',
     bookBios: {
       3: 'Returns to Pyke after Balon\'s death. Wins the Kingsmoot. Sends Victarion to bring Daenerys to him.',
       4: 'King of the Iron Islands. Raids the Shield Islands and the Reach. Possesses the dragonhorn Dragonbinder.',
@@ -584,6 +606,7 @@ Object.assign(window.CHARS, {
     aliases: ['The Iron Captain'],
     portrait: 'victarion',
     bio: 'Balon\'s younger brother and a brutal, powerful warrior. Commands the Iron Fleet. Sent by Euron to court Daenerys with the dragonhorn, he secretly plans to take both Daenerys and the dragons for himself. His wound is healed by Moqorro.',
+    background:'Balon\'s younger brother and Lord Captain of the Iron Fleet — a massive, brutal warrior of the old school. Commands the ironborn\'s naval strength.',
     bookBios: {
       3: 'Loses the Kingsmoot to Euron. Sent to bring Daenerys.',
       4: 'Sailing across the Summer Sea toward Slaver\'s Bay. Hand healed by the red priest Moqorro.',
@@ -605,6 +628,7 @@ Object.assign(window.CHARS, {
     aliases: ['Damphair'],
     portrait: 'aeron',
     bio: 'Balon\'s youngest brother, a fanatic priest of the Drowned God. Once a drunk and reprobate who was changed by a near-drowning. Now presides over the Kingsmoot he called, only to see Euron (whom he fears and hates) win it.',
+    background:'Balon\'s youngest brother, a fanatic priest of the Drowned God. Was once a drunk who nearly drowned; since then he has been consumed entirely by his faith.',
     bookBios: {
       3: 'Presides over the Kingsmoot at Old Wyk.',
       4: 'Horrified by Euron\'s blasphemies. Attempts to stir resistance against him. Disappears — taken by Euron.',
@@ -629,6 +653,7 @@ Object.assign(window.CHARS, {
     portrait: 'edmure',
     photoUrl: 'img/edmure-tully.jpg',
     bio: 'Son of Hoster Tully and younger brother of Catelyn. Well-meaning but often foolish. Blocked Tywin\'s retreat, inadvertently ruining Robb\'s strategic plan. Captured at the Red Wedding. Forced to yield Riverrun to the Lannisters to spare his wife and unborn child.',
+    background:'Son of the ailing Lord Hoster Tully and younger brother of Catelyn Stark. Lord of Riverrun — well-meaning, not especially clever, and living in the shadow of his more capable family.',
     bookBios: {
       0: 'At Riverrun.',
       1: 'Commands in the Riverlands. Blocks Tywin\'s ford — ruining Robb\'s strategy.',
@@ -656,6 +681,7 @@ Object.assign(window.CHARS, {
     photoUrl: 'img/lysa-arryn.jpg',
     deathBook: 2,
     bio: 'Catelyn\'s younger sister and widow of Jon Arryn, Hand of the King. Unstable and obsessively devoted to her sickly son Robin. Her secret love for Petyr Baelish (Littlefinger) — who was her first love — led her to poison Jon Arryn and send the letter that started the conflict. Littlefinger eventually murders her.',
+    background:'Catelyn\'s younger sister and Lady of the Eyrie, widow of Jon Arryn — the former Hand of the King who recently died. Unstable and intensely overprotective of her young son Robin.',
     bookBios: {
       0: 'Holds the Eyrie for her son. Refuses to join the war.',
       1: 'Keeps the Vale neutral.',
@@ -677,6 +703,7 @@ Object.assign(window.CHARS, {
     aliases: ['Robert Arryn', 'Little Lord Arryn'],
     portrait: 'robin-arryn',
     bio: 'Young Lord of the Eyrie, still breastfed past age eight. Sickly, prone to "the shaking sickness" and obsessed with making people "fly" (throwing them through the Moon Door). Under Littlefinger\'s guardianship after his mother\'s death.',
+    background:'Young Lord Robin Arryn of the Eyrie — a sickly, difficult child prone to fits. Heir to the Vale of Arryn.',
     bookBios: {
       0: 'At the Eyrie with his mother.',
       3: 'Lord of the Eyrie. Littlefinger becomes his guardian.',
@@ -702,6 +729,7 @@ Object.assign(window.CHARS, {
     portrait: 'littlefinger',
     photoUrl: 'img/littlefinger.jpg',
     bio: 'Master of Coin and the greatest schemer in Westeros. Rose from nothing through ambition, manipulation, and strategic betrayal. The chain of deception he set in motion (poisoning Jon Arryn, framing the Lannisters, betraying Ned Stark) caused the War of the Five Kings. Now controls the Vale through Lysa\'s death and Robin\'s wardship.',
+    background:'Petyr Baelish — Master of Coin on the King\'s Small Council. Rose from the lowest of lordships through sheer ambition and cunning. Has loved Catelyn Tully since childhood; her rejection shaped everything he became.',
     bookBios: {
       0: 'Master of Coin. Betrays Ned Stark to the Lannisters.',
       1: 'Brokers the Tyrell alliance. Given Harrenhal.',
@@ -731,6 +759,7 @@ Object.assign(window.CHARS, {
     portrait: 'varys',
     photoUrl: 'img/varys.jpg',
     bio: 'Eunuch spymaster and Master of Whisperers on the Small Council. Raised in Essos, castrated as a boy for a sorcerer\'s ritual. Serves "the realm" — or so he claims. His true loyalty is to placing a Targaryen (Aegon, Jon Connington\'s ward) on the Iron Throne. Helps Tyrion escape after Tywin\'s murder.',
+    background:'Lord Varys — the Spider, Master of Whisperers on the Small Council. A eunuch of unknown origin, raised in Essos. Serves "the realm," or so he claims — his real loyalties are a deep and carefully maintained mystery.',
     bookBios: {
       0: 'Master of Whisperers. Appears to support Ned, then abandons him.',
       1: 'Schemes on the Small Council. Supports Tyrion subtly.',
@@ -758,6 +787,7 @@ Object.assign(window.CHARS, {
     portrait: 'sandor',
     photoUrl: 'img/sandor-clegane.jpg',
     bio: 'The Hound — burned as a child by his brother Gregor, scarred and bitter but possessing a brutal code of honour. Served as Joffrey\'s sworn shield. Flees the Battle of the Blackwater. Travels with Arya as her reluctant captor. Believed dead after Brienne wounds him gravely, but likely survived as a gravedigger on the Quiet Isle.',
+    background:'Sandor Clegane — the Hound. Scarred across half his face by fire when he was a child. A brutally effective fighter who serves as Joffrey\'s sworn shield, and despises knights and the chivalry they perform.',
     bookBios: {
       0: 'Joffrey\'s sworn shield. Saves Sansa from the mob.',
       1: 'Deserts at the Blackwater. Offers to take Arya to Winterfell.',
@@ -784,6 +814,7 @@ Object.assign(window.CHARS, {
     portrait: 'brienne',
     photoUrl: 'img/brienne.jpg',
     bio: 'Daughter of Lord Selwyn of Tarth. A huge, powerful woman who dreams of being a true knight. Sworn to Catelyn Stark, then searching for Sansa Stark on Jaime\'s behalf. Eventually captured by Lady Stoneheart (Catelyn\'s reanimated corpse) and forced to choose between killing Jaime or hanging.',
+    background:'Brienne of Tarth — a huge, powerful woman who dreams of being a true knight in a world that mocks the idea. Daughter of Lord Selwyn of Tarth. Devoted to Renly Baratheon\'s rainbow guard.',
     bookBios: {
       1: 'In Renly\'s camp. Flees with Catelyn after his murder. Escorts Jaime to King\'s Landing.',
       2: 'Escorts Jaime. Both captured, Jaime loses his hand.',
@@ -812,6 +843,7 @@ Object.assign(window.CHARS, {
     portrait: 'podrick',
     photoUrl: 'img/podrick-payne.jpg',
     bio: 'Tyrion\'s loyal squire, later squire to Brienne. Quiet and seemingly hapless but unexpectedly capable and devoted. Travels with Brienne in search of Sansa.',
+    background:'Podrick Payne — a young squire, assigned to serve Tyrion Lannister. Quiet, seemingly hapless, and easy to overlook.',
     bookBios: {
       1: 'Squire to Tyrion at the Blackwater. Saves Tyrion\'s life.',
       2: 'With Tyrion at King\'s Landing. Escapes when Tyrion is arrested.',
@@ -835,6 +867,7 @@ Object.assign(window.CHARS, {
     portrait: 'bronn',
     photoUrl: 'img/bronn.jpg',
     bio: 'A sellsword of unknown origin who champions Tyrion at the Eyrie. Shrewd, mercenary, and utterly pragmatic. Rises from hedge knight to lord through Tyrion\'s patronage. Marries into the Stokeworth family after Tyrion\'s fall from favour.',
+    background:'A sellsword of mysterious origin — sharp, mercenary, and utterly pragmatic. Champions Tyrion Lannister at the Eyrie for pay, with no pretence of honour about it.',
     bookBios: {
       0: 'Champions Tyrion in trial by combat at the Eyrie.',
       1: 'Tyrion\'s hired sword and captain of the City Watch.',
@@ -862,6 +895,7 @@ Object.assign(window.CHARS, {
     photoUrl: 'img/beric-dondarrion.jpg',
     deathBook: 2,
     bio: 'Sent by Ned Stark to arrest Ser Gregor Clegane. Killed multiple times and resurrected by Thoros of Myr through the power of R\'hllor. Each resurrection dims his memories further. Leads the Brotherhood Without Banners protecting the smallfolk. Gives his life\'s fire to resurrect Catelyn Stark.',
+    background:'Beric Dondarrion — Lord of Blackhaven, a young lordling sent by Eddard Stark at the start of the story to arrest Ser Gregor Clegane for his crimes against the Riverlands.',
     bookBios: {
       1: 'Reported dead multiple times; keeps coming back.',
       2: 'Leads the Brotherhood. Defeated in multiple duels. Gives his last life to resurrect Catelyn Stark.',
@@ -883,6 +917,7 @@ Object.assign(window.CHARS, {
     portrait: 'thoros',
     photoUrl: 'img/thoros-of-myr.jpg',
     bio: 'A red priest of R\'hllor from Myr who was sent to convert King Robert but instead became a drunk and a tourney knight. Discovered his power to resurrect the dead when he prayed over Beric Dondarrion\'s corpse. Has resurrected Beric six times.',
+    background:'Thoros of Myr — a red priest of R\'hllor sent to convert King Robert, who instead became a drunken tourney knight beloved at court. More jester than prophet, by most accounts.',
     bookBios: {
       0: 'At King\'s Landing; part of Ned\'s party then missing.',
       1: 'In the Riverlands with the Brotherhood.',
@@ -907,6 +942,7 @@ Object.assign(window.CHARS, {
     portrait: 'gendry',
     photoUrl: 'img/gendry.jpg',
     bio: 'Robert Baratheon\'s unacknowledged bastard, apprenticed to a blacksmith. Travels with Arya to the Wall, then captured at Harrenhal. Joins the Brotherhood Without Banners after Melisandre uses his king\'s blood for a ritual and Davos smuggles him to safety.',
+    background:'A blacksmith\'s apprentice in King\'s Landing — huge, strong, and serious about his craft. One of Robert Baratheon\'s many unacknowledged bastards, though he himself doesn\'t know it.',
     bookBios: {
       0: 'Apprentice smith heading to the Wall.',
       1: 'Captured at Harrenhal. Joins the Brotherhood.',

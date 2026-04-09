@@ -81,6 +81,7 @@
     _skin:'#b08060',_hair:'#3a1a08',_eye:'#4a6888',_beard:'short',
     isKing:true, deathBook:2,
     bio:'Eldest son of Ned Stark, undefeated in battle, but his marriage pact betrayal triggered the Red Wedding and his murder.',
+    background:'Eldest son of Ned Stark — serious, strong, and honourable like his father. Grows up fostered alongside Theon Greyjoy at Winterfell. Heir to Winterfell and the North.',
     bookBios:{
       0:'Marches south to free his father. Wins at Whispering Wood. Crowned King in the North.',
       1:'Raids the Westerlands; wins every battle but bleeds politically.',
@@ -105,6 +106,7 @@
     photoUrl:'img/sansa-stark.jpg',
     _skin:'#d0b090',_hair:'#8b1a00',_eye:'#5080a0',
     bio:'Eldest Stark daughter, held hostage in King\'s Landing, then smuggled north by Littlefinger and hidden as his bastard daughter Alayne Stone in the Eyrie.',
+    background:'Eldest daughter of Ned Stark — courtly, gentle, and romantic, unlike her sister Arya. Dreams of knights and songs and becoming a great lady. Betrothed to Prince Joffrey.',
     bookBios:{
       0:'Betrothed to Joffrey; watches her father executed.',
       1:'Abused at court. Secretly aided by Ser Dontos.',
@@ -171,6 +173,7 @@
     photoUrl:'img/bran-stark.jpg',
     _skin:'#b08060',_hair:'#3a2010',_eye:'#4a6888',
     bio:'Second son of Ned Stark, crippled by a fall pushed by Jaime Lannister. A greenseer and skinchanger who travels beyond the Wall to find the three-eyed crow.',
+    background:'Second son of Ned Stark — a boy who loves to climb the walls of Winterfell and dreams of being a knight. His direwolf is Summer.',
     bookBios:{
       0:'Crippled. Survives an assassination attempt. Discovers his skinchanging gift.',
       1:'Holds Winterfell. Escapes after Theon\'s capture.',
@@ -197,6 +200,7 @@
     photoUrl:'img/rickon-stark.jpg',
     _skin:'#c09070',_hair:'#3a1a08',_eye:'#4a6888',
     bio:'Youngest Stark child. Wild and untamed. Flees Winterfell with Osha the wildling and eventually ends up on the remote island of Skagos.',
+    background:'Youngest child of Ned Stark. Wild, untamed, and barely old enough to understand the world around him. His direwolf is Shaggydog.',
     bookBios:{
       0:'At Winterfell.',
       1:'Escapes with Osha after Theon\'s capture.',
@@ -257,6 +261,7 @@
     aliases:['First Ranger','Coldhands (probable)'],
     _skin:'#a87050',_hair:'#1a0a00',_eye:'#4a5870',_beard:'short',
     bio:'Younger brother of Ned Stark and First Ranger of the Night\'s Watch. Vanished beyond the Wall. Possibly the undead figure Coldhands who guides Bran.',
+    background:'Younger brother of Ned Stark and First Ranger of the Night\'s Watch. A capable, respected ranger who chose the black over family and lordship.',
     bookBios:{
       0:'Departs on a ranging beyond the Wall. Never returns.',
       4:'Possibly Coldhands beyond the Wall (unconfirmed in text).',
@@ -275,6 +280,7 @@
     photoUrl:'img/hodor.jpg',
     _skin:'#906040',_hair:'#1a0a00',_eye:'#3a3020',
     bio:'A gentle giant who carries Bran across the world. Bran skinchanges into him to fight. His real name is Walder.',
+    background:'A gentle giant stableboy at Winterfell, known only as Hodor — the only word he can say. Sweet-natured and devoted to the Stark family.',
     bookBios:{4:'In the cave of the three-eyed raven beyond the Wall with Bran.'},
     waypoints:[
       {book:0,loc:'winterfell',confirmed:true},
@@ -291,6 +297,7 @@
     aliases:[],
     _skin:'#a07050',_hair:'#2a2018',_eye:'#3a4030',
     bio:'A wildling woman captured at Winterfell who becomes a loyal protector of the Stark children, ultimately taking Rickon to safety on Skagos.',
+    background:'A wildling woman captured near Winterfell, rough and practical, with knowledge of the lands beyond the Wall that southerners lack.',
     bookBios:{4:'On Skagos with Rickon (probable).'},
     waypoints:[
       {book:0,loc:'winterfell', confirmed:true},
@@ -308,6 +315,7 @@
     aliases:[],
     _skin:'#b09070',_hair:'#3a2010',_eye:'#4a5040',
     bio:'Daughter of Howland Reed. Skilled hunter and spear-woman. Escorts Bran beyond the Wall to the three-eyed raven.',
+    background:'Daughter of Howland Reed of Greywater Watch — the mysterious crannogman who is Ned Stark\'s most loyal ally. A skilled hunter and fighter who wields a frog spear.',
     bookBios:{4:'In the cave of the three-eyed raven beyond the Wall.'},
     waypoints:[
       {book:1,loc:'winterfell',confirmed:true},
@@ -323,6 +331,7 @@
     aliases:[],
     _skin:'#b09878',_hair:'#3a2010',_eye:'#4a5040',
     bio:'Son of Howland Reed. A greenseer with prophetic visions. Guides Bran north; may have died near the raven\'s cave.',
+    background:'Son of Howland Reed. A quiet, intense boy who suffers "the green dreams" — visions he cannot control. Travels with his sister Meera.',
     bookBios:{4:'Fate uncertain — likely died near the three-eyed raven\'s cave.'},
     waypoints:[
       {book:1,loc:'winterfell',confirmed:true},
@@ -343,6 +352,7 @@
     _skin:'#c09878',_hair:'#888888',_eye:'#b8a030',_beard:'full',
     deathBook:2,
     bio:'The most powerful man in Westeros. Orchestrated the Red Wedding. Served as Hand of the King until shot by his own son Tyrion while sitting on the privy.',
+    background:'Lord of Casterly Rock and the most powerful man in Westeros. Cold, calculating, and utterly consumed by the legacy of House Lannister. Father of Cersei, Jaime, and Tyrion.',
     bookBios:{
       0:'Commands in the Riverlands.',
       1:'Saves King\'s Landing at the Blackwater.',
@@ -364,6 +374,7 @@
     _skin:'#d0b090',_hair:'#d4a820',_eye:'#50a850',
     isKing:true,
     bio:'Twin sister of Jaime and mother of Joffrey, Tommen, and Myrcella. Queen Regent whose paranoid scheming ultimately collapses when the Faith Militant arrests her.',
+    background:'Twin sister of Jaime Lannister and wife of King Robert Baratheon. Queen of the Seven Kingdoms. Fiercely ambitious and utterly devoted to her children and the power of House Lannister.',
     bookBios:{
       0:'Queen of Westeros. Conspires to have Ned killed.',
       1:'Regent for Joffrey. Survives the Blackwater.',
@@ -384,6 +395,7 @@
     photoUrl:'img/jaime-lannister.jpg',
     _skin:'#c8a880',_hair:'#d4a820',_eye:'#60a860',_beard:'short',
     bio:'Twin of Cersei. Once the greatest knight in the realm. Loses his sword hand, then slowly rediscovers his honour alongside Brienne of Tarth.',
+    background:'Twin brother of Cersei and the most celebrated knight in the realm. A member of the Kingsguard known as the "Kingslayer" — he killed the Mad King he was sworn to protect, a reputation he has never escaped.',
     bookBios:{
       0:'Captured by Robb Stark at Whispering Wood.',
       1:'Prisoner at Riverrun.',
@@ -458,6 +470,7 @@
     _skin:'#c09878',_hair:'#9a8060',_eye:'#4a5040',_beard:'short',
     deathBook:4,
     bio:'Tywin\'s loyal younger brother and the only one competent enough to stabilise the realm after Cersei\'s disasters. Murdered by Varys in the ADwD epilogue.',
+    background:'Tywin\'s loyal younger brother and chief lieutenant of House Lannister. Steady, reliable, and utterly devoted to his brother\'s vision.',
     bookBios:{4:'Lord Regent. Stabilises the Small Council. Murdered by Varys.'},
     waypoints:[
       {book:0,loc:'riverlands',confirmed:true},
@@ -473,6 +486,7 @@
     _skin:'#d0c090',_hair:'#d4a820',_eye:'#60a860',
     isKing:true, deathBook:2,
     bio:'Cruel, sadistic son of Cersei and Jaime (not Robert). Ordered Ned Stark\'s execution. Poisoned at his own wedding — the Purple Wedding.',
+    background:'Robert Baratheon\'s eldest son and heir to the Iron Throne. Raised at court and pampered by his mother Cersei. Widely regarded as arrogant and unpredictable.',
     bookBios:{
       0:'King. Orders Ned Stark\'s execution.',
       1:'King at the Blackwater. Flees during the battle.',
@@ -492,6 +506,7 @@
     _skin:'#d0b090',_hair:'#d4a820',_eye:'#50a850',
     deathBook:4,
     bio:'Daughter of Cersei and Jaime. Sent to Dorne as a ward; ear cut off in a Queenmaker plot. Poisoned by Ellaria Sand while leaving Dorne.',
+    background:'Robert and Cersei\'s daughter — gentle and sweet-natured, far kinder than her brother Joffrey. Sent to Dorne to be betrothed to Trystane Martell as part of a political alliance.',
     bookBios:{
       1:'Sent to Dorne as a political ward.',
       3:'Ear cut off in Arianne\'s Queenmaker plot.',
@@ -513,6 +528,7 @@
     _skin:'#d0c090',_hair:'#d4a820',_eye:'#60a860',
     isKing:true,
     bio:'Gentle, easily manipulated youngest child of Cersei. Becomes king after Joffrey\'s death. Married to Margaery Tyrell; caught between his wife and his mother.',
+    background:'Robert and Cersei\'s youngest child — a gentle, earnest boy who loves his cats and his mother. Young enough to still be largely innocent.',
     bookBios:{
       3:'King. Marries Margaery Tyrell.',
       4:'King. Faith Militant crisis deepens around him.',
@@ -530,6 +546,7 @@
     aliases:['Ser Lancel','Brother Lancel'],
     _skin:'#c09878',_hair:'#d4a820',_eye:'#60a860',
     bio:'Cousin of the Lannister twins; was Cersei\'s lover and complicit in Robert\'s death. Wounds in the Blackwater lead him to zealous Faith conversion.',
+    background:'Cousin and squire to King Robert Baratheon. Young, eager to please, and easily influenced by stronger personalities.',
     bookBios:{4:'Fanatical member of the Faith Militant in King\'s Landing.'},
     waypoints:[
       {book:0,loc:'kings-landing',confirmed:true},
@@ -549,6 +566,7 @@
     _skin:'#b89060',_hair:'#2a1a00',_eye:'#3050a0',_beard:'full',
     isKing:true, deathBook:0,
     bio:'King of the Seven Kingdoms who won the throne by killing Rhaegar Targaryen. A great warrior grown fat in peace. Died from a boar wound aided by too much wine — Cersei\'s doing.',
+    background:'King of the Seven Kingdoms, who won the crown by killing Rhaegar Targaryen at the Trident. A legendary warrior in his youth — now fat, drunk, and deeply bored with the throne he bled for.',
     bookBios:{0:'Dies from a boar wound, wine supply poisoned on Cersei\'s orders.'},
     waypoints:[
       {book:0,loc:'kings-landing',confirmed:true},
@@ -563,6 +581,7 @@
     _skin:'#a88058',_hair:'#2a1a00',_eye:'#3050a0',_beard:'short',
     isKing:true,
     bio:'Robert\'s younger brother and true heir. Humourless, inflexible, but just. Advised by Melisandre. Defeated at the Blackwater, marches north to save the Wall.',
+    background:'Robert\'s younger brother and Lord of Dragonstone. Humourless, inflexible, and consumed by duty — the most just and least loved of the Baratheon brothers. Believes himself the rightful heir.',
     bookBios:{
       0:'At Dragonstone. Receives Ned\'s letter about the succession.',
       1:'Invades King\'s Landing. Defeated at the Blackwater.',
@@ -590,6 +609,7 @@
     _skin:'#c09878',_hair:'#1a1a00',_eye:'#305090',_beard:'short',
     isKing:true, deathBook:1,
     bio:'Robert\'s youngest, most charismatic brother. Crowned himself King of the South with Tyrell support. Murdered by a shadow assassin conjured by Melisandre.',
+    background:'Robert\'s youngest, most charismatic brother. Lord of Storm\'s End. Beloved and handsome — politics comes naturally to him in a way it never did for Stannis.',
     bookBios:{
       0:'Flees King\'s Landing after Robert dies.',
       1:'Commands the largest army in Westeros. Murdered by a shadow creature at Storm\'s End.',
@@ -607,6 +627,7 @@
     photoUrl:'img/melisandre.jpg',
     _skin:'#d09080',_hair:'#8b0000',_eye:'#c82020',
     bio:'A red priestess from Asshai who burns people as offerings, births shadow demons, and sees visions in her fires. Utterly devoted to her god and to Stannis — whom she believes is Azor Ahai reborn.',
+    background:'A red priestess of R\'hllor from the eastern city of Asshai, who has attached herself to Stannis Baratheon. Speaks of a prophesied warrior of light reborn to battle the darkness.',
     bookBios:{
       0:'At Dragonstone with Stannis.',
       1:'Births shadow demons. Burns Renly\'s leeches.',
@@ -631,6 +652,7 @@
     photoUrl:'img/davos-seaworth.jpg',
     _skin:'#a87858',_hair:'#505050',_eye:'#4a5060',_beard:'short',
     bio:'Former smuggler knighted by Stannis. One of the most honest men in Westeros. Hand of the King and Stannis\'s conscience.',
+    background:'Former smuggler turned knight by Stannis Baratheon, who rewarded him for running food through the siege of Storm\'s End — and then removed his fingertips for the years of crime. The most honest man at Dragonstone.',
     bookBios:{
       0:'At Dragonstone.',
       1:'Commands at the Blackwater; loses sons.',
@@ -656,6 +678,7 @@
     aliases:[],
     _skin:'#c09878',_hair:'#2a1a08',_eye:'#3050a0',
     bio:'Stannis\'s daughter, disfigured by greyscale on one cheek. Sweet and bookish; teaches Davos to read. Travels north with her father\'s army.',
+    background:'Stannis\'s only child — a gentle, bookish girl with a disfiguring patch of greyscale scarring on one cheek. Devoted to her father.',
     bookBios:{4:'At Castle Black area while Stannis marches on Winterfell.'},
     waypoints:[
       {book:0,loc:'dragonstone',confirmed:true},
@@ -670,6 +693,7 @@
     aliases:[],
     _skin:'#c0a878',_hair:'#603020',_eye:'#3050a0',
     bio:'Wife of Stannis, more zealously devoted to R\'hllor than her husband. Cold toward their daughter Shireen.',
+    background:'Wife of Stannis Baratheon. Intensely devoted to the Lord of Light R\'hllor, more zealously than Stannis himself.',
     bookBios:{4:'At Castle Black area with Shireen.'},
     waypoints:[
       {book:0,loc:'dragonstone',confirmed:true},

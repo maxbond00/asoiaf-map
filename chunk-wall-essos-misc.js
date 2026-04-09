@@ -20,6 +20,7 @@ Object.assign(window.CHARS, {
     portrait: 'jeor-mormont',
     deathBook: 2,
     bio: 'Lord Commander of the Night\'s Watch who abdicated his lordship to take the black. A hard, respected commander who sees the true threat beyond the Wall. Led the great ranging that ended in disaster at the Fist of First Men. Killed by his own men in a mutiny at Craster\'s Keep.',
+    background:'Lord Commander Jeor Mormont of the Night\'s Watch — who abdicated his lordship of Bear Island to take the black. A hard, respected commander watching his Watch shrink while the threat beyond the Wall quietly grows.',
     bookBios: {
       0: 'Lord Commander at Castle Black. Sends Jon beyond the Wall.',
       1: 'Leads the great ranging beyond the Wall.',
@@ -42,6 +43,7 @@ Object.assign(window.CHARS, {
     aliases: ['Sam', 'Ser Piggy (mockingly)', 'Sam the Slayer'],
     portrait: 'samwell',
     bio: 'Fat, cowardly, and bookish — until he kills a White Walker with a dragonglass dagger, earning the name "Sam the Slayer." Jon\'s best friend. Discovers crucial information about defeating the Others. Sent to Oldtown with Gilly to become a maester.',
+    background:'Samwell Tarly — a fat, bookish, terrified boy from Horn Hill, sent to the Wall by his ashamed father who threatened to kill him otherwise. Jon Snow\'s unlikely best friend.',
     bookBios: {
       0: 'Arrives at Castle Black. Befriends Jon Snow.',
       1: 'On the great ranging beyond the Wall.',
@@ -71,6 +73,7 @@ Object.assign(window.CHARS, {
     aliases: ['Ser Alliser'],
     portrait: 'default-male',
     bio: 'Bitter master-at-arms at Castle Black, despises Jon Snow from the start. A loyalist to the old Night\'s Watch ways. One of the ringleaders of the mutiny that stabs Jon Snow at the end of ADwD.',
+    background:'Ser Alliser Thorne — master-at-arms at Castle Black. A knight sent to the Wall as punishment after backing the wrong side of Robert\'s Rebellion. Bitter, strict, and takes an instant dislike to Jon Snow.',
     bookBios: {
       0: 'Trains recruits at Castle Black.',
       1: 'Sent to King\'s Landing with a wight\'s hand; ignored.',
@@ -95,6 +98,7 @@ Object.assign(window.CHARS, {
     photoUrl: 'img/qhorin-halfhand.jpg',
     deathBook: 1,
     bio: 'The most celebrated ranger of the Night\'s Watch. Lost the fingers of his sword hand to a wildling axe. Orders Jon Snow to kill him so Jon can convincingly infiltrate Mance Rayder\'s army.',
+    background:'Qhorin Halfhand — one of the most celebrated rangers of the Night\'s Watch. Lost the fingers of his sword hand to a wildling axe and kept fighting. Respected even by the Free Folk.',
     bookBios: {
       1: 'Leads a ranging in the Skirling Pass. Captured by wildlings. Orders Jon to kill him as a ruse.',
     },
@@ -118,6 +122,7 @@ Object.assign(window.CHARS, {
     aliases: ['King-Beyond-the-Wall', 'Abel (alias in ADwD)'],
     portrait: 'mance-rayder',
     bio: 'Former brother of the Night\'s Watch turned King-Beyond-the-Wall. United the warring wildling clans and led them south to flee the White Walkers. Captured by Stannis, he appears to be burned at the stake but Melisandre substitutes Rattleshirt (in Mance\'s glamoured appearance). Sent to Winterfell as the singer Abel.',
+    background:'Mance Rayder — a former brother of the Night\'s Watch who deserted and went over to the Free Folk. Has spent years uniting the quarrelling wildling clans under one banner: the need to flee something terrible coming from the north.',
     bookBios: {
       1: 'Assembles the Free Folk army beyond the Wall.',
       2: 'Leads the assault on the Wall. Captured by Stannis.',
@@ -143,6 +148,7 @@ Object.assign(window.CHARS, {
     portrait: 'ygritte',
     deathBook: 2,
     bio: 'A fierce wildling woman with vivid red hair, "kissed by fire." Jon Snow\'s lover among the Free Folk. She shoots Jon with three arrows as he escapes back to the Night\'s Watch. Dies from an arrow wound during the wildling attack on Castle Black.',
+    background:'Ygritte — a fierce Free Folk woman with vivid red hair "kissed by fire." Captured by Jon Snow while ranging beyond the Wall. Quick-witted, blunt, and utterly without pretension.',
     bookBios: {
       1: 'Captured by Jon and Qhorin; Jon keeps her as prisoner. They become lovers.',
       2: 'Attacks Castle Black with the wildlings. Shot by an arrow; dies in Jon\'s arms.',
@@ -163,6 +169,7 @@ Object.assign(window.CHARS, {
     aliases: ['Tormund Thunderfist', 'Husband to Bears', 'Tall-Talker', 'Horn-Blower'],
     portrait: 'tormund',
     bio: 'One of Mance Rayder\'s most important chieftains. Boisterous, brave, and genuinely likeable. After the Wall battle, he is one of the first wildling leaders to work with Jon Snow on letting the Free Folk through the Wall.',
+    background:'Tormund Giantsbane — one of Mance Rayder\'s most important chieftains. Boisterous, larger than life, and genuinely brave. Tells outrageous stories about himself.',
     bookBios: {
       2: 'Fights at the Wall.',
       4: 'Negotiates with Jon. Leads his people through the Wall at Castle Black.',
@@ -183,6 +190,7 @@ Object.assign(window.CHARS, {
     aliases: ['The Wildling Princess'],
     portrait: 'default-female',
     bio: 'Sister of Mance Rayder\'s wife Dalla (who died in childbirth). Tough, beautiful wildling woman held as a "princess" by Stannis. Jon sends her on a mission beyond the Wall to find Tormund Giantsbane.',
+    background:'Val — a Free Folk woman, sister of Mance Rayder\'s wife Dalla. Fiercely proud. Held effectively as a "wildling princess" by those at Castle Black.',
     bookBios: {
       4: 'Prisoner-guest at Castle Black. Sent by Jon on a mission beyond the Wall.',
     },
@@ -206,6 +214,7 @@ Object.assign(window.CHARS, {
     aliases: ['Lord Flayer', 'The Leech Lord'],
     portrait: 'roose-bolton',
     bio: 'Lord of the Dreadfort. Cold, bloodless, and reptilian. A key commander for Robb Stark who secretly dealt with the Lannisters. Orchestrated the Red Wedding. Made Warden of the North by Tywin. His control of the North is threatened by resistance from the Northern lords.',
+    background:'Roose Bolton — Lord of the Dreadfort. A cold, bloodless man who speaks softly and practices routine bloodletting for his health. One of Robb Stark\'s bannermen.',
     bookBios: {
       1: 'Commands Robb\'s forces in the Riverlands.',
       2: 'Betrays Robb at the Red Wedding. Kills Robb personally.',
@@ -232,6 +241,7 @@ Object.assign(window.CHARS, {
     aliases: ['Ramsay Snow', 'The Bastard of Bolton', 'Lord of the Hornwood'],
     portrait: 'ramsay',
     bio: 'Roose Bolton\'s bastard son — sadistic, unpredictable, and monstrous. Tortured Theon Greyjoy into becoming "Reek." Made legitimate after Roose\'s trueborn heir died. Married Jeyne Poole (falsely presented as Arya Stark). Holds Winterfell.',
+    background:'Ramsay Snow — bastard son of Roose Bolton. Cruel, unpredictable, and genuinely unsettling even to those who know him well.',
     bookBios: {
       1: 'At the Dreadfort. Sacks Winterfell after Theon\'s capture.',
       2: 'Captured Theon; tortures him into Reek.',
@@ -255,6 +265,7 @@ Object.assign(window.CHARS, {
     aliases: ['Lord Too-Fat', 'The Fat Lord'],
     portrait: 'wyman-manderly',
     bio: 'Enormously obese Lord of White Harbor, the richest lord in the North. Appears to collaborate with the Boltons but secretly plots Stark vengeance — his son Wendel was killed at the Red Wedding. Sends Davos Seaworth to find Rickon Stark. Serves Frey pies (made of Freys) at the Winterfell feast.',
+    background:'Wyman Manderly — enormously obese Lord of White Harbor, the richest and most powerful lord in the North. Appears jovial and eager to please.',
     bookBios: {
       3: 'Feigns submission to the Boltons while plotting against them.',
       4: 'At Winterfell for the wedding feast. Serving "Frey pie." Awaiting the right moment.',
@@ -279,6 +290,7 @@ Object.assign(window.CHARS, {
     aliases: ['The High Septon', 'High Sparrow'],
     portrait: 'default-male',
     bio: 'A barefoot septon of humble origins who became the leader of the sparrow religious movement and was elevated to High Septon by Cersei — a decision she quickly regrets. Wields the restored Faith Militant against the crown itself.',
+    background:'A barefoot septon of humble origins who has become the leader of the "sparrow" movement — pious smallfolk streaming into King\'s Landing in the wake of the wars. Sincere, ascetic, and unafraid of the powerful.',
     bookBios: {
       3: 'Arrives in King\'s Landing leading a tide of sparrow pilgrims.',
       4: 'High Septon. Arrests Cersei, Margaery, and Loras Tyrell. Commands the Faith Militant.',
@@ -299,6 +311,7 @@ Object.assign(window.CHARS, {
     portrait: 'default-male',
     photoUrl: 'img/samwell-tarly-sr.jpg',
     bio: 'Lord of Horn Hill, one of the finest military commanders in Westeros and Mace Tyrell\'s best general. Harsh, honour-obsessed father who sent Sam to the Wall to rid himself of his "unworthy" heir.',
+    background:'Randyll Tarly — Lord of Horn Hill and one of the finest military commanders in Westeros. Harsh, honour-obsessed, and inflexible. Gave his son Samwell an ultimatum: take the black or suffer the consequences.',
     bookBios: {
       1: 'Fights for the Tyrells at the Blackwater.',
       3: 'Battles remnants of Robb\'s army.',
@@ -324,6 +337,7 @@ Object.assign(window.CHARS, {
     aliases: ['No One', 'The Alchemist (at the Citadel)'],
     portrait: 'jaqen',
     bio: 'A Faceless Man — an assassin who can change his face. Met Arya while caged in a prison wagon heading to the Wall. Gave her three deaths for saving his life. Departed after changing his face. Resurfaces at the Citadel in Oldtown, seemingly on a mission involving the Faceless Men and the Maesters.',
+    background:'A man who calls himself Jaqen H\'ghar — a prisoner being transported north in a cage with two common criminals. Calm, courteous, and faintly unsettling. Speaks of himself in the third person.',
     bookBios: {
       1: 'Prisoner heading to Castle Black with Arya. Gives her three deaths at Harrenhal.',
       2: 'Departs after granting Arya passage to Braavos.',
@@ -346,6 +360,7 @@ Object.assign(window.CHARS, {
     portrait: 'default-male',
     deathBook: 0,
     bio: 'Former First Sword of Braavos, hired by Ned Stark to teach Arya the Water Dance style of swordfighting. When Lannister soldiers come for Arya after Ned\'s arrest, he holds them off with a wooden practice sword. His fate is never fully confirmed but he is presumed dead.',
+    background:'Syrio Forel — former First Sword of Braavos, hired by Ned Stark in King\'s Landing to teach Arya the Braavosi "water dance" style of swordfighting. Precise, philosophical, and endlessly patient.',
     bookBios: {
       0: 'Teaches Arya in King\'s Landing. Holds off Lannister soldiers to let her escape. Fate unknown but likely killed.',
     },
@@ -363,6 +378,7 @@ Object.assign(window.CHARS, {
     aliases: ['Griff (alias)', 'Lord of Griffin\'s Roost (stripped)'],
     portrait: 'default-male',
     bio: 'Former Hand of the King to Aerys II Targaryen, blamed for failing to capture Robert during the rebellion. Exiled, presumed dead. Has been secretly raising and protecting Aegon Targaryen (whom he believes to be Rhaegar\'s son). Contracted greyscale on the Rhoyne. Invades the Stormlands with the Golden Company.',
+    background:'Jon Connington — former Hand of the King to Aerys II Targaryen. Exiled after the wrong outcome in a key battle against Robert Baratheon. Presumed dead. Was once Robert\'s closest friend, and deeply loyal to Rhaegar Targaryen.',
     bookBios: {
       4: 'Leads the Golden Company\'s invasion of the Stormlands on behalf of Young Aegon. Has greyscale, hiding it.',
     },
@@ -381,6 +397,7 @@ Object.assign(window.CHARS, {
     aliases: ['Young Griff', 'Prince Aegon', 'mummer\'s dragon (Daenerys\'s term)'],
     portrait: 'default-male',
     bio: 'Presented as the son of Rhaegar Targaryen and Elia Martell, smuggled out of King\'s Landing as an infant before the sack. Raised in secret by Jon Connington. His authenticity is doubted by some (Tyrion notably). Launches an invasion of Westeros with the Golden Company, taking Storm\'s End.',
+    background:'A young man presented as Aegon Targaryen — son of Rhaegar and Elia Martell, believed killed as an infant during the Sack of King\'s Landing. Raised in secret and educated to be the ideal king.',
     bookBios: {
       4: 'Arrives in Westeros with the Golden Company. Captures Griffin\'s Roost and Storm\'s End. Does not wait for Daenerys.',
     },
@@ -399,6 +416,7 @@ Object.assign(window.CHARS, {
     aliases: ['Flames'],
     portrait: 'default-male',
     bio: 'A tall, imposing red priest of R\'hllor sent by the High Priest of the Temple of the Lord of Light in Volantis to serve Daenerys. Found adrift after being washed overboard. Joins Victarion\'s fleet and heals his festering hand, apparently gaining his trust.',
+    background:'Moqorro — a tall, imposing red priest of R\'hllor from Volantis, sent west by the High Priest of the Temple of the Lord of Light. Heavily tattooed with flames across his dark skin.',
     bookBios: {
       4: 'Found adrift at sea by Victarion\'s fleet. Heals Victarion\'s hand. Travels with the Iron Fleet toward Meereen.',
     },
@@ -422,6 +440,7 @@ Object.assign(window.CHARS, {
     portrait: 'pycelle',
     deathBook: 4,
     bio: 'Grand Maester of the Small Council for decades. Ancient, sycophantic, and secretly a loyal Lannister agent who withheld medicine from Jon Arryn (allowing him to die) and gave Cersei information. Killed by Varys in the ADwD epilogue.',
+    background:'Grand Maester Pycelle — member of the Small Council for decades, serving under three kings. Ancient, sycophantic, and apparently harmless.',
     bookBios: {
       0: 'Grand Maester. Counsels the small council.',
       2: 'Imprisoned by Tyrion, then freed after the Blackwater.',
@@ -443,6 +462,7 @@ Object.assign(window.CHARS, {
     aliases: [],
     portrait: 'qyburn',
     bio: 'A former maester stripped of his chain for forbidden experiments on living subjects. Saved Jaime\'s life after his hand was cut off. Becomes Cersei\'s loyal spymaster and resurrects Gregor Clegane as the monstrous Ser Robert Strong using necromantic methods.',
+    background:'Qyburn — a former maester stripped of his chain for conducting forbidden experiments on living subjects. Works now as a healer at Harrenhal.',
     bookBios: {
       2: 'Treats Jaime\'s stump. Joins the Small Council.',
       3: 'Master of Whisperers. Resurrects Ser Gregor Clegane as Ser Robert Strong.',
@@ -465,6 +485,7 @@ Object.assign(window.CHARS, {
     portrait: 'gregor',
     deathBook: 2,
     bio: 'The Mountain That Rides — eight feet of brutal, murderous violence. Raped and murdered Elia Martell and dashed her infant son against a wall. Poisoned by Oberyn\'s spear during their duel. "Died" but was reanimated by Qyburn as the mute, masked Ser Robert Strong, now Cersei\'s champion.',
+    background:'Ser Gregor Clegane — the Mountain That Rides. Eight feet of brutality and violence. A household knight for House Lannister who commits atrocities without hesitation or remorse.',
     bookBios: {
       0: 'Terrorises the Riverlands. Kills Loras Tyrell\'s horse at the tourney.',
       1: 'Raids the Riverlands on Tywin\'s orders.',
@@ -491,6 +512,7 @@ Object.assign(window.CHARS, {
     aliases: ['King\'s Justice'],
     portrait: 'ilyn-payne',
     bio: 'The King\'s Justice (royal executioner). Had his tongue cut out by Aerys II. Wields a great sword, Ice — confiscated from Ned Stark. Executes Ned Stark in the Great Sept of Baelor.',
+    background:'Ser Ilyn Payne — the King\'s Justice, royal executioner. Had his tongue ripped out by King Aerys for a careless remark. Carries out sentences with grim, wordless efficiency.',
     bookBios: {
       0: 'Executes Ned Stark.',
       1: 'Present at court.',
@@ -553,6 +575,7 @@ Object.assign(window.CHARS, {
     aliases: [],
     portrait: 'default-female',
     bio: 'Daughter and wife of Craster, a wildling who married his own daughters. Saved by Sam after the mutiny at Craster\'s Keep. Travels with Sam to Oldtown, carrying her son (actually Mance Rayder\'s son, swapped with Melisandre\'s arrangement).',
+    background:'Gilly — a daughter and wife of Craster, the wildling hermit beyond the Wall who marries his own daughters. Quietly determined. Wants her unborn son to live more than anything else.',
     bookBios: {
       2: 'Craster\'s daughter. Saved by Sam and the Night\'s Watch survivors.',
       3: 'Travels with Sam south. Baby swapped for Mance\'s child by Melisandre.',
@@ -575,6 +598,7 @@ Object.assign(window.CHARS, {
     aliases: [],
     portrait: 'hot-pie',
     bio: 'A baker\'s apprentice from King\'s Landing who traveled with Arya in the prison wagon. Survived Harrenhal. Stayed behind at the inn at the crossroads to be a baker, which is, he points out, all he ever wanted.',
+    background:'Hot-pie — a baker\'s apprentice from Flea Bottom in King\'s Landing, travelling north with recruits heading for the Wall. Good-natured and mostly talks about food.',
     bookBios: {
       0: 'Traveling north from King\'s Landing with the Night\'s Watch recruits.',
       1: 'At Harrenhal.',
@@ -604,6 +628,7 @@ Object.assign(window.CHARS, {
     aliases: ['King Hizdahr'],
     portrait: 'default-male',
     bio: 'Nobleman of one of Meereen\'s great slave-holding families. Persistent suitor of Daenerys. She agrees to marry him if he can stop the Sons of the Harpy for ninety days. He achieves this (by being in league with them or by other means) and becomes her king-consort, then effectively regent in her absence.',
+    background:'Hizdahr zo Loraq — a nobleman of Meereen from one of the great slave-holding families. A persistent presence at Daenerys\'s court, pushing her to reopen the fighting pits.',
     bookBios: {
       4: 'Married to Daenerys. Rules Meereen during her absence. Arrested after the attack at the fighting pits.',
     },
@@ -621,6 +646,7 @@ Object.assign(window.CHARS, {
     aliases: [],
     portrait: 'default-male',
     bio: 'Captain of the Second Sons mercenary company. Served Daenerys briefly before betraying her and taking his company to the Yunkai\'i side. Claims distant Targaryen blood. May re-defect to Daenerys after the dragons return.',
+    background:'Brown Ben Plumm — weathered sellsword captain of the Second Sons mercenary company, currently contracted to Daenerys in Meereen. Claims distant Targaryen blood.',
     bookBios: {
       4: 'Commands the Second Sons for Yunkai during the siege of Meereen.',
     },
