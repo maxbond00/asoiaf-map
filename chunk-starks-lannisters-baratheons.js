@@ -9,7 +9,7 @@
     name:'Eddard "Ned" Stark', initial:'N', gender:'m',
     house:'stark', houseLabel:'House Stark — Lord of Winterfell, Warden of the North',
     aliases:['Lord Stark','The Quiet Wolf'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BODcwMjg0MDQ5MF5BMl5BanBnXkFtZTcwMTk2NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/ned-stark.jpg',
     _skin:'#b08060',_hair:'#2a1a08',_eye:'#4a5870',_beard:'short',
     deathBook:0,
     bio:'Lord of Winterfell and Warden of the North. A man of iron honour in a world of duplicity. Named Hand of the King by his old friend Robert Baratheon, he travelled to King\'s Landing only to uncover treason surrounding the throne.',
@@ -25,7 +25,7 @@
     name:'Catelyn Tully Stark', initial:'C', gender:'f',
     house:'tully', houseLabel:'House Tully (by birth) / House Stark (by marriage)',
     aliases:['Lady Stark','Lady Stoneheart','Mother Merciless'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTY2ODc4MTkxMV5BMl5BanBnXkFtZTcwNjM3MTg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/catelyn-stark.jpg',
     _skin:'#c09878',_hair:'#8b1a00',_eye:'#4a6888',
     deathBook:2,
     bio:'Lady of Winterfell and wife of Eddard Stark. After her murder at the Red Wedding, she is resurrected without mercy by Beric Dondarrion as the vengeful Lady Stoneheart.',
@@ -54,7 +54,7 @@
     name:'Robb Stark', initial:'Ro', gender:'m',
     house:'stark', houseLabel:'House Stark — King in the North',
     aliases:['The Young Wolf','King in the North'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMjI2NDE1NzczNF5BMl5BanBnXkFtZTcwNjcwODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/robb-stark.jpg',
     _skin:'#b08060',_hair:'#3a1a08',_eye:'#4a6888',_beard:'short',
     isKing:true, deathBook:2,
     bio:'Eldest son of Ned Stark, undefeated in battle, but his marriage pact betrayal triggered the Red Wedding and his murder.',
@@ -79,7 +79,7 @@
     name:'Sansa Stark', initial:'Sa', gender:'f',
     house:'stark', houseLabel:'House Stark',
     aliases:['Alayne Stone (alias)','Little Bird'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BNjAwMjE2NDExNF5BMl5BanBnXkFtZTcwODAwODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/sansa-stark.jpg',
     _skin:'#d0b090',_hair:'#8b1a00',_eye:'#5080a0',
     bio:'Eldest Stark daughter, held hostage in King\'s Landing, then smuggled north by Littlefinger and hidden as his bastard daughter Alayne Stone in the Eyrie.',
     bookBios:{
@@ -104,7 +104,7 @@
     name:'Arya Stark', initial:'Ar', gender:'f',
     house:'stark', houseLabel:'House Stark',
     aliases:['Arry','Nymeria','Weasel','Cat of the Canals','Mercy','No One'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTk5MTYwNDc0OF5BMl5BanBnXkFtZTcwOTg2NDg1Nw@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/arya-stark.jpg',
     _skin:'#b07858',_hair:'#2a1a08',_eye:'#5a7040',
     bio:'Youngest Stark daughter, wolf-blooded and fierce. Witnesses her father\'s execution, survives Harrenhal, escapes across the Narrow Sea, and trains as a Faceless Man in Braavos.',
     bookBios:{
@@ -131,7 +131,7 @@
     name:'Brandon Stark', initial:'Br', gender:'m',
     house:'stark', houseLabel:'House Stark — Lord of Winterfell (in absentia)',
     aliases:['Bran','The Winged Wolf'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTA1NTg0NTI3MTBeQTJeQWpwZ15BbWU3MDEyNjg4OTQ@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/bran-stark.jpg',
     _skin:'#b08060',_hair:'#3a2010',_eye:'#4a6888',
     bio:'Second son of Ned Stark, crippled by a fall pushed by Jaime Lannister. A greenseer and skinchanger who travels beyond the Wall to find the three-eyed crow.',
     bookBios:{
@@ -157,7 +157,7 @@
     name:'Rickon Stark', initial:'Ri', gender:'m',
     house:'stark', houseLabel:'House Stark',
     aliases:[],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMWZiOGNjMDAtOTRlNi00MDJmLWEyMTMtOGEwZTM5ODJlNDAyXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/rickon-stark.jpg',
     _skin:'#c09070',_hair:'#3a1a08',_eye:'#4a6888',
     bio:'Youngest Stark child. Wild and untamed. Flees Winterfell with Osha the wildling and eventually ends up on the remote island of Skagos.',
     bookBios:{
@@ -178,7 +178,7 @@
     name:'Jon Snow', initial:'J', gender:'m',
     house:'nighswatch', houseLabel:'Night\'s Watch — 998th Lord Commander',
     aliases:['Lord Snow','The Bastard of Winterfell'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTkwMjUxMDk2OV5BMl5BanBnXkFtZTcwMzg3MTg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/jon-snow.jpg',
     _skin:'#a87858',_hair:'#1a0a00',_eye:'#3a4a60',_beard:'short',
     bio:'Raised as Ned Stark\'s bastard. Joins the Night\'s Watch, rises to Lord Commander, infiltrates the Free Folk, falls for Ygritte, and is stabbed by mutinous brothers at the end of ADwD.',
     bookBios:{
@@ -202,7 +202,7 @@
 
   'benjen-stark': {
     name:'Benjen Stark', initial:'Be', gender:'m',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMjFiY2M5MjgtZmRiMS00ZTAyLTk2Y2UtMjdjZTRkZmVlYTMyXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/benjen-stark.jpg',
     house:'stark', houseLabel:'House Stark / Night\'s Watch — First Ranger',
     aliases:['First Ranger','Coldhands (probable)'],
     _skin:'#a87050',_hair:'#1a0a00',_eye:'#4a5870',_beard:'short',
@@ -222,7 +222,7 @@
     name:'Walder (Hodor)', initial:'Ho', gender:'m',
     house:'stark', houseLabel:'House Stark — Stableboy, Bran\'s legs',
     aliases:['Hodor'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMjEzMzU4MDEyNF5BMl5BanBnXkFtZTcwNDM2ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/hodor.jpg',
     _skin:'#906040',_hair:'#1a0a00',_eye:'#3a3020',
     bio:'A gentle giant who carries Bran across the world. Bran skinchanges into him to fight. His real name is Walder.',
     bookBios:{4:'In the cave of the three-eyed raven beyond the Wall with Bran.'},
@@ -236,7 +236,7 @@
 
   'osha': {
     name:'Osha', initial:'Os', gender:'f',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMjI4NjY0ODY2OV5BMl5BanBnXkFtZTcwMzU5ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/osha.jpg',
     house:'freefolk', houseLabel:'Free Folk — Wildling woman',
     aliases:[],
     _skin:'#a07050',_hair:'#2a2018',_eye:'#3a4030',
@@ -253,7 +253,7 @@
 
   'meera-reed': {
     name:'Meera Reed', initial:'Me', gender:'f',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTQyOTQwNjI5OF5BMl5BanBnXkFtZTcwOTcyMTEwOQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/meera-reed.jpg',
     house:'none', houseLabel:'House Reed of Greywater Watch',
     aliases:[],
     _skin:'#b09070',_hair:'#3a2010',_eye:'#4a5040',
@@ -268,7 +268,7 @@
 
   'jojen-reed': {
     name:'Jojen Reed', initial:'Jo', gender:'m',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTg0OTU4MTk4M15BMl5BanBnXkFtZTcwMTE4MTE5OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/jojen-reed.jpg',
     house:'none', houseLabel:'House Reed of Greywater Watch',
     aliases:[],
     _skin:'#b09878',_hair:'#3a2010',_eye:'#4a5040',
@@ -289,7 +289,7 @@
     name:'Tywin Lannister', initial:'Ty', gender:'m',
     house:'lannister', houseLabel:'House Lannister — Lord of Casterly Rock, Hand of the King',
     aliases:['The Great Lion','Lord Tywin'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BOTA4ODMxMzE1OV5BMl5BanBnXkFtZTcwMTM0ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/tywin-lannister.jpg',
     _skin:'#c09878',_hair:'#888888',_eye:'#b8a030',_beard:'full',
     deathBook:2,
     bio:'The most powerful man in Westeros. Orchestrated the Red Wedding. Served as Hand of the King until shot by his own son Tyrion while sitting on the privy.',
@@ -310,7 +310,7 @@
     name:'Cersei Lannister', initial:'Ce', gender:'f',
     house:'lannister', houseLabel:'House Lannister — Queen Regent',
     aliases:['The Lioness','Queen Regent'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTgzNTAxNjExMl5BMl5BanBnXkFtZTcwMDEwNzI4OQ@@._V1._CR954,56,605,670._SX100_SY140_.jpg',
+    photoUrl:'img/cersei-lannister.jpg',
     _skin:'#d0b090',_hair:'#d4a820',_eye:'#50a850',
     isKing:true,
     bio:'Twin sister of Jaime and mother of Joffrey, Tommen, and Myrcella. Queen Regent whose paranoid scheming ultimately collapses when the Faith Militant arrests her.',
@@ -331,7 +331,7 @@
     name:'Jaime Lannister', initial:'Ja', gender:'m',
     house:'lannister', houseLabel:'House Lannister — Lord Commander of the Kingsguard',
     aliases:['Kingslayer','The Lion of Lannister'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMjIzMzU1NjM1MF5BMl5BanBnXkFtZTcwMzIxODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/jaime-lannister.jpg',
     _skin:'#c8a880',_hair:'#d4a820',_eye:'#60a860',_beard:'short',
     bio:'Twin of Cersei. Once the greatest knight in the realm. Loses his sword hand, then slowly rediscovers his honour alongside Brienne of Tarth.',
     bookBios:{
@@ -359,7 +359,7 @@
     name:'Tyrion Lannister', initial:'Tr', gender:'m',
     house:'lannister', houseLabel:'House Lannister — former Hand of the King',
     aliases:['The Imp','Halfman','Hugor Hill','Yollo'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMjA2MDAwOTI0OV5BMl5BanBnXkFtZTcwNjA3NDg1Nw@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/tyrion-lannister.jpg',
     _skin:'#c09878',_hair:'#a88030',_eye:'#606030',_beard:'short',
     bio:'The youngest and cleverest Lannister. Masterminded the defence at the Blackwater, then framed for Joffrey\'s murder, escaped to Essos, and journeys toward Daenerys.',
     bookBios:{
@@ -388,7 +388,7 @@
 
   'kevan-lannister': {
     name:'Kevan Lannister', initial:'Ke', gender:'m',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMjZkMzliOWYtODIwNS00ZTU2LWIxNTAtYjFlNTA1YjdhNzc4XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/kevan-lannister.jpg',
     house:'lannister', houseLabel:'House Lannister — Lord Regent',
     aliases:[],
     _skin:'#c09878',_hair:'#9a8060',_eye:'#4a5040',_beard:'short',
@@ -405,7 +405,7 @@
     name:'Joffrey Baratheon', initial:'Jf', gender:'m',
     house:'lannister', houseLabel:'House Baratheon of King\'s Landing (true-born of House Lannister)',
     aliases:['King Joffrey','The Boy King'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTk1NDg5MTAwMl5BMl5BanBnXkFtZTcwOTIwODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/joffrey.jpg',
     _skin:'#d0c090',_hair:'#d4a820',_eye:'#60a860',
     isKing:true, deathBook:2,
     bio:'Cruel, sadistic son of Cersei and Jaime (not Robert). Ordered Ned Stark\'s execution. Poisoned at his own wedding — the Purple Wedding.',
@@ -422,7 +422,7 @@
 
   'myrcella': {
     name:'Myrcella Baratheon', initial:'My', gender:'f',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTA4OTA1MTIxMzdeQTJeQWpwZ15BbWU3MDY2NjQ4NTc@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/myrcella.jpg',
     house:'lannister', houseLabel:'House Baratheon of King\'s Landing',
     aliases:[],
     _skin:'#d0b090',_hair:'#d4a820',_eye:'#50a850',
@@ -445,7 +445,7 @@
     name:'Tommen Baratheon', initial:'To', gender:'m',
     house:'lannister', houseLabel:'House Baratheon of King\'s Landing — King of the Seven Kingdoms',
     aliases:['King Tommen'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BOTY1YWUxM2QtZjhmZC00ZmQ2LThkM2YtNTk2MmQ5OTk3NGMyXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/tommen.jpg',
     _skin:'#d0c090',_hair:'#d4a820',_eye:'#60a860',
     isKing:true,
     bio:'Gentle, easily manipulated youngest child of Cersei. Becomes king after Joffrey\'s death. Married to Margaery Tyrell; caught between his wife and his mother.',
@@ -461,7 +461,7 @@
 
   'lancel-lannister': {
     name:'Lancel Lannister', initial:'La', gender:'m',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMjI0MTQ5MzEzNV5BMl5BanBnXkFtZTcwNTQ4MDA2NTE@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/lancel-lannister.jpg',
     house:'lannister', houseLabel:'House Lannister',
     aliases:['Ser Lancel','Brother Lancel'],
     _skin:'#c09878',_hair:'#d4a820',_eye:'#60a860',
@@ -481,7 +481,7 @@
     name:'Robert Baratheon', initial:'Rb', gender:'m',
     house:'baratheon', houseLabel:'House Baratheon — King of the Seven Kingdoms',
     aliases:['King Robert','The Usurper (Targaryen perspective)'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMzQwMDcwNzY5MF5BMl5BanBnXkFtZTcwMzIyMTE5OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/robert-baratheon.jpg',
     _skin:'#b89060',_hair:'#2a1a00',_eye:'#3050a0',_beard:'full',
     isKing:true, deathBook:0,
     bio:'King of the Seven Kingdoms who won the throne by killing Rhaegar Targaryen. A great warrior grown fat in peace. Died from a boar wound aided by too much wine — Cersei\'s doing.',
@@ -495,7 +495,7 @@
     name:'Stannis Baratheon', initial:'St', gender:'m',
     house:'stannis', houseLabel:'House Baratheon of Dragonstone — the rightful King',
     aliases:['King Stannis','The Rightful King'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMjExNzY0NzI0NF5BMl5BanBnXkFtZTcwNjA2NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/stannis-baratheon.jpg',
     _skin:'#a88058',_hair:'#2a1a00',_eye:'#3050a0',_beard:'short',
     isKing:true,
     bio:'Robert\'s younger brother and true heir. Humourless, inflexible, but just. Advised by Melisandre. Defeated at the Blackwater, marches north to save the Wall.',
@@ -519,7 +519,7 @@
 
   'renly-baratheon': {
     name:'Renly Baratheon', initial:'Re', gender:'m',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BNjA4OTE5MzcyOF5BMl5BanBnXkFtZTcwNDA1ODg5NA@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/renly-baratheon.jpg',
     isKing:true,
     house:'baratheon', houseLabel:'House Baratheon of Storm\'s End',
     aliases:['King Renly'],
@@ -540,7 +540,7 @@
     name:'Melisandre of Asshai', initial:'Ml', gender:'f',
     house:'none', houseLabel:'Red Priestess of R\'hllor — Adviser to Stannis',
     aliases:['The Red Woman','The Red Priestess'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BMTk0MjI5NjQ2OV5BMl5BanBnXkFtZTcwODI4NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/melisandre.jpg',
     _skin:'#d09080',_hair:'#8b0000',_eye:'#c82020',
     bio:'A red priestess from Asshai who burns people as offerings, births shadow demons, and sees visions in her fires. Utterly devoted to her god and to Stannis — whom she believes is Azor Ahai reborn.',
     bookBios:{
@@ -564,7 +564,7 @@
     name:'Davos Seaworth', initial:'Dv', gender:'m',
     house:'none', houseLabel:'House Seaworth — Hand of the King to Stannis',
     aliases:['The Onion Knight','Ser Davos'],
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BNTMwODc0NzI4Ml5BMl5BanBnXkFtZTcwNzY3NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/davos-seaworth.jpg',
     _skin:'#a87858',_hair:'#505050',_eye:'#4a5060',_beard:'short',
     bio:'Former smuggler knighted by Stannis. One of the most honest men in Westeros. Hand of the King and Stannis\'s conscience.',
     bookBios:{
@@ -587,7 +587,7 @@
 
   'shireen-baratheon': {
     name:'Shireen Baratheon', initial:'Sh', gender:'f',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BZjUzNmYzZDktZGY4ZS00ZDA1LWE1MGItMDAwM2E1ZGVlODg1XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/shireen-baratheon.jpg',
     house:'stannis', houseLabel:'House Baratheon of Dragonstone',
     aliases:[],
     _skin:'#c09878',_hair:'#2a1a08',_eye:'#3050a0',
@@ -601,7 +601,7 @@
 
   'selyse-baratheon': {
     name:'Selyse Baratheon', initial:'Sy', gender:'f',
-    photoUrl:'https://m.media-amazon.com/images/M/MV5BZGZjNDA5YWUtZjE5OC00NGE2LWI3Y2UtOTQ1Yjg1MDc3MTk4L2ltYWdlXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl:'img/selyse-baratheon.jpg',
     house:'stannis', houseLabel:'House Baratheon of Dragonstone — Queen to Stannis',
     aliases:[],
     _skin:'#c0a878',_hair:'#603020',_eye:'#3050a0',
