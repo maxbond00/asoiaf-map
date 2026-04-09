@@ -33,14 +33,48 @@
   let _activeFilter = 'All';
   let _activeSubtab = 'tribunal';
 
+  // ── Firebase shared vote state ──────────────────────────────────────────
+  // _fbVotes[theoryId][verdict] = count of real visitor votes (not seeds)
+  // _fbWow[id]                  = net community delta for WOW predictions
+  let _fbVotes  = {};
+  let _fbWow    = {};
+  let _fbReady  = false;
+
+  function _fbRef(path){ return window._fbDB ? window._fbDB.ref(path) : null; }
+
+  function initFirebaseVotes(){
+    const db = window._fbDB;
+    if(!db) return;
+
+    // Real-time listener — fires immediately with current data, then on any change
+    db.ref('/asoiaf-votes/theory').on('value', snap => {
+      _fbVotes  = snap.val() || {};
+      _fbReady  = true;
+      refreshGrid();
+      if(_modalId){ const th=THEORIES.find(t=>t.id===_modalId); if(th) refreshModal(th); }
+    }, () => { _fbReady = false; }); // on error — fall back gracefully
+
+    db.ref('/asoiaf-votes/wow').on('value', snap => {
+      _fbWow = snap.val() || {};
+      const el=document.getElementById('grrm-watch-cards');
+      if(el) el.innerHTML=_wowCardsHTML();
+    });
+  }
+
   function getUserVotes(){ try{ return JSON.parse(localStorage.getItem(VOTES_KEY)||'{}'); }catch(_){ return {}; } }
   function saveUserVotes(v){ localStorage.setItem(VOTES_KEY, JSON.stringify(v)); }
 
   function getTotals(th){
-    const uv = getUserVotes();
-    const uVote = uv[th.id];
+    // Seeds = fandom baseline; Firebase stores real visitor votes on top
     const t = { ...th.seeds };
-    if(uVote) t[uVote] = (t[uVote]||0) + 1;
+    if(_fbReady && _fbVotes[th.id]){
+      const fb = _fbVotes[th.id];
+      VERDICTS.forEach(v => { if(fb[v]) t[v] = (t[v]||0) + fb[v]; });
+    } else if(!_fbReady){
+      // Firebase not yet loaded — show user's local vote as provisional
+      const uVote = getUserVotes()[th.id];
+      if(uVote) t[uVote] = (t[uVote]||0) + 1;
+    }
     return t;
   }
 
@@ -76,6 +110,7 @@
     tab.innerHTML = buildTabHTML();
     buildModal();
     document.addEventListener('keydown', e => { if(e.key==='Escape') window._closeTheory(); });
+    initFirebaseVotes(); // start real-time sync for shared vote counts
   };
 
   function getCategories(){
@@ -260,10 +295,29 @@
 
   window._castVote = function(verdict){
     if(!_modalId) return;
-    const uv = getUserVotes();
-    if(uv[_modalId] === verdict) delete uv[_modalId]; // toggle off
+    const uv    = getUserVotes();
+    const oldV  = uv[_modalId];
+    const toggling = (oldV === verdict); // clicking same verdict = un-vote
+
+    // ── Firebase atomic updates ───────────────────────────────────────
+    if(window._fbDB){
+      if(oldV){
+        // Decrement old verdict (clamp at 0)
+        const rOld = _fbRef(`/asoiaf-votes/theory/${_modalId}/${oldV}`);
+        rOld.transaction(c => Math.max(0, (c||0) - 1));
+      }
+      if(!toggling){
+        // Increment new verdict
+        const rNew = _fbRef(`/asoiaf-votes/theory/${_modalId}/${verdict}`);
+        rNew.transaction(c => (c||0) + 1);
+      }
+    }
+
+    // ── Local state (tracks which verdict this user chose for UI) ─────
+    if(toggling) delete uv[_modalId];
     else uv[_modalId] = verdict;
     saveUserVotes(uv);
+
     const th = THEORIES.find(t=>t.id===_modalId);
     if(th) refreshModal(th);
     refreshGrid();
@@ -444,18 +498,35 @@
   function saveWowVotes(v){ localStorage.setItem(WOW_KEY, JSON.stringify(v)); }
 
   function getWowPct(id){
-    const v = getWowVotes();
-    const raw = WOW_SEEDS[id].pct + (v[id]||0);
+    // Use Firebase community delta if available; else fall back to local
+    const delta = _fbReady ? (_fbWow[id]||0) : (getWowVotes()[id]||0);
+    const raw   = WOW_SEEDS[id].pct + delta;
     return Math.max(1, Math.min(99, raw));
   }
 
   window._voteWow = function(id, dir){
+    // ── Firebase: atomically increment community net delta ────────────
+    if(window._fbDB){
+      const r = _fbRef(`/asoiaf-votes/wow/${id}`);
+      r.transaction(delta => {
+        const next = (delta||0) + dir;
+        const raw  = WOW_SEEDS[id].pct + next;
+        // clamp so displayed % stays 1-99
+        if(raw < 1)  return 1  - WOW_SEEDS[id].pct;
+        if(raw > 99) return 99 - WOW_SEEDS[id].pct;
+        return next;
+      });
+    }
+
+    // ── Local fallback (used before Firebase responds) ─────────────────
     const v = getWowVotes();
     v[id] = (v[id]||0) + dir;
     const raw = WOW_SEEDS[id].pct + v[id];
     if(raw < 1)  v[id] = 1  - WOW_SEEDS[id].pct;
     if(raw > 99) v[id] = 99 - WOW_SEEDS[id].pct;
     saveWowVotes(v);
+
+    // Optimistic UI refresh (Firebase listener will re-render when it echoes back)
     const el = document.getElementById('grrm-watch-cards');
     if(el) el.innerHTML = _wowCardsHTML();
   };
