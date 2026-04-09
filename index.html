@@ -6,8 +6,15 @@
 <title>A Song of Ice and Fire — Character Map</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;overflow:hidden;height:100vh;user-select:none;}
-#app{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+/* iOS viewport fix: --app-height is set by JS to window.innerHeight (excludes browser chrome) */
+:root{--app-height:100vh;}
+html{height:100%;overflow:hidden;}
+body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;overflow:hidden;height:100%;user-select:none;}
+#app{display:flex;flex-direction:column;height:var(--app-height);}
+/* Fast tap for all interactive elements — removes 300ms iOS tap delay */
+button,a,[onclick],.tab-btn,.ctrl-btn,.zoom-btn,.hf-btn,.sp-btn,.t-filter,.theory-card,.wow-btn,.ghf-btn,.rel-chip,.tm-btn,.tm-nav-btn,.book-marker,.lp-item,.sr-item{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+/* Explicit vertical scroll permission for scroll containers */
+#tab-history,#theories-grid,#char-panel,#loc-popup-list,.jl-list,#graph-sidebar{touch-action:pan-y pinch-zoom;}
 
 /* ── HEADER ── */
 #header{background:linear-gradient(to right,#1a0a00,#0a0510,#1a0a00);border-bottom:2px solid #8b6914;padding:7px 18px;display:flex;align-items:center;justify-content:space-between;z-index:100;flex-shrink:0;}
@@ -2803,35 +2810,16 @@ function addTouchAsMouse(el){
   else patchMapTouch();
 })();
 
-// ── SWIPE-RIGHT TO CLOSE CHAR PANEL (mobile) ──────────────────────────────
+// ── iOS VIEWPORT HEIGHT FIX ────────────────────────────────────────────────
+// iOS Safari's 100vh includes the browser chrome bar, making the app taller
+// than the visible area. window.innerHeight gives the true usable height.
 (function(){
-  const panel = document.getElementById('char-panel');
-  if(!panel) return;
-  let startX = 0, startY = 0, dragging = false;
-  panel.addEventListener('touchstart', e => {
-    if(e.touches.length !== 1) return;
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    dragging = true;
-  }, {passive:true});
-  panel.addEventListener('touchmove', e => {
-    if(!dragging || e.touches.length !== 1) return;
-    const dx = e.touches[0].clientX - startX;
-    const dy = Math.abs(e.touches[0].clientY - startY);
-    // Only intercept clear rightward horizontal swipes
-    if(dx > 12 && dy < 60) panel.style.transform = `translateX(${Math.min(dx, 280)}px)`;
-  }, {passive:true});
-  panel.addEventListener('touchend', e => {
-    if(!dragging) return;
-    dragging = false;
-    const dx = e.changedTouches[0].clientX - startX;
-    if(dx > 90){
-      panel.style.transform = '';
-      if(window.closePanel) window.closePanel();
-    } else {
-      panel.style.transform = '';
-    }
-  }, {passive:true});
+  function fixVh(){
+    document.documentElement.style.setProperty('--app-height', window.innerHeight+'px');
+  }
+  fixVh();
+  window.addEventListener('resize', fixVh);
+  window.addEventListener('orientationchange', function(){ setTimeout(fixVh, 300); });
 })();
 
 // ── AUTO-HIDE ROTATE NUDGE WHEN DEVICE ROTATES TO LANDSCAPE ───────────────
