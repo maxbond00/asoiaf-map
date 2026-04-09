@@ -271,7 +271,7 @@
     const s = document.createElement('style');
     s.id = 'theory-css';
     s.textContent = `
-    #tab-theories { display:flex; flex-direction:column; height:100%; overflow:hidden; background:#0a0500; color:#c8a050; }
+    #tab-theories { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; background:#0a0500; color:#c8a050; }
 
     /* Header */
     #theories-header { padding:14px 20px 10px; border-bottom:1px solid #2a1a05; background:rgba(8,4,0,.97); flex-shrink:0; }
@@ -291,7 +291,7 @@
     .t-filter.active { background:#1a0d00; border-color:#d4a820; color:#d4a820; }
 
     /* Grid */
-    #theories-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; padding:14px 16px; overflow-y:auto; flex:1; }
+    #theories-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; padding:14px 16px; overflow-y:auto; -webkit-overflow-scrolling:touch; flex:1; min-height:0; }
 
     /* Cards */
     .theory-card { background:#0c0600; border:1px solid #1e1205; border-radius:4px; padding:12px 12px 10px; cursor:pointer; transition:border-color .15s,background .15s,box-shadow .15s; display:flex; flex-direction:column; gap:6px; }
@@ -370,6 +370,23 @@
     @media(max-width:380px){
       #theories-grid { grid-template-columns:1fr; }
       .wow-vote-row { flex-wrap:wrap; justify-content:center; }
+    }
+    /* Landscape on a phone: very short viewport — aggressively compact */
+    @media(max-height:500px){
+      #theories-header { padding:5px 14px 5px; }
+      #theories-subtitle { display:none; }
+      #theories-legend { display:none; }
+      #theories-title { font-size:.85em; }
+      #grrm-watch-wrap { padding:6px 14px 8px; }
+      #grrm-watch-header { margin-bottom:6px; }
+      #grrm-watch-cards { flex-direction:row; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; gap:8px; }
+      .wow-card { min-width:160px; flex-shrink:0; padding:8px 10px; gap:3px; }
+      .wow-label { font-size:.6em; }
+      .wow-pct { font-size:1.4em; margin:1px 0; }
+      .wow-meter { height:4px; margin-bottom:2px; }
+      .wow-vote-hint { display:none; }
+      #grrm-watch-note { display:none; }
+      #theories-grid { gap:6px; padding:8px 10px; }
     }
     `;
     document.head.appendChild(s);

@@ -7,7 +7,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;overflow:hidden;height:100vh;user-select:none;}
-#app{display:flex;flex-direction:column;height:100vh;}
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 
 /* ── HEADER ── */
 #header{background:linear-gradient(to right,#1a0a00,#0a0510,#1a0a00);border-bottom:2px solid #8b6914;padding:7px 18px;display:flex;align-items:center;justify-content:space-between;z-index:100;flex-shrink:0;}
@@ -294,7 +294,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 .tab-btn.active{background:rgba(60,30,0,.9);border-color:#d4a820;color:#d4a820;box-shadow:0 0 10px rgba(212,168,32,.25);}
 
 /* ── RELATIONS GRAPH TAB ── */
-#tab-relations{flex:1;display:none;flex-direction:column;overflow:hidden;background:#050300;}
+#tab-relations{flex:1;min-height:0;display:none;flex-direction:column;overflow:hidden;background:#050300;}
 #graph-toolbar{background:linear-gradient(to right,#0a0500,#100800,#0a0500);border-bottom:1px solid #3a2008;padding:7px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap;}
 #graph-toolbar-title{color:#d4a820;font-size:.85em;letter-spacing:2px;margin-right:4px;}
 #graph-count{font-size:.72em;color:#5a3a18;letter-spacing:.5px;}
@@ -348,7 +348,7 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
 @media(max-width:768px){#ask-sug-grid{grid-template-columns:1fr;}#ask-header-title{font-size:.65em;}.ask-bubble{font-size:.78em;}#ask-messages{padding:12px 10px;}#ask-input-row{padding:8px 10px;}}
 
 /* ── HISTORY TAB ── */
-#tab-history{flex:1;display:none;overflow-y:auto;background:linear-gradient(180deg,#030200 0%,#0a0500 100%);}
+#tab-history{flex:1;min-height:0;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(180deg,#030200 0%,#0a0500 100%);}
 #history-content{max-width:860px;margin:0 auto;padding:32px 24px 60px;}
 #history-title{text-align:center;color:#d4a820;font-size:1.6em;letter-spacing:6px;margin-bottom:6px;}
 #history-sub{text-align:center;color:#5a3a10;font-size:.78em;letter-spacing:3px;margin-bottom:36px;}
@@ -469,15 +469,51 @@ body{background:#4a7e9e;color:#c9a84c;font-family:'Palatino Linotype','Book Anti
   .hf-btn { width: 28px; height: 28px; font-size: 13px; }
 }
 
-/* ── Portrait mode: rotate nudge shown for both map and graph ── */
+/* ── Portrait mode: rotate nudge shown ── */
 @media (max-width: 768px) and (orientation: portrait) {
-  /* Show the soft map nudge banner */
   #map-rotate-nudge { display: flex; }
-  /* House filter: move up to avoid home-bar overlap */
   #house-filter { bottom: max(52px, calc(42px + env(safe-area-inset-bottom))); }
-  /* Mini-map: avoid timeline/safe-area overlap */
   #mini-map-wrap { bottom: max(70px, calc(60px + env(safe-area-inset-bottom))); }
-  /* Theories: single column on narrow portrait screens */
+}
+
+/* ── Landscape on a phone: short viewport, needs aggressive compaction ── */
+@media (max-height: 500px) {
+  /* Header: strip to bare minimum */
+  #header { padding-top: 3px; padding-bottom: 3px; }
+  #header h1 { display: none; }
+  .tab-btn { padding: 3px 8px; font-size: 9px; }
+  #music-btn { padding: 3px 8px; font-size: 10px; }
+
+  /* Timeline: minimal in landscape */
+  #timeline { padding-top: 4px; padding-bottom: max(4px, env(safe-area-inset-bottom)); gap: 6px; }
+  #event-markers { display: none; }
+  #book-markers { display: none; }
+  #progress-container { min-height: 0; }
+  #progress-track { height: 6px; }
+  #progress-handle { width: 12px; height: 12px; }
+
+  /* Map overlays: reposition for short viewport */
+  #book-display { top: 4px; padding: 3px 6px; }
+  #book-num { font-size: 1.1em; }
+  #book-title { font-size: 6px; }
+  #zoom-controls { top: 36px; }
+  .zoom-btn { width: 28px; height: 28px; font-size: 12px; }
+  #house-filter { bottom: max(40px, env(safe-area-inset-bottom)); gap: 2px; padding: 3px 6px; }
+  .hf-btn { width: 28px; height: 28px; font-size: 13px; }
+  #mini-map-wrap { display: none; }
+
+  /* Char panel: use full height, ensure it scrolls */
+  #char-panel { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Relations graph: hide sidebar in landscape to give graph full width */
+  #graph-sidebar { display: none; }
+  #graph-toolbar { padding: 4px 10px; }
+  #graph-toolbar-title { font-size: .7em; }
+
+  /* History tab: tighter */
+  #history-content { padding: 12px 10px 24px; }
+  #history-title { font-size: 1em; letter-spacing: 2px; margin-bottom: 4px; }
+  #history-sub { margin-bottom: 18px; }
 }
 
 /* ── PORTRAIT MODE HINT (relations graph — full overlay) ── */
@@ -848,7 +884,7 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
   </div>
 
   <!-- ═══════════════════════ THEORIES TAB ══════════════════════════════ -->
-  <div id="tab-theories" style="display:none;flex-direction:column;height:100%;overflow:hidden;"></div>
+  <div id="tab-theories" style="display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden;"></div>
 
   <!-- ═══════════════════════ HISTORY TIMELINE TAB ══════════════════════ -->
   <div id="tab-history">
