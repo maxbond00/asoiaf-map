@@ -13,6 +13,7 @@
     _skin:'#b08060',_hair:'#2a1a08',_eye:'#4a5870',_beard:'short',
     deathBook:0,
     bio:'Lord of Winterfell and Warden of the North. A man of iron honour in a world of duplicity. Named Hand of the King by his old friend Robert Baratheon, he travelled to King\'s Landing only to uncover treason surrounding the throne.',
+    background:'Lord of Winterfell and Warden of the North. An honourable man who fought alongside Robert Baratheon to topple the Mad King. He rules the North with justice and holds family above all else.',
     bookBios:{0:'Discovers Joffrey\'s true parentage. Betrayed by Littlefinger and executed at the Great Sept of Baelor.'},
     chronicle:[
       {frac:0.02, text:'Lord of Winterfell with his wife and children. King Robert Baratheon arrives seeking his old friend as the new Hand of the King.'},
@@ -32,11 +33,12 @@
   'catelyn-stark': {
     name:'Catelyn Tully Stark', initial:'C', gender:'f',
     house:'tully', houseLabel:'House Tully (by birth) / House Stark (by marriage)',
-    aliases:['Lady Stark','Lady Stoneheart','Mother Merciless'],
+    aliases:['Lady Stark'],
     photoUrl:'img/catelyn-stark.jpg',
     _skin:'#c09878',_hair:'#8b1a00',_eye:'#4a6888',
     deathBook:2,
     bio:'Lady of Winterfell and wife of Eddard Stark. After her murder at the Red Wedding, she is resurrected without mercy by Beric Dondarrion as the vengeful Lady Stoneheart.',
+    background:'Lady of Winterfell, born Catelyn Tully of Riverrun. Wife of Eddard Stark and mother of five children — Robb, Sansa, Arya, Bran, and Rickon. Fierce, devoted, and deeply protective of her family.',
     bookBios:{
       0:'Rides to King\'s Landing after Bran\'s fall. Captures Tyrion Lannister.',
       1:'Acts as Robb\'s diplomat; frees Jaime Lannister hoping to recover her daughters.',
@@ -124,10 +126,11 @@
   'arya-stark': {
     name:'Arya Stark', initial:'Ar', gender:'f',
     house:'stark', houseLabel:'House Stark',
-    aliases:['Arry','Nymeria','Weasel','Cat of the Canals','Mercy','No One'],
+    aliases:['Arry'],
     photoUrl:'img/arya-stark.jpg',
     _skin:'#b07858',_hair:'#2a1a08',_eye:'#5a7040',
     bio:'Youngest Stark daughter, wolf-blooded and fierce. Witnesses her father\'s execution, survives Harrenhal, escapes across the Narrow Sea, and trains as a Faceless Man in Braavos.',
+    background:'Youngest daughter of Ned Stark — wolf-blooded and fierce, she refuses the traditional lady\'s path in favour of swords and adventure. Her direwolf is Nymeria.',
     bookBios:{
       0:'Flees King\'s Landing after Ned\'s execution. Taken north with the Night\'s Watch.',
       1:'Prisoner at Harrenhal. Receives three deaths from Jaqen H\'ghar. Escapes.',
@@ -215,6 +218,7 @@
     photoUrl:'img/jon-snow.jpg',
     _skin:'#a87858',_hair:'#1a0a00',_eye:'#3a4a60',_beard:'short',
     bio:'Raised as Ned Stark\'s bastard. Joins the Night\'s Watch, rises to Lord Commander, infiltrates the Free Folk, falls for Ygritte, and is stabbed by mutinous brothers at the end of ADwD.',
+    background:'Raised as the bastard son of Eddard Stark at Winterfell. Skilled with a sword and deeply serious, he is loved by his siblings but set apart by the circumstances of his birth. His direwolf is Ghost.',
     bookBios:{
       0:'Leaves Winterfell for the Night\'s Watch at Castle Black.',
       1:'Ranges beyond the Wall. Ordered to infiltrate Mance Rayder\'s wildlings.',
@@ -404,10 +408,11 @@
   'tyrion-lannister': {
     name:'Tyrion Lannister', initial:'Tr', gender:'m',
     house:'lannister', houseLabel:'House Lannister — former Hand of the King',
-    aliases:['The Imp','Halfman','Hugor Hill','Yollo'],
+    aliases:['The Imp','Halfman'],
     photoUrl:'img/tyrion-lannister.jpg',
     _skin:'#c09878',_hair:'#a88030',_eye:'#606030',_beard:'short',
     bio:'The youngest and cleverest Lannister. Masterminded the defence at the Blackwater, then framed for Joffrey\'s murder, escaped to Essos, and journeys toward Daenerys.',
+    background:'Youngest son of Tywin Lannister — a dwarf in a family that prizes strength and beauty. Compensates with a razor wit and an encyclopedic knowledge of history, wine, and human weakness. Loved by few, underestimated by all.',
     bookBios:{
       0:'Captured at the Eyrie; wins trial by combat. Returns to King\'s Landing.',
       1:'Hand of the King. Masterminds the Battle of the Blackwater.',

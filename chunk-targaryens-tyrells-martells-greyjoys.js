@@ -16,13 +16,13 @@ Object.assign(window.CHARS, {
     house: 'targaryen',
     houseLabel: 'House Targaryen — Queen of Meereen, Mother of Dragons',
     aliases: [
-      'Dany', 'Khaleesi', 'Mhysa', 'Mother of Dragons',
-      'The Unburnt', 'Breaker of Chains', 'Daenerys Stormborn'
+      'Dany', 'Daenerys Stormborn'
     ],
     portrait: 'daenerys',
     photoUrl: 'img/daenerys.jpg',
     isKing: true,
     bio: 'Last surviving child of the Mad King Aerys II Targaryen. Sold to Khal Drogo, she transforms from a frightened girl into a powerful queen. Hatches three dragons — Drogon, Rhaegal, and Viserion — in a funeral pyre. Conquers Slaver\'s Bay and rules Meereen, attempting to learn to govern before reclaiming the Iron Throne.',
+    background:'Last surviving child of the Mad King Aerys II Targaryen. Raised in exile across the Free Cities with her domineering brother Viserys. Born in a storm on Dragonstone — she has never set foot in Westeros, but dreams of nothing else.',
     bookBios: {
       0: 'Sold to Khal Drogo. Travels across the Dothraki Sea. Hatches three dragons from petrified eggs in Drogo\'s funeral pyre.',
       1: 'Travels through Qarth. Attempts to find ships to cross the Narrow Sea.',

@@ -1855,9 +1855,12 @@ function refreshPanelBio(){
   else{badge.className='char-status-badge s-alive';badge.textContent='ALIVE';}
   document.getElementById('char-location-text').textContent=
     '📍 '+(st.isDead?'Deceased':pos.lbl)+(st.status==='prob'?' (probable)':'');
+  // Only show the book-summary blurb for characters without a chronicle feed
+  // (for chronicle characters it would be a spoiler for events later in the book)
   const bkBios=ch.bookBios||{};
+  const hasChronicle=ch.chronicle && ch.chronicle.length>0;
   document.getElementById('char-current-status').textContent=
-    bkBios[bk]?'📖 Book '+(bk+1)+': '+bkBios[bk]:'';
+    !hasChronicle && bkBios[bk]?'📖 Book '+(bk+1)+': '+bkBios[bk]:'';
   buildChronicle(ch);
 }
 
@@ -2136,10 +2139,12 @@ function openPanel(id){
   document.getElementById('char-sigil-svg').innerHTML=
     SIGILS[ch.house]||SIGILS['none'];
 
-  document.getElementById('char-bio').textContent=ch.bio||'';
+  // Use spoiler-free background if available, else fall back to bio
+  document.getElementById('char-bio').textContent=ch.background||ch.bio||'';
   const bkBios=ch.bookBios||{};
+  const hasChronicle=ch.chronicle && ch.chronicle.length>0;
   document.getElementById('char-current-status').textContent=
-    bkBios[bk]?'📖 Book '+(bk+1)+': '+bkBios[bk]:'';
+    !hasChronicle && bkBios[bk]?'📖 Book '+(bk+1)+': '+bkBios[bk]:'';
   buildChronicle(ch);
 
   // POV chapters
