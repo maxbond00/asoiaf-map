@@ -31,6 +31,7 @@
   const VOTES_KEY = 'asoiaf_theory_votes_v1'; // same key — mystery just adds a new value
 
   let _activeFilter = 'All';
+  let _activeSubtab = 'tribunal';
 
   function getUserVotes(){ try{ return JSON.parse(localStorage.getItem(VOTES_KEY)||'{}'); }catch(_){ return {}; } }
   function saveUserVotes(v){ localStorage.setItem(VOTES_KEY, JSON.stringify(v)); }
@@ -90,24 +91,49 @@
     const filterPills = cats.map(c =>
       `<button class="t-filter${c===_activeFilter?' active':''}" onclick="window._filterTheories('${c}')">${c}</button>`
     ).join('');
+    const isTrib = _activeSubtab === 'tribunal';
 
     return `
-      <div id="theories-header">
+      <div id="theories-topbar">
         <div id="theories-title-row">
-          <div id="theories-title">⚗ THE FAN THEORY TRIBUNAL</div>
-          <div id="theories-progress-wrap" title="${voted} of ${THEORIES.length} voted">
+          <div id="theories-title">⚗ A SONG OF ICE &amp; FIRE</div>
+          <div id="theories-progress-wrap" title="${voted} of ${THEORIES.length} voted" style="${isTrib?'':'display:none'}">
             <div id="theories-progress-bar" style="width:${pct}%"></div>
             <span id="theories-progress-label">${voted}/${THEORIES.length} voted</span>
           </div>
         </div>
-        <div id="theories-subtitle">Click any card to read and cast your verdict — sorted by fan consensus</div>
-        <div id="theories-legend">${VERDICTS.map(v=>`<span class="tleg" style="border-color:${VC[v]};color:${VC[v]}">${VL[v]}</span>`).join('')}</div>
-        <div id="theories-filters">${filterPills}</div>
+        <div id="theories-subtab-bar">
+          <button class="tsub-btn${isTrib?' tsub-active':''}" onclick="window._theorySubtab('tribunal')">⚗ TRIBUNAL</button>
+          <button class="tsub-btn${!isTrib?' tsub-active':''}" onclick="window._theorySubtab('predictions')">🐉 PREDICTIONS</button>
+        </div>
       </div>
-      ${buildGRRMWatch()}
-      <div id="theories-grid">${sorted().map((th,i) => cardHTML(th, i+1)).join('')}</div>
+      <div id="theories-tribunal-pane" style="display:${isTrib?'flex':'none'};flex-direction:column;flex:1;min-height:0;overflow:hidden;">
+        <div id="theories-subheader">
+          <div id="theories-subtitle">Click any card to read and cast your verdict — sorted by fan consensus</div>
+          <div id="theories-legend">${VERDICTS.map(v=>`<span class="tleg" style="border-color:${VC[v]};color:${VC[v]}">${VL[v]}</span>`).join('')}</div>
+          <div id="theories-filters">${filterPills}</div>
+        </div>
+        <div id="theories-grid">${sorted().map((th,i) => cardHTML(th, i+1)).join('')}</div>
+      </div>
+      <div id="theories-predictions-pane" style="display:${!isTrib?'flex':'none'};flex-direction:column;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+        ${buildGRRMWatch()}
+      </div>
     `;
   }
+
+  window._theorySubtab = function(sub){
+    _activeSubtab = sub;
+    const isTrib = sub === 'tribunal';
+    const tribPane = document.getElementById('theories-tribunal-pane');
+    const predPane = document.getElementById('theories-predictions-pane');
+    const progWrap = document.getElementById('theories-progress-wrap');
+    if(tribPane) tribPane.style.display = isTrib ? 'flex' : 'none';
+    if(predPane) predPane.style.display = isTrib ? 'none' : 'flex';
+    if(progWrap) progWrap.style.display = isTrib ? '' : 'none';
+    document.querySelectorAll('.tsub-btn').forEach(b => {
+      b.classList.toggle('tsub-active', b.textContent.includes(isTrib ? 'TRIBUNAL' : 'PREDICTIONS'));
+    });
+  };
 
   window._filterTheories = function(cat){
     _activeFilter = cat;
@@ -273,15 +299,24 @@
     s.textContent = `
     #tab-theories { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; background:#0a0500; color:#c8a050; }
 
-    /* Header */
-    #theories-header { padding:14px 20px 10px; border-bottom:1px solid #2a1a05; background:rgba(8,4,0,.97); flex-shrink:0; }
-    #theories-title-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:4px; }
-    #theories-title { font-size:1.1em; font-weight:bold; letter-spacing:2px; color:#d4a820; }
-    #theories-progress-wrap { position:relative; height:16px; background:#1a0d00; border-radius:8px; overflow:hidden; width:140px; flex-shrink:0; border:1px solid #2a1a05; }
+    /* Top bar (always visible) */
+    #theories-topbar { padding:10px 20px 0; border-bottom:1px solid #2a1a05; background:rgba(8,4,0,.97); flex-shrink:0; }
+    #theories-title-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+    #theories-title { font-size:1em; font-weight:bold; letter-spacing:2px; color:#d4a820; }
+    #theories-progress-wrap { position:relative; height:16px; background:#1a0d00; border-radius:8px; overflow:hidden; width:130px; flex-shrink:0; border:1px solid #2a1a05; }
     #theories-progress-bar { height:100%; background:#4a2a08; border-radius:8px; transition:width .4s; }
     #theories-progress-label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.6em; color:#8a5a20; letter-spacing:.5px; }
-    #theories-subtitle { font-size:.71em; color:#4a2a08; letter-spacing:.3px; margin-bottom:8px; }
-    #theories-legend { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+
+    /* Subtab bar */
+    #theories-subtab-bar { display:flex; gap:0; margin:0 -20px; }
+    .tsub-btn { flex:1; background:transparent; border:none; border-top:2px solid transparent; color:#3a2008; padding:7px 4px; cursor:pointer; font-family:inherit; font-size:.72em; letter-spacing:1px; transition:all .15s; }
+    .tsub-btn:hover { color:#8a5a20; }
+    .tsub-btn.tsub-active { color:#d4a820; border-top-color:#d4a820; background:rgba(212,168,32,.06); }
+
+    /* Tribunal subheader */
+    #theories-subheader { padding:8px 20px 6px; background:rgba(8,4,0,.97); flex-shrink:0; }
+    #theories-subtitle { font-size:.71em; color:#4a2a08; letter-spacing:.3px; margin-bottom:6px; }
+    #theories-legend { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:6px; }
     .tleg { font-size:.62em; border:1px solid; padding:2px 7px; border-radius:2px; letter-spacing:.4px; }
 
     /* Category filters */
@@ -336,8 +371,8 @@
     .tm-nav-btn { background:none; border:1px solid #2a1a05; color:#4a2a08; padding:5px 14px; border-radius:3px; cursor:pointer; font-family:inherit; font-size:.68em; letter-spacing:1px; transition:border-color .15s,color .15s; }
     .tm-nav-btn:hover { border-color:#6a3a10; color:#8a5a20; }
 
-    /* GRRM Watch */
-    #grrm-watch-wrap { flex-shrink:0; background:rgba(8,4,0,.97); border-bottom:1px solid #2a1a05; padding:14px 20px 16px; }
+    /* GRRM Watch — now lives inside scrollable predictions pane */
+    #grrm-watch-wrap { background:rgba(8,4,0,.97); padding:18px 20px 24px; }
     #grrm-watch-header { display:flex; align-items:baseline; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
     #grrm-watch-title { font-size:.95em; font-weight:bold; color:#d4a820; letter-spacing:2px; }
     #grrm-watch-sub { font-size:.67em; color:#4a2a08; letter-spacing:.3px; }
@@ -358,6 +393,8 @@
 
     @media(max-width:540px){
       #theories-grid { grid-template-columns:1fr 1fr; gap:7px; padding:8px; }
+      #theories-topbar { padding:8px 14px 0; }
+      #theories-subheader { padding:6px 14px 4px; }
       #theories-title-row { flex-wrap:wrap; }
       #theories-progress-wrap { width:100px; }
       #tm-box { padding:18px 14px 16px; }
@@ -366,6 +403,7 @@
       .tm-rl { width:105px; }
       #grrm-watch-cards { flex-direction:column; }
       .wow-card { min-width:0; }
+      #theories-subtab-bar { margin:0 -14px; }
     }
     @media(max-width:380px){
       #theories-grid { grid-template-columns:1fr; }
@@ -373,11 +411,13 @@
     }
     /* Landscape on a phone: very short viewport — aggressively compact */
     @media(max-height:500px){
-      #theories-header { padding:5px 14px 5px; }
+      #theories-topbar { padding:4px 14px 0; }
+      #theories-subheader { padding:4px 14px 3px; }
       #theories-subtitle { display:none; }
       #theories-legend { display:none; }
       #theories-title { font-size:.85em; }
-      #grrm-watch-wrap { padding:6px 14px 8px; }
+      .tsub-btn { padding:4px; font-size:.65em; }
+      #grrm-watch-wrap { padding:8px 14px 12px; }
       #grrm-watch-header { margin-bottom:6px; }
       #grrm-watch-cards { flex-direction:row; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; gap:8px; }
       .wow-card { min-width:160px; flex-shrink:0; padding:8px 10px; gap:3px; }

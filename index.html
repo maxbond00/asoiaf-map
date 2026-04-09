@@ -65,6 +65,17 @@ button,a,[onclick],.tab-btn,.ctrl-btn,.zoom-btn,.hf-btn,.sp-btn,.t-filter,.theor
 #char-bio{font-size:.81em;line-height:1.7;color:#a09060;}
 #char-current-status{font-size:.81em;line-height:1.6;color:#c0a070;margin-top:9px;border-top:1px solid #2a1a08;padding-top:9px;}
 
+/* ── MAP FULLSCREEN TOGGLE ── */
+#map-fs-btn{position:absolute;bottom:18px;left:14px;z-index:20;background:rgba(10,5,0,.85);border:1px solid #4a2a08;color:#8b6914;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:all .2s;}
+#map-fs-btn:hover{border-color:#d4a820;color:#d4a820;}
+#map-fs-restore{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:600;background:rgba(10,5,0,.95);border:1px solid #4a2a08;border-top:none;color:#8b6914;padding:max(6px,env(safe-area-inset-top)) 20px 6px;border-radius:0 0 12px 12px;cursor:pointer;font-size:10px;letter-spacing:2px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+#map-fs-restore:hover{color:#d4a820;border-color:#d4a820;}
+body.map-full #header{display:none;}
+body.map-full #timeline{display:none;}
+body.map-full #map-fs-btn{display:none;}
+body.map-full #map-fs-restore{display:block;}
+body.map-full #zoom-controls{top:18px;}
+
 /* ── MAP OVERLAYS ── */
 #zoom-controls{position:absolute;top:50px;left:14px;display:flex;flex-direction:column;gap:4px;z-index:10;}
 .zoom-btn{background:rgba(15,8,0,.88);border:1px solid #6a4a10;color:#d4a820;width:30px;height:30px;border-radius:4px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
@@ -574,6 +585,9 @@ body.light-theme #follow-indicator .follow-stop { color:#8b6914; }
 body.light-theme #follow-indicator .follow-stop:hover { color:#5a2808; }
 body.light-theme .zoom-btn { background:rgba(245,238,216,.96); border-color:#c8a870; color:#6a3a08; }
 body.light-theme .zoom-btn:hover { background:rgba(235,220,190,.98); }
+body.light-theme #map-fs-btn { background:rgba(245,238,216,.96); border-color:#c8a870; color:#6a3a08; }
+body.light-theme #map-fs-btn:hover { border-color:#8b6914; color:#4a2008; }
+body.light-theme #map-fs-restore { background:rgba(245,238,216,.97); border-color:#c8a870; color:#6a3a08; }
 body.light-theme #house-filter { background:rgba(245,238,216,.93); border-color:#c8a870; }
 body.light-theme .hf-btn { color:#7a5a28; border-color:rgba(0,0,0,.18); }
 body.light-theme .hf-btn.active { border-color:#8b6914; background:rgba(139,105,20,.15); }
@@ -817,6 +831,10 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
       </div>
       <div id="search-results"></div>
     </div>
+
+    <!-- Fullscreen toggle -->
+    <button id="map-fs-btn" onclick="toggleMapFS()" title="Fullscreen map">⛶</button>
+    <button id="map-fs-restore" onclick="toggleMapFS()">☰ MENU</button>
 
     <!-- Zoom controls -->
     <div id="zoom-controls">
@@ -2324,10 +2342,17 @@ const HOUSE_DOT_COL = {
 })();
 
 
+// ── FULLSCREEN MAP TOGGLE ─────────────────────────────────────────────
+function toggleMapFS(){
+  document.body.classList.toggle('map-full');
+}
+
 // ── TAB SWITCHING ─────────────────────────────────────────────────────
 let currentTab = 'map';
 function switchTab(tab){
   currentTab = tab;
+  // Exit fullscreen when switching away from map
+  if(tab !== 'map') document.body.classList.remove('map-full');
   const mapCont   = document.getElementById('map-container');
   const tabRel    = document.getElementById('tab-relations');
   const tabHist   = document.getElementById('tab-history');
