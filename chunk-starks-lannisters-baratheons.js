@@ -14,6 +14,14 @@
     deathBook:0,
     bio:'Lord of Winterfell and Warden of the North. A man of iron honour in a world of duplicity. Named Hand of the King by his old friend Robert Baratheon, he travelled to King\'s Landing only to uncover treason surrounding the throne.',
     bookBios:{0:'Discovers Joffrey\'s true parentage. Betrayed by Littlefinger and executed at the Great Sept of Baelor.'},
+    chronicle:[
+      {frac:0.02, text:'Lord of Winterfell with his wife and children. King Robert Baratheon arrives seeking his old friend as the new Hand of the King.'},
+      {frac:0.06, text:'Reluctantly accepts the role of Hand and rides south with the royal party — duty before desire.'},
+      {frac:0.10, text:'Arrives in King\'s Landing and finds the Small Council a nest of vipers. Begins investigating the death of the previous Hand, Jon Arryn.'},
+      {frac:0.14, text:'Uncovers a devastating secret about Joffrey\'s true parentage. Prepares to act — but trusts the wrong man.'},
+      {frac:0.17, text:'Betrayed by Petyr "Littlefinger" Baelish. Imprisoned in the black cells of the Red Keep on charges of treason.'},
+      {frac:0.19, text:'Executed at the Great Sept of Baelor before a crowd. The north remembers.'},
+    ],
     waypoints:[
       {book:0.0, loc:'winterfell',   confirmed:true},
       {book:0.22,loc:'kings-landing',confirmed:true},  // rides south with Robert; arrives KL
@@ -36,6 +44,19 @@
       3:'Leads the Brotherhood Without Banners in merciless Riverlands vengeance.',
       4:'Still haunting the Riverlands as Lady Stoneheart (probable).',
     },
+    chronicle:[
+      {frac:0.03, text:'At Winterfell with her family. A bad feeling settles over her when King Robert\'s entourage arrives.'},
+      {frac:0.08, text:'Rides secretly to King\'s Landing after Bran\'s near-fatal "fall" — a Lannister dagger implicates someone at court.'},
+      {frac:0.12, text:'Captures Tyrion Lannister at the Crossroads Inn and brings him to the Eyrie as her sister Lysa\'s prisoner.'},
+      {frac:0.16, text:'Returns to the south to join Robb\'s army. Watches her eldest son proclaimed King in the North.'},
+      {frac:0.24, text:'Acts as Robb\'s diplomat. Negotiates with Renly Baratheon. Works to hold the Stark alliance together.'},
+      {frac:0.30, text:'Makes a unilateral decision: frees Jaime Lannister from captivity, hoping to trade him for her daughters.'},
+      {frac:0.38, text:'Pleads with Robb not to attend the Frey wedding — something feels deeply wrong. He doesn\'t listen.'},
+      {frac:0.40, text:'Murdered at the Red Wedding alongside Robb. Her throat slit by Raymund Frey.'},
+      {frac:0.44, text:'Resurrected three days after her death by Beric Dondarrion — silent, merciless, and cold. She is Lady Stoneheart now.'},
+      {frac:0.65, text:'Leads the Brotherhood Without Banners across the Riverlands, hanging Freys, Lannisters, and anyone who served them.'},
+      {frac:0.85, text:'Still haunting the Riverlands. Her justice is absolute and without mercy.'},
+    ],
     waypoints:[
       {book:0.0, loc:'winterfell',      confirmed:true},
       {book:0.28,loc:'crossroads-inn', confirmed:true},  // rides south; captures Tyrion
@@ -114,6 +135,19 @@
       3:'Sails to Braavos. Enters the House of Black and White.',
       4:'Apprentice Faceless Man in Braavos, working as Cat of the Canals.',
     },
+    chronicle:[
+      {frac:0.04, text:'In King\'s Landing learning water dancing — sword fighting — from the Braavosi master Syrio Forel.'},
+      {frac:0.16, text:'Witnesses her father\'s execution at the Great Sept of Baelor. Escapes the city in disguise, left utterly alone.'},
+      {frac:0.18, text:'Travelling north disguised as a boy named "Arry," hidden among Night\'s Watch recruits.'},
+      {frac:0.28, text:'Prisoner at Harrenhal under the Mountain\'s brutal command. Befriends the mysterious Jaqen H\'ghar.'},
+      {frac:0.33, text:'Uses her final "death" owed by Jaqen to force him to help her escape Harrenhal with her friends.'},
+      {frac:0.42, text:'Running through the Riverlands with the Brotherhood Without Banners — outlaws who sell her to the Hound.'},
+      {frac:0.48, text:'Travelling with Sandor Clegane toward the Twins for Robb\'s wedding. Her list of names grows shorter.'},
+      {frac:0.50, text:'Watches the Red Wedding massacre from outside the Twins. The Hound knocks her out before she can die trying to help.'},
+      {frac:0.60, text:'Boards a ship to Braavos, coin in hand. "Valar Morghulis."'},
+      {frac:0.70, text:'Accepted into the House of Black and White, training under the Faceless Men. Shedding her identity one layer at a time.'},
+      {frac:0.80, text:'Working the streets of Braavos as Cat of the Canals — her face gone, her name gone, but her list is not forgotten.'},
+    ],
     waypoints:[
       {book:0,   loc:'winterfell',   confirmed:true},
       {book:0.3, loc:'kings-landing',confirmed:true},  // rides south with father
@@ -188,6 +222,18 @@
       3:'Lord Commander. Negotiates with Stannis. Sends Sam to Oldtown.',
       4:'Makes controversial choices — opens the Wall to wildlings. Stabbed by mutineers.',
     },
+    chronicle:[
+      {frac:0.04, text:'Leaves Winterfell for the Night\'s Watch — a bastard who cannot inherit, seeking a place to belong.'},
+      {frac:0.08, text:'Arrives at Castle Black and trains under the brutal Ser Alliser Thorne. Chosen as steward to Lord Commander Mormont.'},
+      {frac:0.20, text:'Rides out on the Great Ranging beyond the Wall with hundreds of brothers. The haunted forest closes around them.'},
+      {frac:0.26, text:'Ordered by Qhorin Halfhand to infiltrate Mance Rayder\'s Free Folk as a spy — a mission that will change him.'},
+      {frac:0.34, text:'Living among the wildlings. Falls in love with Ygritte. He is no longer sure where his loyalties truly lie.'},
+      {frac:0.42, text:'Breaks with the wildlings. Returns to Castle Black and defends the Wall against Mance Rayder\'s massive assault.'},
+      {frac:0.48, text:'Elected the 998th Lord Commander of the Night\'s Watch — a historic choice by a slim margin.'},
+      {frac:0.62, text:'Negotiates an alliance with Stannis Baratheon and begins settling wildlings on the Gift. The Watch is deeply unhappy.'},
+      {frac:0.80, text:'Sends Samwell Tarly south to Oldtown to train as a maester. Opens the gates of Castle Black to tens of thousands of wildlings.'},
+      {frac:0.90, text:'Receives a threatening letter from Ramsay Bolton. Calls for volunteers to march on Winterfell — and is immediately stabbed by his own brothers. "For the Watch."'},
+    ],
     waypoints:[
       {book:0,   loc:'winterfell',  confirmed:true},
       {book:0.2, loc:'castle-black',confirmed:true},  // joins Night's Watch
@@ -369,6 +415,19 @@
       3:'Hiding in Pentos with Illyrio Mopatis.',
       4:'Travels across Essos. Captured by Jorah Mormont. Enslaved. Reaches Meereen.',
     },
+    chronicle:[
+      {frac:0.02, text:'At Winterfell with King Robert\'s party. Makes a point of visiting Bran after his fall. Visits the Wall with Jon Snow.'},
+      {frac:0.12, text:'Captured by Catelyn Stark at the Crossroads Inn on false charges. Taken to the Eyrie and imprisoned in a sky cell.'},
+      {frac:0.15, text:'Demands a trial by combat at the Eyrie — and wins, thanks to his sellsword Bronn. Released, seething.'},
+      {frac:0.22, text:'Returns to King\'s Landing as Hand of the King while his father fights the war. Begins cleaning up the Small Council.'},
+      {frac:0.32, text:'Masterminds the defence of King\'s Landing at the Battle of the Blackwater. Fights on the walls himself until nearly killed.'},
+      {frac:0.42, text:'Forced to marry Sansa Stark against both their wills. Framed for Joffrey\'s murder at the Purple Wedding.'},
+      {frac:0.48, text:'Escapes the black cells with Jaime and Varys\'s help. Kills Shae — his lover who betrayed him — and then his own father Tywin on the privy. Flees Westeros.'},
+      {frac:0.62, text:'Hiding in Pentos with the merchant prince Illyrio Mopatis, drinking himself toward death.'},
+      {frac:0.75, text:'Agrees to travel to Daenerys with Illyrio\'s blessing. Captured en route by Ser Jorah Mormont, who means to sell him to the queen.'},
+      {frac:0.85, text:'Enslaved and sold into the fighting pits of Meereen. Finds himself drawn into the chaos surrounding Daenerys\'s city.'},
+      {frac:0.92, text:'In Meereen as the city is besieged. Beginning to carve out a role as an unlikely political adviser.'},
+    ],
     waypoints:[
       {book:0.0, loc:'winterfell',   confirmed:true},  // visits Winterfell with the Starks
       {book:0.1, loc:'castle-black', confirmed:true},  // rides north to the Wall with Jon

@@ -30,6 +30,22 @@ Object.assign(window.CHARS, {
       3: 'Ruling Meereen as queen. Faces the Sons of the Harpy insurgency and political chaos.',
       4: 'Meereen under siege. Rides Drogon away from the fighting pits. Ends in the Dothraki Sea with Drogon.',
     },
+    chronicle:[
+      {frac:0.02, text:'In Pentos — a beggar princess in exile, sold by her brother Viserys to Khal Drogo\'s khalasar in exchange for an army.'},
+      {frac:0.08, text:'Riding east across the Dothraki Sea with her new husband. Learning the language, learning strength, learning who she can be.'},
+      {frac:0.14, text:'In Vaes Dothrak, the holy city. Eats a stallion\'s heart as the Dothraki custom demands. Visions of her destiny begin.'},
+      {frac:0.18, text:'Viserys provokes Drogo once too often. Given the golden crown he always wanted — poured molten over his head.'},
+      {frac:0.19, text:'Drogo\'s festering wound leads to a maegi\'s blood magic that costs him his mind. Daenerys smothers him to end his suffering, then walks into his funeral pyre.'},
+      {frac:0.20, text:'Emerges from the ashes unburnt, three baby dragons clinging to her. The world has never seen dragons in over a century.'},
+      {frac:0.28, text:'Crossing the deadly Red Waste with a starving khalasar. Her dragons are tiny. Her hope is smaller.'},
+      {frac:0.34, text:'In Qarth, the greatest city that ever was. Seeks ships and support to cross the Narrow Sea — and is betrayed.'},
+      {frac:0.40, text:'Leaves Qarth by ship, sailing west. Her dragons grow, day by day.'},
+      {frac:0.44, text:'Arrives in Astapor, city of the Unsullied. Trades a dragon — then turns it around. The slave army is hers.'},
+      {frac:0.50, text:'Takes Yunkai, then Meereen. Decides she cannot rule the Seven Kingdoms if she cannot hold one city. She stays.'},
+      {frac:0.60, text:'Queen of Meereen. The Sons of the Harpy kill her Unsullied in the streets. Being queen is harder than conquering.'},
+      {frac:0.75, text:'The fighting pits reopen. Drogon appears above the arena and Daenerys seizes her moment — she rides him away from the chaos.'},
+      {frac:0.82, text:'Lost on the Dothraki Sea, far from Meereen, with only Drogon for company. Her city is under siege without her.'},
+    ],
     waypoints: [
       { book: 0.0,  loc: 'pentos',       confirmed: true  }, // AGoT opens in Pentos
       { book: 0.35, loc: 'dothraki-sea', confirmed: true  }, // riding east with Drogo

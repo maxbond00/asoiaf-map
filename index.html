@@ -141,6 +141,16 @@ body.map-full #zoom-controls{top:18px;}
   100%{transform:scale(1)   rotate(0deg);opacity:1}
 }
 .skull-born .tok-anim{animation:skullBorn .7s cubic-bezier(.34,1.56,.64,1) both;}
+/* ── CHAPTER STEP BUTTONS ── */
+.ch-step-btn{font-size:17px;font-weight:bold;}
+/* ── CHARACTER CHRONICLE FEED ── */
+#char-chronicle{margin-top:10px;}
+.chr-title{font-size:.72em;color:#8b6914;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.chr-entry{padding:7px 0;border-bottom:1px solid #2a1a08;display:flex;flex-direction:column;gap:3px;}
+.chr-entry:last-child{border-bottom:none;}
+.chr-book{font-size:.68em;color:#7a5a10;letter-spacing:1px;}
+.chr-text{font-size:.8em;color:#a09060;line-height:1.6;}
+.chr-latest .chr-text{color:#c8a860;}
 /* overflow badges use absolute SVG coords (no group transform), so scale around SVG origin → use fade only */
 .overflow-badge{animation:tokFadeIn .18s ease-out both;}
 .char-token.traveling .tok-ring{stroke:#ffe87a!important;filter:drop-shadow(0 0 5px rgba(255,232,100,.7)) drop-shadow(0 2px 5px rgba(0,0,0,.85))!important;}
@@ -561,6 +571,11 @@ body.light-theme #char-location-text { color:#6a4820; }
 body.light-theme #char-divider { border-top-color:#c8a870; }
 body.light-theme #char-bio { color:#4a3010; }
 body.light-theme #char-current-status { color:#5a3a10; border-top-color:#c8a870; }
+body.light-theme .chr-title { color:#7a5010; }
+body.light-theme .chr-entry { border-bottom-color:#c8a870; }
+body.light-theme .chr-book { color:#8b6010; }
+body.light-theme .chr-text { color:#4a3010; }
+body.light-theme .chr-latest .chr-text { color:#2a1a00; }
 body.light-theme #char-portrait-img { border-color:#8b6914; }
 body.light-theme #char-portrait-svg { border-color:#8b6914; }
 body.light-theme .rel-chip { border-color:#c8a870; background:rgba(0,0,0,.03); }
@@ -914,9 +929,11 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
   <div id="timeline">
     <div style="display:flex;gap:5px;align-items:center">
       <button class="ctrl-btn" onclick="skipStart()" title="Start">⏮</button>
-      <button class="ctrl-btn" onclick="prevBook()" title="Prev">⏪</button>
+      <button class="ctrl-btn" onclick="prevBook()" title="Prev Book">⏪</button>
+      <button class="ctrl-btn ch-step-btn" onclick="prevChapter()" title="Previous chapter">‹</button>
       <button class="ctrl-btn" id="play-btn" onclick="togglePlay()">▶</button>
-      <button class="ctrl-btn" onclick="nextBook()" title="Next">⏩</button>
+      <button class="ctrl-btn ch-step-btn" onclick="nextChapter()" title="Next chapter">›</button>
+      <button class="ctrl-btn" onclick="nextBook()" title="Next Book">⏩</button>
       <button class="ctrl-btn" onclick="skipEnd()" title="End">⏭</button>
     </div>
     <div id="progress-container">
@@ -937,8 +954,8 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
       <span>Speed:</span>
       <select id="speed-select" onchange="playSpeed=+this.value">
         <option value=".25">¼×</option>
-        <option value=".5">½×</option>
-        <option value="1" selected>1×</option>
+        <option value=".5" selected>½×</option>
+        <option value="1">1×</option>
         <option value="2">2×</option>
         <option value="4">4×</option>
       </select>
@@ -966,6 +983,7 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
   <hr id="char-divider">
   <div id="char-bio"></div>
   <div id="char-current-status"></div>
+  <div id="char-chronicle"></div>
   <div id="char-pov"></div>
   <div id="char-relations"></div>
   <div id="char-journey-log"></div>
@@ -990,13 +1008,14 @@ const BOOK_NAMES = [
   'A Game of Thrones','A Clash of Kings','A Storm of Swords',
   'A Feast for Crows','A Dance with Dragons'
 ];
-const BOOK_SEC  = 60;   // 60 "seconds" per book = smoother sub-chapter travel
-const TOTAL_SEC = BOOK_SEC * 5;
+const BOOK_SEC     = 60;   // 60 "seconds" per book = smoother sub-chapter travel
+const TOTAL_SEC    = BOOK_SEC * 5;
+const CHAPTER_STEP = BOOK_SEC / 12; // ~12 steps per book (every ~5 chapters)
 
 // Approximate chapter counts per book (for chapter display)
 const BOOK_CHAPTERS = [73, 70, 82, 46, 73];
 
-let t = 0, playing = false, playSpeed = 1, lastStamp = null, rafId = null;
+let t = 0, playing = false, playSpeed = 0.5, lastStamp = null, rafId = null;
 let followingId = null;  // character id being tracked by the camera
 let openPanelId = null;  // id of character whose panel is currently open
 let houseFilter = 'all'; // house filter for the map
@@ -1805,6 +1824,26 @@ function updateUI(){
 
 }
 
+function buildChronicle(ch){
+  const el=document.getElementById('char-chronicle'); if(!el) return;
+  const entries=(ch.chronicle||[]).filter(e=>e.frac<=t/TOTAL_SEC);
+  if(!entries.length){el.innerHTML='';return;}
+  const BNAMES=['Game of Thrones','Clash of Kings','Storm of Swords','Feast for Crows','Dance with Dragons'];
+  let html='<div class="chr-title">Chronicle</div>';
+  entries.forEach((e,i)=>{
+    const isLatest=(i===entries.length-1);
+    const bk=Math.min(4,Math.floor(e.frac*5));
+    html+=`<div class="chr-entry${isLatest?' chr-latest':''}">
+      <span class="chr-book">📖 ${BNAMES[bk]}</span>
+      <span class="chr-text">${e.text}</span>
+    </div>`;
+  });
+  el.innerHTML=html;
+  // scroll latest into view
+  const last=el.querySelector('.chr-latest');
+  if(last) last.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
 function refreshPanelBio(){
   if(!openPanelId) return;
   const ch=window.CHARS[openPanelId]; if(!ch) return;
@@ -1819,6 +1858,7 @@ function refreshPanelBio(){
   const bkBios=ch.bookBios||{};
   document.getElementById('char-current-status').textContent=
     bkBios[bk]?'📖 Book '+(bk+1)+': '+bkBios[bk]:'';
+  buildChronicle(ch);
 }
 
 // ── ANIMATION LOOP ────────────────────────────────────────────────────
@@ -1845,6 +1885,18 @@ function nextBook(){goBook(Math.min(4,curBook()+1));}
 function prevBook(){goBook(Math.max(0,curBook()-1));}
 function skipStart(){t=0;playing=false;render();updateUI();}
 function skipEnd(){t=TOTAL_SEC;playing=false;render();updateUI();}
+function nextChapter(){
+  const newT=Math.min(TOTAL_SEC, Math.floor(t/CHAPTER_STEP+1)*CHAPTER_STEP);
+  if(newT < t){ _evPrevT=newT; _prevDead.clear(); }
+  t=newT; render(); updateUI();
+}
+function prevChapter(){
+  // step back one full CHAPTER_STEP; if already on a boundary go one further
+  const cur=Math.floor(t/CHAPTER_STEP);
+  const newT=Math.max(0,(cur-(t%CHAPTER_STEP<0.01?2:1))*CHAPTER_STEP);
+  _evPrevT=newT; _prevDead.clear();
+  t=newT; render(); updateUI();
+}
 function seekClick(e){
   const r=document.getElementById('progress-track').getBoundingClientRect();
   const newT=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*TOTAL_SEC;
@@ -2088,6 +2140,7 @@ function openPanel(id){
   const bkBios=ch.bookBios||{};
   document.getElementById('char-current-status').textContent=
     bkBios[bk]?'📖 Book '+(bk+1)+': '+bkBios[bk]:'';
+  buildChronicle(ch);
 
   // POV chapters
   const povDiv = document.getElementById('char-pov');
