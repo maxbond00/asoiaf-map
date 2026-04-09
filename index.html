@@ -133,6 +133,14 @@ body.map-full #zoom-controls{top:18px;}
 @keyframes tokFadeIn{from{opacity:0}to{opacity:1}}
 /* tok-anim is an INNER wrapper — its CSS transform never conflicts with the outer group's SVG transform attribute */
 .tok-anim{animation:tokIn .22s cubic-bezier(.34,1.56,.64,1) both;transform-origin:0 0;}
+/* Death / battle animation keyframes */
+@keyframes skullBorn{
+  0%  {transform:scale(0) rotate(-30deg);opacity:0}
+  55% {transform:scale(1.45) rotate(8deg);opacity:1}
+  75% {transform:scale(.88) rotate(-3deg)}
+  100%{transform:scale(1)   rotate(0deg);opacity:1}
+}
+.skull-born .tok-anim{animation:skullBorn .7s cubic-bezier(.34,1.56,.64,1) both;}
 /* overflow badges use absolute SVG coords (no group transform), so scale around SVG origin → use fade only */
 .overflow-badge{animation:tokFadeIn .18s ease-out both;}
 .char-token.traveling .tok-ring{stroke:#ffe87a!important;filter:drop-shadow(0 0 5px rgba(255,232,100,.7)) drop-shadow(0 2px 5px rgba(0,0,0,.85))!important;}
@@ -1010,14 +1018,25 @@ function setHouseFilter(h){
 }
 
 const EVENTS=[
-  {frac:0.9/5,  label:'Ned Stark executed',           color:'#c83030', icon:'⚔'},
-  {frac:1.7/5,  label:'Battle of Blackwater',          color:'#c87020', icon:'🔥'},
-  {frac:2.3/5,  label:'The Red Wedding',               color:'#8b0000', icon:'🩸'},
-  {frac:2.65/5, label:'Purple Wedding',                color:'#9030c8', icon:'💀'},
-  {frac:2.85/5, label:'Red Viper vs The Mountain',     color:'#c83030', icon:'⚔'},
-  {frac:3.5/5,  label:"Cersei's Walk of Shame",        color:'#c89030', icon:'🔔'},
-  {frac:4.9/5,  label:'Jon Snow stabbed at Castle Black', color:'#3060c8', icon:'❄'},
+  {frac:0.9/5,  label:'Ned Stark Executed',              color:'#c83030', icon:'⚔',
+   type:'death',    loc:'kings-landing', deathChars:['ned-stark']},
+  {frac:1.7/5,  label:'Battle of Blackwater',            color:'#c87020', icon:'🔥',
+   type:'battle',   loc:'kings-landing', battleWindow:7000},
+  {frac:2.3/5,  label:'The Red Wedding',                 color:'#8b0000', icon:'🩸',
+   type:'massacre', loc:'the-twins',     deathChars:['robb-stark','catelyn-stark'], battleWindow:7000},
+  {frac:2.65/5, label:'The Purple Wedding',              color:'#9030c8', icon:'💀',
+   type:'death',    loc:'kings-landing', deathChars:['joffrey']},
+  {frac:2.85/5, label:'Red Viper vs The Mountain',       color:'#c83030', icon:'⚔',
+   type:'death',    loc:'kings-landing', deathChars:['oberyn-martell']},
+  {frac:3.5/5,  label:"Cersei's Walk of Shame",          color:'#c89030', icon:'🔔'},
+  {frac:4.9/5,  label:'Jon Snow Stabbed at Castle Black',color:'#3060c8', icon:'❄',
+   type:'death',    loc:'castle-black',  deathChars:['jon-snow']},
 ];
+// ── EVENT ANIMATION STATE ─────────────────────────────────────────────
+const _evAnim   = {};        // eventFrac → {startMs, type, loc, deathChars, battleWindow, label, color}
+let   _evPrevT  = -1;        // previous t, for forward-crossing detection
+const _prevDead = new Set(); // char IDs that were dead in the last render frame
+
 // Travel animation: tracks per-character current rendered position for smooth movement
 const _pos = {};   // id -> {x, y}  current displayed SVG coords
 let transform = {x:0,y:0,s:1};
@@ -1296,6 +1315,127 @@ function charXY(st){
   return {x:from.x+(to.x-from.x)*ease, y:from.y+(to.y-from.y)*ease};
 }
 
+// ── EVENT TRIGGER DETECTION ───────────────────────────────────────────
+// Call each tick; fires animation state only on forward time crossing
+function checkEventTriggers(){
+  if(_evPrevT >= 0 && t > _evPrevT){   // only on forward movement
+    const now = performance.now();
+    for(const ev of EVENTS){
+      if(!ev.type) continue;
+      const evT = ev.frac * TOTAL_SEC;
+      if(_evPrevT < evT && t >= evT){
+        _evAnim[ev.frac] = {
+          startMs:     now,
+          type:        ev.type,
+          loc:         ev.loc,
+          deathChars:  ev.deathChars || [],
+          battleWindow:ev.battleWindow || 5000,
+          label:       ev.label,
+          color:       ev.color
+        };
+      }
+    }
+  }
+  _evPrevT = t;
+}
+
+// ── DRAW EVENT EFFECTS (called each render) ────────────────────────────
+function drawEventFX(){
+  let fxG = document.getElementById('event-fx');
+  if(!fxG){
+    fxG = mkEl('g',{id:'event-fx','pointer-events':'none'});
+    const charTok = document.getElementById('char-tokens');
+    if(charTok) charTok.parentNode.insertBefore(fxG, charTok.nextSibling);
+    else return;
+  }
+  fxG.innerHTML = '';
+
+  const now = performance.now();
+  const RIPPLE_DUR     = 1600;  // ms per ripple wave
+  const RIPPLE_WAVES   = 3;
+  const RIPPLE_STAGGER = 380;   // ms between wave starts
+  const rippleTotal    = RIPPLE_DUR + RIPPLE_WAVES * RIPPLE_STAGGER;
+
+  for(const [frac, anim] of Object.entries(_evAnim)){
+    const elapsed = now - anim.startMs;
+    const isDeath    = anim.type==='death' || anim.type==='massacre';
+    const isBattle   = anim.type==='battle'|| anim.type==='massacre';
+    const totalDur   = isBattle ? Math.max(anim.battleWindow, rippleTotal) : rippleTotal;
+    if(elapsed > totalDur){ delete _evAnim[frac]; continue; }
+
+    const loc = LOC[anim.loc]; if(!loc) continue;
+
+    // ── Red-screen flash for massacres (very start) ──────────────
+    if(anim.type==='massacre' && elapsed < 900){
+      const fp = elapsed<450 ? elapsed/450 : (900-elapsed)/450;
+      fxG.appendChild(mkEl('rect',{x:0,y:0,width:1620,height:1000,
+        fill:'#8b0000', opacity: Math.min(0.35, fp*0.35)}));
+    }
+
+    // ── Death ripples ────────────────────────────────────────────
+    if(isDeath){
+      const rc = anim.type==='massacre' ? '#cc0000' : '#bb1111';
+      // Bright inner flash
+      if(elapsed < 320){
+        const fp = 1 - elapsed/320;
+        fxG.appendChild(mkEl('circle',{cx:loc.x,cy:loc.y,r:22,
+          fill:rc, opacity: fp*0.65}));
+      }
+      // Expanding ripple rings
+      for(let w=0; w<RIPPLE_WAVES; w++){
+        const ws = w * RIPPLE_STAGGER;
+        const we = elapsed - ws;
+        if(we < 0 || we > RIPPLE_DUR) continue;
+        const p  = we / RIPPLE_DUR;
+        const r  = 14 + p * 58;
+        const op = (1-p) * (anim.type==='massacre' ? 0.85 : 0.7);
+        const sw = Math.max(0.2, 2.5 - p*2.2);
+        fxG.appendChild(mkEl('circle',{cx:loc.x,cy:loc.y,r,fill:'none',
+          stroke:rc, 'stroke-width':sw, opacity:op}));
+      }
+    }
+
+    // ── Battle glow + icon + label ───────────────────────────────
+    if(isBattle){
+      const bp  = Math.min(1, elapsed / anim.battleWindow);
+      // Envelope: fade-in 10%, hold, fade-out last 15%
+      const env = bp<0.10 ? bp/0.10 : bp>0.85 ? (1-bp)/0.15 : 1.0;
+
+      // Pulsing region glow
+      const gPulse = 0.30 + 0.35*Math.sin(elapsed/1200*Math.PI*2);
+      const gR     = 42  + 9  *Math.sin(elapsed/1200*Math.PI*2);
+      fxG.appendChild(mkEl('circle',{cx:loc.x,cy:loc.y,r:gR,
+        fill: anim.type==='massacre' ? '#6b0000' : '#8b3000',
+        opacity: gPulse * env * 0.52}));
+
+      // Pulsing sword / blood icon
+      const iScale = 0.82 + 0.32*Math.sin(elapsed/800*Math.PI*2);
+      const icon   = anim.type==='massacre' ? '🩸' : '⚔️';
+      const iY     = loc.y - 38;
+      const itxt   = mkEl('text',{
+        x:loc.x, y:iY,
+        'text-anchor':'middle','dominant-baseline':'central',
+        'font-size':'24', opacity: env,
+        transform:`translate(${loc.x},${iY}) scale(${iScale}) translate(${-loc.x},${-iY})`
+      });
+      itxt.textContent = icon;
+      fxG.appendChild(itxt);
+
+      // Event label text above icon
+      const ltxt = mkEl('text',{
+        x:loc.x, y:loc.y-62,
+        'text-anchor':'middle','dominant-baseline':'central',
+        'font-size':'9','font-weight':'bold',
+        'font-family':'Georgia,serif','letter-spacing':'1.5',
+        fill: anim.type==='massacre' ? '#ff4444' : '#ffaa44',
+        opacity: env * 0.95
+      });
+      ltxt.textContent = anim.label.toUpperCase();
+      fxG.appendChild(ltxt);
+    }
+  }
+}
+
 // ── RENDER ───────────────────────────────────────────────────────────
 const SVG_NS    = 'http://www.w3.org/2000/svg';
 const TOKEN_R   = 13;   // photo token radius
@@ -1517,19 +1657,28 @@ function render(){
   existing.forEach((el,id)=>{ if(!desired.has(id)) el.remove(); });
 
   // Update existing, create new
+  // If a character just became dead this frame, force-rebuild as skull with bounce
   desired.forEach(({x,y,st,ch,cls},id)=>{
     const tx=Math.round(x), ty=Math.round(y);
-    if(existing.has(id)){
+    const newlyDead = st.isDead && !_prevDead.has(id);
+    if(existing.has(id) && !newlyDead){
       const el=existing.get(id);
       el.setAttribute('transform',`translate(${tx},${ty})`);
-      el.setAttribute('class',cls);   // status may change (dead, prob)
+      el.setAttribute('class',cls);
     } else {
+      if(existing.has(id)) existing.get(id).remove(); // remove stale alive token
       const tok=buildToken(id,ch,st,clipDefs);
-      tok.setAttribute('class',cls);
+      const finalCls = newlyDead ? cls+' skull-born' : cls;
+      tok.setAttribute('class',finalCls);
       tok.setAttribute('transform',`translate(${tx},${ty})`);
       g.appendChild(tok);
+      if(newlyDead) setTimeout(()=>tok.classList.remove('skull-born'),750);
     }
   });
+
+  // Track which chars are dead this frame (for next frame's newly-dead detection)
+  _prevDead.clear();
+  desired.forEach(({st},id)=>{ if(st.isDead) _prevDead.add(id); });
 
   // ── 3. Travel lines — redraw each frame (no animation, no flicker) ──
   if(travelG){
@@ -1575,6 +1724,9 @@ function render(){
   // ── 5. Creatures ──────────────────────────────────────────────────────
   renderCreatures();
   drawMiniMap();
+
+  // ── 6. Event effects (death ripples, battle glows) ────────────────────
+  drawEventFX();
 
 }
 
@@ -1677,6 +1829,7 @@ function tick(ts){
   t=Math.min(TOTAL_SEC,t+dt*playSpeed);
   if(t>=TOTAL_SEC){t=TOTAL_SEC;playing=false;}
   centerOnFollowed();   // keep camera on followed character
+  checkEventTriggers(); // fire death/battle animations on forward crossing
   render(); updateUI();
   if(playing) rafId=requestAnimationFrame(tick);
 }
@@ -1694,7 +1847,9 @@ function skipStart(){t=0;playing=false;render();updateUI();}
 function skipEnd(){t=TOTAL_SEC;playing=false;render();updateUI();}
 function seekClick(e){
   const r=document.getElementById('progress-track').getBoundingClientRect();
-  t=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*TOTAL_SEC;
+  const newT=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*TOTAL_SEC;
+  if(newT < t){ _evPrevT=newT; _prevDead.clear(); } // backward scrub — reset state
+  t=newT;
   centerOnFollowed();
   render();updateUI();
 }
