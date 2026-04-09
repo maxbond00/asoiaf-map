@@ -20,7 +20,7 @@ Object.assign(window.CHARS, {
       'The Unburnt', 'Breaker of Chains', 'Daenerys Stormborn'
     ],
     portrait: 'daenerys',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMjA4MzIxMTQwMF5BMl5BanBnXkFtZTcwMzY2NDg1Nw@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMjA4MzIxMTQwMF5BMl5BanBnXkFtZTcwMzY2NDg1Nw@@._V1._SX100_SY140_.jpg',
     isKing: true,
     bio: 'Last surviving child of the Mad King Aerys II Targaryen. Sold to Khal Drogo, she transforms from a frightened girl into a powerful queen. Hatches three dragons — Drogon, Rhaegal, and Viserion — in a funeral pyre. Conquers Slaver\'s Bay and rules Meereen, attempting to learn to govern before reclaiming the Iron Throne.',
     bookBios: {
@@ -57,7 +57,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Targaryen — "The Beggar King"',
     aliases: ['The Beggar King', 'The Boy Who Lived (mockingly)'],
     portrait: 'viserys',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTgwNzIxMTU1OV5BMl5BanBnXkFtZTcwNzI2ODg5NA@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTgwNzIxMTU1OV5BMl5BanBnXkFtZTcwNzI2ODg5NA@@._V1._SX100_SY140_.jpg',
     isKing: true,
     deathBook: 0,
     bio: 'Daenerys\'s older brother. Arrogant, cruel, and obsessed with reclaiming the Iron Throne. He sold Daenerys to Drogo in exchange for an army. His cruelty and impatience led to his death — Drogo poured molten gold over his head, giving him "the golden crown he wanted."',
@@ -78,7 +78,7 @@ Object.assign(window.CHARS, {
     house: 'none',
     houseLabel: 'The Dothraki — Khal of the Great Khalasar',
     aliases: ['The Great Khal', 'The Stallion Who Mounts the World (prophesied)'],
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTQzMTE2MjczM15BMl5BanBnXkFtZTcwMDA5NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTQzMTE2MjczM15BMl5BanBnXkFtZTcwMDA5NDk4OQ@@._V1._SX100_SY140_.jpg',
     deathBook: 0,
     bio: 'The mightiest Khal of the Dothraki, with a khalasar of forty thousand warriors. Sold Daenerys\' hand in exchange by her brother Viserys. Despite a brutal beginning, he and Daenerys developed genuine love. A minor wound became infected; Daenerys allowed a maegi to use blood magic to save him, leaving him braindead. She smothered him to end his suffering.',
     bookBios: {
@@ -100,7 +100,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Mormont — exiled knight, sworn to Daenerys',
     aliases: ['Ser Jorah', 'Lord of Bear Island (stripped)'],
     portrait: 'jorah',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTkzNTcxMDI2NV5BMl5BanBnXkFtZTcwMzgxNzI4OQ@@._V1._CR225,437,407,405._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTkzNTcxMDI2NV5BMl5BanBnXkFtZTcwMzgxNzI4OQ@@._V1._CR225,437,407,405._SX100_SY140_.jpg',
     bio: 'Exiled from Westeros for selling poachers into slavery. Began as a spy for Robert, reporting on Daenerys, but fell in love with her and became her most devoted protector. Banished by Daenerys when his treachery was revealed. Contracted greyscale.',
     bookBios: {
       0: 'Serves as spy and protector to Daenerys among the Dothraki.',
@@ -129,7 +129,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Kingsguard (dismissed) — Lord Commander of Daenerys\'s Queensguard',
     aliases: ['Bold Barristan', 'Arstan Whitebeard (alias)'],
     portrait: 'barristan',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTUyMTE0NjUxNV5BMl5BanBnXkFtZTcwOTA1ODg5NA@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTUyMTE0NjUxNV5BMl5BanBnXkFtZTcwOTA1ODg5NA@@._V1._SX100_SY140_.jpg',
     deathBook: 4,
     bio: 'The greatest living knight in Westeros. Served three kings on the Kingsguard before being dismissed by Joffrey. Traveled to Essos in disguise, found Daenerys, and became her Lord Commander. Ran Meereen in her absence. Killed in a Sons of the Harpy ambush.',
     bookBios: {
@@ -157,7 +157,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Handmaiden and Interpreter to Daenerys Targaryen',
     aliases: [],
     portrait: 'missandei',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BNTE5OTI0OTA0OV5BMl5BanBnXkFtZTcwODczOTAzOQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNTE5OTI0OTA0OV5BMl5BanBnXkFtZTcwODczOTAzOQ@@._V1._SX100_SY140_.jpg',
     bio: 'A former slave from Naath, translator of nineteen languages. Freed by Daenerys at Astapor, she becomes one of her most trusted confidantes and handmaidens.',
     bookBios: {
       2: 'Freed by Daenerys at Astapor; becomes her handmaiden and translator.',
@@ -179,7 +179,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Commander of Daenerys\'s Unsullied',
     aliases: [],
     portrait: 'grey-worm',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMjk3ZDJlNTQtZDBiMC00ODVhLTlmYmYtYzkxMDA0N2QxNDY0XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMjk3ZDJlNTQtZDBiMC00ODVhLTlmYmYtYzkxMDA0N2QxNDY0XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     bio: 'Commander of the Unsullied, freed slave soldiers. Devoted and disciplined warrior who leads Daenerys\'s army. Develops a bond with Missandei.',
     bookBios: {
       2: 'Freed by Daenerys at Astapor; leads the Unsullied.',
@@ -196,7 +196,7 @@ Object.assign(window.CHARS, {
   'illyrio-mopatis': {
     name: 'Illyrio Mopatis',
     initial: 'Il',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMzM1OWY0ZmUtNWM5Ny00NzgzLWFhMmUtOWY1Njc3NmNkZmM1XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMzM1OWY0ZmUtNWM5Ny00NzgzLWFhMmUtOWY1Njc3NmNkZmM1XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     gender: 'm',
     house: 'none',
     houseLabel: 'Magister of Pentos',
@@ -227,7 +227,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Tyrell — Queen of Thorns',
     aliases: ['Queen of Thorns', 'The Queen of Thorns'],
     portrait: 'olenna',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTkxMjgwOTQ3Nl5BMl5BanBnXkFtZTcwMjE2NzE5OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTkxMjgwOTQ3Nl5BMl5BanBnXkFtZTcwMjE2NzE5OQ@@._V1._SX100_SY140_.jpg',
     bio: 'Sharp-tongued matriarch of House Tyrell, grandmother of Margaery and Loras. The true political power of Highgarden. Masterminded the poisoning of Joffrey at the Purple Wedding to protect Margaery from his cruelty.',
     bookBios: {
       1: 'Arrives in King\'s Landing to negotiate Margaery\'s betrothal to Renly, then Joffrey.',
@@ -251,7 +251,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Tyrell — Queen consort',
     aliases: ['The Little Queen', 'Queen Margaery'],
     portrait: 'margaery',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTkzODQ1MDg3NV5BMl5BanBnXkFtZTcwODA4NDk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTkzODQ1MDg3NV5BMl5BanBnXkFtZTcwODA4NDk4OQ@@._V1._SX100_SY140_.jpg',
     isKing: true,
     bio: 'Granddaughter of Olenna, she was married to Renly Baratheon (marriage unconsummated), then betrothed to Joffrey, then married Tommen. A skilled political operator who cultivates the smallfolk\'s love. Imprisoned by the Faith Militant in AFfC.',
     bookBios: {
@@ -277,7 +277,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Tyrell — the Knight of Flowers',
     aliases: ['Knight of Flowers'],
     portrait: 'loras',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BNzcwNDAxZGMtODU1Mi00YzA2LWJhMzYtN2FjZjg2YWZlMTQ4XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNzcwNDAxZGMtODU1Mi00YzA2LWJhMzYtN2FjZjg2YWZlMTQ4XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     bio: 'The most celebrated tourney knight of his generation. Secret lover of Renly Baratheon. After Renly\'s death, his grief drives him toward reckless bravery. Severely wounded during the siege of Dragonstone.',
     bookBios: {
       0: 'Jousts at King\'s Landing. Renly\'s lover.',
@@ -297,7 +297,7 @@ Object.assign(window.CHARS, {
   'mace-tyrell': {
     name: 'Mace Tyrell',
     initial: 'Ma',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BNTcyZWFjZjItYmI4NS00ZDE2LTg4Y2YtYWJkYWI5MWJlNWFjXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNTcyZWFjZjItYmI4NS00ZDE2LTg4Y2YtYWJkYWI5MWJlNWFjXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     gender: 'm',
     house: 'tyrell',
     houseLabel: 'House Tyrell — Lord of Highgarden, Hand of the King',
@@ -324,7 +324,7 @@ Object.assign(window.CHARS, {
     name: 'Doran Martell',
     initial: 'Do',
     gender: 'm',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BZWU5NzJkNWMtYTM4MS00YmE2LWExYmItNDNiOTE3YzI5YzAxXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BZWU5NzJkNWMtYTM4MS00YmE2LWExYmItNDNiOTE3YzI5YzAxXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1._SX100_SY140_.jpg',
     house: 'martell',
     houseLabel: 'House Martell — Prince of Dorne',
     aliases: ['Prince Doran'],
@@ -348,7 +348,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Martell — the Red Viper of Dorne',
     aliases: ['The Red Viper', 'Prince Oberyn'],
     portrait: 'oberyn',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BZTJmYjViYjctYTU0My00NTJiLWE2YzUtOWZkNTg4MTZkZmEyXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BZTJmYjViYjctYTU0My00NTJiLWE2YzUtOWZkNTg4MTZkZmEyXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     deathBook: 2,
     bio: 'Youngest prince of Dorne. Bisexual, brilliant, and deadly with a spear. His sister Elia was murdered by Gregor Clegane during the Sack of King\'s Landing. He champions Tyrion in trial by combat against Ser Gregor, but his obsession with a full confession costs him his life.',
     bookBios: {
@@ -404,7 +404,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Martell — Sand Snake, daughter of Oberyn',
     aliases: ['Lady Nym'],
     portrait: 'nymeria-sand',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BNDZmN2FkMTEtMmMyYy00ZTcwLWE3MGQtNGU1NzY4MjAxNjQ0XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNDZmN2FkMTEtMmMyYy00ZTcwLWE3MGQtNGU1NzY4MjAxNjQ0XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     bio: 'Second of the Sand Snakes, daughters of Oberyn Martell. Uses a whip. Deadly, calculating, and beautiful. Imprisoned by Doran after Oberyn\'s death when she pushes for war.',
     bookBios: {
       3: 'Demands war against the Lannisters. Imprisoned at Sunspear.',
@@ -425,7 +425,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Martell — Sand Snake, daughter of Oberyn',
     aliases: [],
     portrait: 'obara-sand',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BOWU3OTRmYmItZTZiYi00Mjk1LTk2NTItMzBjZmQ3NDZhMDMyXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BOWU3OTRmYmItZTZiYi00Mjk1LTk2NTItMzBjZmQ3NDZhMDMyXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     bio: 'Eldest of the Sand Snakes. Fierce warrior who uses a spear and shield. Hot-tempered and hungry for war against the Lannisters.',
     bookBios: {
       3: 'Demands war. Imprisoned.',
@@ -446,7 +446,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Martell — Sand Snake, daughter of Oberyn',
     aliases: [],
     portrait: 'tyene-sand',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BNDY5NzBiMTQtYzhmMS00Y2FmLTkzYzYtYzM2ODBjNGZlNGNiXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNDY5NzBiMTQtYzhmMS00Y2FmLTkzYzYtYzM2ODBjNGZlNGNiXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     bio: 'Third Sand Snake; daughter of Oberyn and a septa. Uses daggers coated in the Long Farewell poison. Appears sweet and devout but is lethal. Sent to infiltrate the Faith of the Seven in King\'s Landing.',
     bookBios: {
       3: 'Imprisoned at Sunspear.',
@@ -470,7 +470,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Greyjoy — Lord Reaper of Pyke, King of the Iron Islands',
     aliases: ['King of the Iron Islands'],
     portrait: 'balon-greyjoy',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTUxNjkwODczN15BMl5BanBnXkFtZTcwODMwNTgzNw@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTUxNjkwODczN15BMl5BanBnXkFtZTcwODMwNTgzNw@@._V1._SX100_SY140_.jpg',
     isKing: true,
     deathBook: 2,
     bio: 'Lord of the Iron Islands who once rebelled against Robert Baratheon and lost. A proud, cold man obsessed with the Old Way. When Robb Stark\'s back is turned, he invades the North. Falls from a bridge at Pyke in a storm — likely murdered by Euron\'s faceless assassin.',
@@ -494,7 +494,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Greyjoy — ward of Winterfell / Reek',
     aliases: ['Reek', 'Prince of Winterfell', 'Theon Turncloak'],
     portrait: 'theon',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTM3ODUyOTY3N15BMl5BanBnXkFtZTcwNjI4MTg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTM3ODUyOTY3N15BMl5BanBnXkFtZTcwNjI4MTg4OQ@@._V1._SX100_SY140_.jpg',
     bio: 'Ward (hostage) of House Stark for years. Betrays Robb Stark to prove himself to his father, capturing Winterfell. Tortured and psychologically broken by Ramsay Bolton into becoming "Reek." Eventually helps Jeyne Poole (posing as Arya) escape Winterfell.',
     bookBios: {
       0: 'Ward at Winterfell. Goes to Robb\'s muster.',
@@ -522,7 +522,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Greyjoy — Captain of the Black Wind',
     aliases: ['Yara (show name)', 'Asha Greyjoy', 'The Kraken\'s Daughter'],
     portrait: 'yara',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTc2NzU5ODk0MV5BMl5BanBnXkFtZTcwMzEyNDY2OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTc2NzU5ODk0MV5BMl5BanBnXkFtZTcwMzEyNDY2OQ@@._V1._SX100_SY140_.jpg',
     bio: 'Balon\'s daughter and finest captain. Bold, irreverent, and militarily capable. She sails to rescue Theon from the Dreadfort but he refuses to come. After Balon\'s death she competes in the Kingsmoot and loses to Euron. Captured by Stannis at Deepwood Motte.',
     bookBios: {
       1: 'Leads Greyjoy raids in the North.',
@@ -546,7 +546,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Greyjoy — King of the Iron Islands, the Crow\'s Eye',
     aliases: ['Crow\'s Eye', 'The Damned'],
     portrait: 'euron',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BNzg1MTJhMjMtMmY4Yy00NTU2LTliZWUtNjM4YzAxY2M3ZDBkXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNzg1MTJhMjMtMmY4Yy00NTU2LTliZWUtNjM4YzAxY2M3ZDBkXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     isKing: true,
     bio: 'Balon\'s younger brother — mad, terrifying, and brilliant. Banished years ago for raping Victarion\'s salt wife. Returns after Balon\'s (suspicious) death, wins the Kingsmoot with his dragonhorn and promises of conquest. His ambitions seem limitless.',
     bookBios: {
@@ -611,7 +611,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Tully — Lord of Riverrun',
     aliases: ['Lord Edmure'],
     portrait: 'edmure',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BYjEzNThlMmQtMDgzYi00MTQ5LTllMzQtNDZjY2JiMTVhNmNkXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BYjEzNThlMmQtMDgzYi00MTQ5LTllMzQtNDZjY2JiMTVhNmNkXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     bio: 'Son of Hoster Tully and younger brother of Catelyn. Well-meaning but often foolish. Blocked Tywin\'s retreat, inadvertently ruining Robb\'s strategic plan. Captured at the Red Wedding. Forced to yield Riverrun to the Lannisters to spare his wife and unborn child.',
     bookBios: {
       0: 'At Riverrun.',
@@ -637,7 +637,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'House Arryn — Lady of the Eyrie, regent to Robin Arryn',
     aliases: ['Lady Arryn'],
     portrait: 'lysa-arryn',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMmNlYTYzOTYtOTg1ZC00YzdlLTliNTgtZDhjMTY1MGViZTA5XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMmNlYTYzOTYtOTg1ZC00YzdlLTliNTgtZDhjMTY1MGViZTA5XkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     deathBook: 2,
     bio: 'Catelyn\'s younger sister and widow of Jon Arryn, Hand of the King. Unstable and obsessively devoted to her sickly son Robin. Her secret love for Petyr Baelish (Littlefinger) — who was her first love — led her to poison Jon Arryn and send the letter that started the conflict. Littlefinger eventually murders her.',
     bookBios: {
@@ -654,7 +654,7 @@ Object.assign(window.CHARS, {
   'robin-arryn': {
     name: 'Robin Arryn',
     initial: 'Rb',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BNjBlNzE3YjEtMTcwYS00OTQxLTk1NjEtNGMwNzJhNWI2OGJjXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNjBlNzE3YjEtMTcwYS00OTQxLTk1NjEtNGMwNzJhNWI2OGJjXkEyXkFqcGdeQXVyMjk3NTUyOTc@._V1._SX100_SY140_.jpg',
     gender: 'm',
     house: 'arryn',
     houseLabel: 'House Arryn — Lord of the Eyrie',
@@ -684,7 +684,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Master of Coin — Lord Protector of the Vale',
     aliases: ['Littlefinger', 'Lord Baelish'],
     portrait: 'littlefinger',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTQ1MjE3OTc3M15BMl5BanBnXkFtZTcwODgzODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTQ1MjE3OTc3M15BMl5BanBnXkFtZTcwODgzODg4OQ@@._V1._SX100_SY140_.jpg',
     bio: 'Master of Coin and the greatest schemer in Westeros. Rose from nothing through ambition, manipulation, and strategic betrayal. The chain of deception he set in motion (poisoning Jon Arryn, framing the Lannisters, betraying Ned Stark) caused the War of the Five Kings. Now controls the Vale through Lysa\'s death and Robin\'s wardship.',
     bookBios: {
       0: 'Master of Coin. Betrays Ned Stark to the Lannisters.',
@@ -713,7 +713,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Master of Whisperers — The Spider',
     aliases: ['The Spider', 'Rugen (alias)'],
     portrait: 'varys',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTkzNDk2MjczM15BMl5BanBnXkFtZTcwODk0ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTkzNDk2MjczM15BMl5BanBnXkFtZTcwODk0ODg4OQ@@._V1._SX100_SY140_.jpg',
     bio: 'Eunuch spymaster and Master of Whisperers on the Small Council. Raised in Essos, castrated as a boy for a sorcerer\'s ritual. Serves "the realm" — or so he claims. His true loyalty is to placing a Targaryen (Aegon, Jon Connington\'s ward) on the Iron Throne. Helps Tyrion escape after Tywin\'s murder.',
     bookBios: {
       0: 'Master of Whisperers. Appears to support Ned, then abandons him.',
@@ -740,7 +740,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Sworn sword (former Kingsguard)',
     aliases: ['The Hound', 'The Gravedigger (probable)'],
     portrait: 'sandor',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTQwMjEwNDQ1MF5BMl5BanBnXkFtZTcwMzAxODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTQwMjEwNDQ1MF5BMl5BanBnXkFtZTcwMzAxODg4OQ@@._V1._SX100_SY140_.jpg',
     bio: 'The Hound — burned as a child by his brother Gregor, scarred and bitter but possessing a brutal code of honour. Served as Joffrey\'s sworn shield. Flees the Battle of the Blackwater. Travels with Arya as her reluctant captor. Believed dead after Brienne wounds him gravely, but likely survived as a gravedigger on the Quiet Isle.',
     bookBios: {
       0: 'Joffrey\'s sworn shield. Saves Sansa from the mob.',
@@ -766,7 +766,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Sworn to House Stark / Catelyn Stark',
     aliases: ['The Maid of Tarth', 'Brienne the Beauty (mockingly)'],
     portrait: 'brienne',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTYzNDY4NzgzOV5BMl5BanBnXkFtZTcwNDM5ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTYzNDY4NzgzOV5BMl5BanBnXkFtZTcwNDM5ODg4OQ@@._V1._SX100_SY140_.jpg',
     bio: 'Daughter of Lord Selwyn of Tarth. A huge, powerful woman who dreams of being a true knight. Sworn to Catelyn Stark, then searching for Sansa Stark on Jaime\'s behalf. Eventually captured by Lady Stoneheart (Catelyn\'s reanimated corpse) and forced to choose between killing Jaime or hanging.',
     bookBios: {
       1: 'In Renly\'s camp. Flees with Catelyn after his murder. Escorts Jaime to King\'s Landing.',
@@ -794,7 +794,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Squire to Tyrion Lannister, then Brienne of Tarth',
     aliases: ['Pod'],
     portrait: 'podrick',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BNTU5NjczOTQyNl5BMl5BanBnXkFtZTcwMzMwNTk4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BNTU5NjczOTQyNl5BMl5BanBnXkFtZTcwMzMwNTk4OQ@@._V1._SX100_SY140_.jpg',
     bio: 'Tyrion\'s loyal squire, later squire to Brienne. Quiet and seemingly hapless but unexpectedly capable and devoted. Travels with Brienne in search of Sansa.',
     bookBios: {
       1: 'Squire to Tyrion at the Blackwater. Saves Tyrion\'s life.',
@@ -817,7 +817,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Sellsword, Ser Bronn of the Blackwater, Lord of Stokeworth',
     aliases: ['Ser Bronn', 'Lord Stokeworth'],
     portrait: 'bronn',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTY0MzI5MjY1OV5BMl5BanBnXkFtZTcwODM1ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTY0MzI5MjY1OV5BMl5BanBnXkFtZTcwODM1ODg4OQ@@._V1._SX100_SY140_.jpg',
     bio: 'A sellsword of unknown origin who champions Tyrion at the Eyrie. Shrewd, mercenary, and utterly pragmatic. Rises from hedge knight to lord through Tyrion\'s patronage. Marries into the Stokeworth family after Tyrion\'s fall from favour.',
     bookBios: {
       0: 'Champions Tyrion in trial by combat at the Eyrie.',
@@ -843,7 +843,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Brotherhood Without Banners — the Lightning Lord',
     aliases: ['The Lightning Lord', 'Lord Beric'],
     portrait: 'beric',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMjQwMTEwNTg2MF5BMl5BanBnXkFtZTgwNTAxODYxOTE@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMjQwMTEwNTg2MF5BMl5BanBnXkFtZTgwNTAxODYxOTE@._V1._SX100_SY140_.jpg',
     deathBook: 2,
     bio: 'Sent by Ned Stark to arrest Ser Gregor Clegane. Killed multiple times and resurrected by Thoros of Myr through the power of R\'hllor. Each resurrection dims his memories further. Leads the Brotherhood Without Banners protecting the smallfolk. Gives his life\'s fire to resurrect Catelyn Stark.',
     bookBios: {
@@ -865,7 +865,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Red Priest of R\'hllor — Brotherhood Without Banners',
     aliases: [],
     portrait: 'thoros',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTYwNzc0MDUzNF5BMl5BanBnXkFtZTcwMDc1NzE5OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTYwNzc0MDUzNF5BMl5BanBnXkFtZTcwMDc1NzE5OQ@@._V1._SX100_SY140_.jpg',
     bio: 'A red priest of R\'hllor from Myr who was sent to convert King Robert but instead became a drunk and a tourney knight. Discovered his power to resurrect the dead when he prayed over Beric Dondarrion\'s corpse. Has resurrected Beric six times.',
     bookBios: {
       0: 'At King\'s Landing; part of Ned\'s party then missing.',
@@ -889,7 +889,7 @@ Object.assign(window.CHARS, {
     houseLabel: 'Bastard son of King Robert Baratheon',
     aliases: ['The Bull'],
     portrait: 'gendry',
-    photoUrl: 'https://https://images-na.ssl-images-amazon.com/images/M/MV5BMTcxNzYwMTk4MV5BMl5BanBnXkFtZTcwNDg1ODg4OQ@@._V1._SX100_SY140_.jpg',
+    photoUrl: 'https://https://m.media-amazon.com/images/M/MV5BMTcxNzYwMTk4MV5BMl5BanBnXkFtZTcwNDg1ODg4OQ@@._V1._SX100_SY140_.jpg',
     bio: 'Robert Baratheon\'s unacknowledged bastard, apprenticed to a blacksmith. Travels with Arya to the Wall, then captured at Harrenhal. Joins the Brotherhood Without Banners after Melisandre uses his king\'s blood for a ritual and Davos smuggles him to safety.',
     bookBios: {
       0: 'Apprentice smith heading to the Wall.',
