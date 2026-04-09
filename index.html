@@ -20,9 +20,6 @@ button,a,[onclick],.tab-btn,.ctrl-btn,.zoom-btn,.hf-btn,.sp-btn,.t-filter,.theor
 #header{background:linear-gradient(to right,#1a0a00,#0a0510,#1a0a00);border-bottom:2px solid #8b6914;padding:7px 18px;display:flex;align-items:center;justify-content:space-between;z-index:100;flex-shrink:0;}
 #header h1{font-size:1.2em;letter-spacing:3px;color:#d4a820;text-shadow:0 0 20px rgba(212,168,32,.5);}
 .header-right{display:flex;gap:14px;align-items:center;font-size:11px;color:#8b6914;letter-spacing:1px;}
-#music-btn{background:rgba(26,10,0,.85);border:2px solid #d4a820;color:#d4a820;padding:5px 14px;border-radius:20px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:6px;transition:all .2s;flex-shrink:0;letter-spacing:1px;box-shadow:0 0 10px rgba(212,168,32,.2);}
-#music-btn:hover{box-shadow:0 0 16px rgba(212,168,32,.5);background:rgba(40,20,0,.9);}
-#music-btn.muted{color:#5a3a10;border-color:#3a2008;box-shadow:none;}
 
 /* ── MAP ── */
 #map-container{flex:1;position:relative;overflow:hidden;background:#4a7e9e;}
@@ -405,7 +402,6 @@ button,a,[onclick],.tab-btn,.ctrl-btn,.zoom-btn,.hf-btn,.sp-btn,.t-filter,.theor
   .tab-btn { padding: 4px 8px; font-size: 9px; letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0; }
   .header-right { gap: 6px; font-size: 10px; flex-shrink: 0; }
   #char-count { display: none; }
-  #music-btn { padding: 4px 8px; font-size: 10px; flex-shrink: 0; }
 
   /* iOS: prevent zoom on input focus — keep font-size ≥ 16px */
   #search-input { font-size: 16px; }
@@ -472,7 +468,6 @@ button,a,[onclick],.tab-btn,.ctrl-btn,.zoom-btn,.hf-btn,.sp-btn,.t-filter,.theor
 
 @media (max-width: 400px) {
   .tab-btn { padding: 3px 6px; font-size: 8px; }
-  #music-btn { display: none; }
   .hf-btn { width: 28px; height: 28px; font-size: 13px; }
 }
 
@@ -489,7 +484,6 @@ button,a,[onclick],.tab-btn,.ctrl-btn,.zoom-btn,.hf-btn,.sp-btn,.t-filter,.theor
   #header { padding-top: 3px; padding-bottom: 3px; }
   #header h1 { display: none; }
   .tab-btn { padding: 3px 8px; font-size: 9px; }
-  #music-btn { padding: 3px 8px; font-size: 10px; }
 
   /* Timeline: minimal in landscape */
   #timeline { padding-top: 4px; padding-bottom: max(4px, env(safe-area-inset-bottom)); gap: 6px; }
@@ -713,7 +707,6 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
     </div>
     <div class="header-right">
       <span id="char-count" style="color:#5a3a10"></span>
-      <button id="music-btn" onclick="toggleMusic()" title="Play ambient music"><span>♫</span> MUSIC</button>
     </div>
   </div>
 
@@ -2330,176 +2323,6 @@ const HOUSE_DOT_COL = {
   });
 })();
 
-// ── MUSIC — Game of Thrones theme (Web Audio synthesis) ───────────────
-let audioCtx=null, masterGain=null, musicPlaying=false, musicMuted=false;
-let melodyTimer=null, noteIdx=0, harpTimer=null, harpIdx=0;
-
-// Note frequencies (Hz) — standard equal temperament
-const _C3=130.8,_D3=146.8,_Eb3=155.6,_F3=174.6,_G3=196.0,_Ab3=207.7,_Bb3=233.1;
-const _C4=261.6,_D4=293.7,_Eb4=311.1,_F4=349.2,_G4=392.0,_Ab4=415.3,_Bb4=466.2,_B4=493.9;
-const _C5=523.3,_D5=587.3,_Eb5=622.3,_F5=698.5,_G5=784.0,_Bb5=932.3;
-const _R=0; // rest
-
-const _BPM=73, _B=60/_BPM; // one beat ≈ 0.822s
-
-// Cello/string ostinato — the famous repeating bass figure
-// [hz, beats]
-const GOT_CELLO=[
-  [_G3,.75],[_G3,.75],[_C4,1.5],[_G3,.75],
-  [_Eb4,1.0],[_G3,.75],[_D4,.75],[_G3,.75],
-];
-
-// Main theme melody — [hz, beats]
-const GOT_MELODY=[
-  // === Phrase 1: opening motif ===
-  [_G3,1],[_G3,1],[_C4,2],[_R,.5],
-  [_G3,1],[_Eb4,1.5],[_D4,.5],[_C4,2.5],[_R,.5],
-  [_G3,1],[_G3,1],[_Bb3,2],[_R,.5],
-  [_G3,1],[_Eb4,1.5],[_D4,.5],[_C4,3],[_R,1.5],
-
-  // === Phrase 2: main string melody (high) ===
-  [_C5,2],[_G4,1],[_Eb5,1],[_D5,2],[_C5,2],[_R,.5],
-  [_C5,2],[_G4,1],[_Eb5,1],[_D5,1],[_C5,1],[_Bb4,1],[_C5,3],[_R,1.5],
-
-  // === Phrase 3: contrasting phrase ===
-  [_G4,2],[_D4,1],[_G4,1],[_Ab4,2],[_G4,2],[_R,.5],
-  [_G4,2],[_D4,1],[_G4,1],[_Ab4,1],[_G4,1],[_F4,1],[_Eb4,3],[_R,2],
-
-  // === Phrase 4: climax ===
-  [_Eb5,1],[_D5,1],[_C5,2],[_G4,2],[_Ab4,1],[_G4,2],[_R,.5],
-  [_Eb5,1],[_D5,1],[_C5,1],[_Bb4,1],[_C5,4],[_R,4],
-];
-
-function buildReverb(ctx){
-  const len=ctx.sampleRate*2.4;
-  const buf=ctx.createBuffer(2,len,ctx.sampleRate);
-  for(let c=0;c<2;c++){
-    const d=buf.getChannelData(c);
-    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.2);
-  }
-  const conv=ctx.createConvolver(); conv.buffer=buf; return conv;
-}
-
-function startMusic(){
-  if(musicPlaying) return;
-  try{
-    audioCtx = audioCtx||new (window.AudioContext||window.webkitAudioContext)();
-    if(audioCtx.state==='suspended') audioCtx.resume();
-    masterGain=audioCtx.createGain();
-    masterGain.gain.setValueAtTime(0,audioCtx.currentTime);
-    masterGain.gain.linearRampToValueAtTime(musicMuted?0:0.22,audioCtx.currentTime+3);
-    masterGain.connect(audioCtx.destination);
-
-    const reverb=buildReverb(audioCtx);
-    const rvbGain=audioCtx.createGain(); rvbGain.gain.value=0.42;
-    reverb.connect(rvbGain); rvbGain.connect(masterGain);
-
-    // Sub-bass drone — C2 + G2, barely felt, not heard
-    [[65.4,.014],[98.0,.009]].forEach(([f,v])=>{
-      const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-      o.type='sine'; o.frequency.value=f; g.gain.value=v;
-      o.connect(g); g.connect(masterGain); o.start();
-    });
-
-    // Cello ostinato — sawtooth through lowpass for warm string body
-    harpIdx=0;
-    function playCello(){
-      if(!musicPlaying) return;
-      const [freq,beats]=GOT_CELLO[harpIdx%GOT_CELLO.length];
-      const dur=beats*_B;
-      const now=audioCtx.currentTime;
-      if(freq>0){
-        const o=audioCtx.createOscillator();
-        const filt=audioCtx.createBiquadFilter();
-        const env=audioCtx.createGain();
-        o.type='sawtooth'; o.frequency.value=freq;
-        filt.type='lowpass'; filt.frequency.value=900; filt.Q.value=1.5;
-        o.connect(filt); filt.connect(env);
-        env.connect(masterGain); env.connect(reverb);
-        env.gain.setValueAtTime(0,now);
-        env.gain.linearRampToValueAtTime(0.08,now+0.05);
-        env.gain.setValueAtTime(0.06,now+dur*0.65);
-        env.gain.exponentialRampToValueAtTime(0.001,now+dur*0.96);
-        o.start(now); o.stop(now+dur);
-      }
-      harpIdx++;
-      harpTimer=setTimeout(playCello,dur*1000);
-    }
-    setTimeout(playCello,500);
-
-    // Main melody — sine with vibrato (violin/horn character)
-    noteIdx=0;
-    function playMelody(){
-      if(!musicPlaying) return;
-      const [freq,beats]=GOT_MELODY[noteIdx%GOT_MELODY.length];
-      const dur=beats*_B;
-      const now=audioCtx.currentTime;
-      if(freq>0){
-        const o=audioCtx.createOscillator(), env=audioCtx.createGain();
-        o.type='sine'; o.frequency.value=freq;
-        // Vibrato — kicks in after slight delay for natural bowing feel
-        const lfo=audioCtx.createOscillator(), lfog=audioCtx.createGain();
-        lfo.frequency.value=5.5; lfog.gain.value=4.5;
-        lfo.connect(lfog); lfog.connect(o.frequency);
-        lfo.start(now+0.18); lfo.stop(now+dur*1.04);
-        env.gain.setValueAtTime(0,now);
-        env.gain.linearRampToValueAtTime(0.15,now+0.09);
-        env.gain.setValueAtTime(0.12,now+dur*0.7);
-        env.gain.exponentialRampToValueAtTime(0.001,now+dur*1.04);
-        o.connect(env); env.connect(masterGain); env.connect(reverb);
-        o.start(now); o.stop(now+dur*1.08);
-      }
-      noteIdx++;
-      melodyTimer=setTimeout(playMelody,dur*1000);
-    }
-    // Melody enters after 2 bars of solo cello (~3s) for the dramatic build
-    setTimeout(playMelody,3000);
-
-    musicPlaying=true;
-    updateMusicBtn();
-  } catch(e){ console.warn('Audio init failed:',e); }
-}
-
-function stopMusic(){
-  if(melodyTimer) clearTimeout(melodyTimer);
-  if(harpTimer)   clearTimeout(harpTimer);
-  if(masterGain){
-    masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime+1.2);
-    setTimeout(()=>{ try{audioCtx.close();}catch(e){} audioCtx=null; masterGain=null; },1400);
-  }
-  musicPlaying=false;
-  updateMusicBtn();
-}
-
-function toggleMusic(){
-  if(!musicPlaying){ startMusic(); return; }
-  musicMuted=!musicMuted;
-  if(masterGain){
-    masterGain.gain.linearRampToValueAtTime(
-      musicMuted?0:0.24, audioCtx.currentTime+0.5);
-  }
-  updateMusicBtn();
-}
-
-function updateMusicBtn(){
-  const btn=document.getElementById('music-btn');
-  if(!btn) return;
-  if(!musicPlaying){
-    btn.innerHTML='<span>♫</span> MUSIC';
-    btn.classList.remove('muted');
-    btn.title='Play music';
-  } else if(musicMuted){
-    btn.innerHTML='<span>🔇</span> MUTED';
-    btn.classList.add('muted');
-    btn.title='Unmute';
-  } else {
-    btn.innerHTML='<span>♫</span> PLAYING';
-    btn.classList.remove('muted');
-    btn.title='Mute music';
-  }
-}
-
-// ── SOUND EFFECTS REMOVED — music only ───────────────────────────────
 
 // ── TAB SWITCHING ─────────────────────────────────────────────────────
 let currentTab = 'map';
@@ -2538,7 +2361,6 @@ function enterMap(){
   sp.style.opacity='0';
   setTimeout(()=>{ sp.style.display='none'; }, 600);
   document.body.classList.add('light-theme');
-  startMusic();
 }
 
 function initSpoilerParticles(){
