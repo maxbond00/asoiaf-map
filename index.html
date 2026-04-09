@@ -2323,29 +2323,52 @@ const HOUSE_DOT_COL = {
   });
 })();
 
-// ── MUSIC — Warm medieval harp & flute (G major) ─────────────────────
+// ── MUSIC — Game of Thrones theme (Web Audio synthesis) ───────────────
 let audioCtx=null, masterGain=null, musicPlaying=false, musicMuted=false;
 let melodyTimer=null, noteIdx=0, harpTimer=null, harpIdx=0;
 
-// G major melody — gentle, flowing, entirely pleasant (0 = rest)
-const MED_MELODY = [
-  196.0, 220.0, 247.0, 294.0, 330.0, 294.0, 247.0, 220.0, // ascending
-  196.0, 247.0, 294.0, 330.0, 294.0, 247.0, 196.0,   0,   // with rest
-  392.0, 349.2, 330.0, 294.0, 247.0, 220.0, 247.0, 294.0, // high descend
-  330.0, 294.0, 247.0, 220.0, 196.0, 147.0, 196.0, 196.0, // cadence home
-];
-const MED_NOTE_DUR = 0.68;
+// Note frequencies (Hz) — standard equal temperament
+const _C3=130.8,_D3=146.8,_Eb3=155.6,_F3=174.6,_G3=196.0,_Ab3=207.7,_Bb3=233.1;
+const _C4=261.6,_D4=293.7,_Eb4=311.1,_F4=349.2,_G4=392.0,_Ab4=415.3,_Bb4=466.2,_B4=493.9;
+const _C5=523.3,_D5=587.3,_Eb5=622.3,_F5=698.5,_G5=784.0,_Bb5=932.3;
+const _R=0; // rest
 
-// Harp arpeggio pattern — G major chord tones, triangle wave
-const HARP_PAT = [98.0, 147.0, 196.0, 247.0, 196.0, 147.0]; // G2 D3 G3 B3 G3 D3
-const HARP_DUR = 0.36;
+const _BPM=73, _B=60/_BPM; // one beat ≈ 0.822s
+
+// Cello/string ostinato — the famous repeating bass figure
+// [hz, beats]
+const GOT_CELLO=[
+  [_G3,.75],[_G3,.75],[_C4,1.5],[_G3,.75],
+  [_Eb4,1.0],[_G3,.75],[_D4,.75],[_G3,.75],
+];
+
+// Main theme melody — [hz, beats]
+const GOT_MELODY=[
+  // === Phrase 1: opening motif ===
+  [_G3,1],[_G3,1],[_C4,2],[_R,.5],
+  [_G3,1],[_Eb4,1.5],[_D4,.5],[_C4,2.5],[_R,.5],
+  [_G3,1],[_G3,1],[_Bb3,2],[_R,.5],
+  [_G3,1],[_Eb4,1.5],[_D4,.5],[_C4,3],[_R,1.5],
+
+  // === Phrase 2: main string melody (high) ===
+  [_C5,2],[_G4,1],[_Eb5,1],[_D5,2],[_C5,2],[_R,.5],
+  [_C5,2],[_G4,1],[_Eb5,1],[_D5,1],[_C5,1],[_Bb4,1],[_C5,3],[_R,1.5],
+
+  // === Phrase 3: contrasting phrase ===
+  [_G4,2],[_D4,1],[_G4,1],[_Ab4,2],[_G4,2],[_R,.5],
+  [_G4,2],[_D4,1],[_G4,1],[_Ab4,1],[_G4,1],[_F4,1],[_Eb4,3],[_R,2],
+
+  // === Phrase 4: climax ===
+  [_Eb5,1],[_D5,1],[_C5,2],[_G4,2],[_Ab4,1],[_G4,2],[_R,.5],
+  [_Eb5,1],[_D5,1],[_C5,1],[_Bb4,1],[_C5,4],[_R,4],
+];
 
 function buildReverb(ctx){
-  const len = ctx.sampleRate * 1.6;   // shorter, lighter reverb
-  const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+  const len=ctx.sampleRate*2.4;
+  const buf=ctx.createBuffer(2,len,ctx.sampleRate);
   for(let c=0;c<2;c++){
     const d=buf.getChannelData(c);
-    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.2);
   }
   const conv=ctx.createConvolver(); conv.buffer=buf; return conv;
 }
@@ -2353,65 +2376,77 @@ function buildReverb(ctx){
 function startMusic(){
   if(musicPlaying) return;
   try{
-    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    audioCtx = audioCtx||new (window.AudioContext||window.webkitAudioContext)();
     if(audioCtx.state==='suspended') audioCtx.resume();
-    masterGain = audioCtx.createGain();
-    masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-    masterGain.gain.linearRampToValueAtTime(musicMuted?0:0.24, audioCtx.currentTime+2.5);
+    masterGain=audioCtx.createGain();
+    masterGain.gain.setValueAtTime(0,audioCtx.currentTime);
+    masterGain.gain.linearRampToValueAtTime(musicMuted?0:0.22,audioCtx.currentTime+3);
     masterGain.connect(audioCtx.destination);
 
-    const reverb = buildReverb(audioCtx);
-    const rvbGain = audioCtx.createGain(); rvbGain.gain.value=0.32;
+    const reverb=buildReverb(audioCtx);
+    const rvbGain=audioCtx.createGain(); rvbGain.gain.value=0.42;
     reverb.connect(rvbGain); rvbGain.connect(masterGain);
 
-    // Soft bass drone — G1 + D2, pure sine, barely audible foundation
-    [[49.0, 0.018],[73.4, 0.012]].forEach(([f,vol])=>{
-      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-      o.type='sine'; o.frequency.value=f; g.gain.value=vol;
+    // Sub-bass drone — C2 + G2, barely felt, not heard
+    [[65.4,.014],[98.0,.009]].forEach(([f,v])=>{
+      const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+      o.type='sine'; o.frequency.value=f; g.gain.value=v;
       o.connect(g); g.connect(masterGain); o.start();
     });
 
-    // Harp arpeggios — triangle wave, quick pluck decay
+    // Cello ostinato — sawtooth through lowpass for warm string body
     harpIdx=0;
-    function pluckHarp(){
+    function playCello(){
       if(!musicPlaying) return;
+      const [freq,beats]=GOT_CELLO[harpIdx%GOT_CELLO.length];
+      const dur=beats*_B;
       const now=audioCtx.currentTime;
-      const freq=HARP_PAT[harpIdx%HARP_PAT.length];
-      const o=audioCtx.createOscillator(), env=audioCtx.createGain();
-      o.type='triangle'; o.frequency.value=freq;
-      env.gain.setValueAtTime(0.13, now);
-      env.gain.exponentialRampToValueAtTime(0.001, now+0.32);
-      o.connect(env); env.connect(masterGain); env.connect(reverb);
-      o.start(now); o.stop(now+0.34);
+      if(freq>0){
+        const o=audioCtx.createOscillator();
+        const filt=audioCtx.createBiquadFilter();
+        const env=audioCtx.createGain();
+        o.type='sawtooth'; o.frequency.value=freq;
+        filt.type='lowpass'; filt.frequency.value=900; filt.Q.value=1.5;
+        o.connect(filt); filt.connect(env);
+        env.connect(masterGain); env.connect(reverb);
+        env.gain.setValueAtTime(0,now);
+        env.gain.linearRampToValueAtTime(0.08,now+0.05);
+        env.gain.setValueAtTime(0.06,now+dur*0.65);
+        env.gain.exponentialRampToValueAtTime(0.001,now+dur*0.96);
+        o.start(now); o.stop(now+dur);
+      }
       harpIdx++;
-      harpTimer=setTimeout(pluckHarp, HARP_DUR*1000);
+      harpTimer=setTimeout(playCello,dur*1000);
     }
-    setTimeout(pluckHarp, 600);
+    setTimeout(playCello,500);
 
-    // Flute melody — sine wave, gentle vibrato starts a touch in
+    // Main melody — sine with vibrato (violin/horn character)
     noteIdx=0;
-    function playFlute(){
+    function playMelody(){
       if(!musicPlaying) return;
+      const [freq,beats]=GOT_MELODY[noteIdx%GOT_MELODY.length];
+      const dur=beats*_B;
       const now=audioCtx.currentTime;
-      const freq=MED_MELODY[noteIdx%MED_MELODY.length];
       if(freq>0){
         const o=audioCtx.createOscillator(), env=audioCtx.createGain();
         o.type='sine'; o.frequency.value=freq;
+        // Vibrato — kicks in after slight delay for natural bowing feel
         const lfo=audioCtx.createOscillator(), lfog=audioCtx.createGain();
-        lfo.frequency.value=5.2; lfog.gain.value=2.5;
+        lfo.frequency.value=5.5; lfog.gain.value=4.5;
         lfo.connect(lfog); lfog.connect(o.frequency);
-        lfo.start(now+0.14); lfo.stop(now+MED_NOTE_DUR*1.05);
-        env.gain.setValueAtTime(0, now);
-        env.gain.linearRampToValueAtTime(0.10, now+0.07);
-        env.gain.setValueAtTime(0.08, now+MED_NOTE_DUR*0.6);
-        env.gain.exponentialRampToValueAtTime(0.001, now+MED_NOTE_DUR*1.05);
+        lfo.start(now+0.18); lfo.stop(now+dur*1.04);
+        env.gain.setValueAtTime(0,now);
+        env.gain.linearRampToValueAtTime(0.15,now+0.09);
+        env.gain.setValueAtTime(0.12,now+dur*0.7);
+        env.gain.exponentialRampToValueAtTime(0.001,now+dur*1.04);
         o.connect(env); env.connect(masterGain); env.connect(reverb);
-        o.start(now); o.stop(now+MED_NOTE_DUR*1.08);
+        o.start(now); o.stop(now+dur*1.08);
       }
       noteIdx++;
-      melodyTimer=setTimeout(playFlute, MED_NOTE_DUR*1000);
+      melodyTimer=setTimeout(playMelody,dur*1000);
     }
-    setTimeout(playFlute, 2200);
+    // Melody enters after 2 bars of solo cello (~3s) for the dramatic build
+    setTimeout(playMelody,3000);
 
     musicPlaying=true;
     updateMusicBtn();
