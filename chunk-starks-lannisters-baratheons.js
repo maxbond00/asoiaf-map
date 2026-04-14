@@ -274,12 +274,12 @@
   },
 
   'hodor': {
-    name:'Walder (Hodor)', initial:'Ho', gender:'m',
+    name:'Hodor', initial:'Ho', gender:'m',
     house:'stark', houseLabel:'House Stark — Stableboy, Bran\'s legs',
     aliases:['Hodor'],
     photoUrl:'img/hodor.jpg',
     _skin:'#906040',_hair:'#1a0a00',_eye:'#3a3020',
-    bio:'A gentle giant who carries Bran across the world. Bran skinchanges into him to fight. His real name is Walder.',
+    bio:'A gentle giant who carries Bran across the world. Bran skinchanges into him to fight. His true name is unknown — he speaks only the word "Hodor."',
     background:'A gentle giant stableboy at Winterfell, known only as Hodor — the only word he can say. Sweet-natured and devoted to the Stark family.',
     bookBios:{4:'In the cave of the three-eyed raven beyond the Wall with Bran.'},
     waypoints:[
