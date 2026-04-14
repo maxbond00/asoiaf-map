@@ -27,7 +27,13 @@ button,a,[onclick],.tab-btn,.ctrl-btn,.zoom-btn,.hf-btn,.sp-btn,.t-filter,.theor
 #map-container{flex:1;position:relative;overflow:hidden;background:#4a7e9e;}
 /* Leaflet tile layer fills the container */
 #leaflet-map{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;}
-.leaflet-container{background:#4a7e9e !important;}
+/* Background matches the map's outer ocean border colour — visible in the very rare
+   case where the user has panned to the absolute edge of tile coverage */
+.leaflet-container{background:#3a6a88 !important;}
+/* Prevent the ghostly grey tile-loading squares from flashing */
+.leaflet-tile-container img{border:none !important;}
+/* GPU-accelerated tile transforms for snappier pan */
+.leaflet-tile{will-change:transform;}
 /* SVG overlay — transparent canvas for character tokens, trails, hitboxes */
 #world-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:400;overflow:visible;}
 /* Only specific SVG groups need pointer events */
@@ -71,6 +77,11 @@ button,a,[onclick],.tab-btn,.ctrl-btn,.zoom-btn,.hf-btn,.sp-btn,.t-filter,.theor
 #char-divider{border:none;border-top:1px solid #3a2a10;margin:11px 0;}
 #char-bio{font-size:.81em;line-height:1.7;color:#a09060;}
 #char-current-status{font-size:.81em;line-height:1.6;color:#c0a070;margin-top:9px;border-top:1px solid #2a1a08;padding-top:9px;}
+#char-follow-btn{margin-top:7px;background:#1a0d00;border:1px solid #8b6914;color:#d4a820;padding:4px 12px;border-radius:12px;cursor:pointer;font-size:.73em;letter-spacing:1px;font-family:inherit;transition:all .2s;width:100%;}
+#char-follow-btn:hover{background:#2a1a05;border-color:#d4a820;box-shadow:0 0 8px rgba(212,168,32,.3);}
+#char-follow-btn.following{background:#2a1a00;border-color:#d4a820;color:#ffe060;box-shadow:0 0 10px rgba(212,168,32,.4);}
+#char-follow-btn.following::before{content:'🔒 ';}
+#char-follow-btn:not(.following)::before{content:'📍 ';}
 
 /* ── MAP FULLSCREEN TOGGLE ── */
 #map-fs-btn{position:absolute;bottom:18px;left:14px;z-index:20;background:rgba(10,5,0,.85);border:1px solid #4a2a08;color:#8b6914;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:all .2s;}
@@ -158,6 +169,10 @@ body.map-full #zoom-controls{top:18px;}
 .chr-book{font-size:.68em;color:#7a5a10;letter-spacing:1px;}
 .chr-text{font-size:.8em;color:#a09060;line-height:1.6;}
 .chr-latest .chr-text{color:#c8a860;}
+.chr-locked-wrap{margin-top:2px;opacity:0.5;}
+.chr-locked{border-bottom:1px solid #1a1008;}
+.chr-locked-book{color:#4a3a20;}
+.chr-locked-text{color:#4a3a20;font-style:italic;}
 /* overflow badges use absolute SVG coords (no group transform), so scale around SVG origin → use fade only */
 .overflow-badge{animation:tokFadeIn .18s ease-out both;}
 .char-token.traveling .tok-ring{stroke:#ffe87a!important;filter:drop-shadow(0 0 5px rgba(255,232,100,.7)) drop-shadow(0 2px 5px rgba(0,0,0,.85))!important;}
@@ -963,6 +978,9 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
       <div id="char-house-words" style="font-style:italic;font-size:11px;color:#8b7a55;margin-top:1px;letter-spacing:0.03em;"></div>
       <div id="char-status-badge" class="s-alive">ALIVE</div>
       <div id="char-location-text"></div>
+      <button id="char-follow-btn" onclick="window._panelFollowToggle()" title="Lock camera onto this character">
+        📍 FOLLOW
+      </button>
     </div>
   </div>
   <hr id="char-divider">
@@ -1169,35 +1187,37 @@ function charLatLng(st){
 
 // ── LOCATION LORE ─────────────────────────────────────────────────────
 const LOC_LORE = {
-  'castle-black':    {icon:'🏰', lore:"Headquarters of the Night's Watch. Jon Snow rises from steward to Lord Commander here. Ten thousand brothers once manned the Wall — fewer than a thousand remain."},
-  'winterfell':      {icon:'🐺', lore:"Seat of House Stark for eight thousand years. Where the story begins. The crypts hold the bones of Stark kings, and secrets older still."},
-  'the-twins':       {icon:'💀', lore:"Site of the Red Wedding. By bread and salt, guest right was broken — Robb Stark, Grey Wind, and Catelyn Tully were slain by treachery of House Frey and House Bolton."},
-  'kings-landing':   {icon:'👑', lore:"Capital of the Seven Kingdoms. Home of the Iron Throne, forged from the swords of Aegon's defeated enemies. A city of a million souls — scheming, starving, and surviving."},
-  'harrenhal':       {icon:'🔥', lore:"The largest castle in Westeros, half-melted by Aegon's dragons. Cursed — no house that holds it has prospered. Site of the Brotherhood and Roose Bolton's betrayal."},
-  'dragonstone':     {icon:'🐉', lore:"Ancient seat of House Targaryen, built in Valyrian style. Where Aegon planned his conquest. Stannis Baratheon's base of operations. Holds the ancestral Targaryen weapons."},
-  'pyke':            {icon:'🦑', lore:"Storm-battered seat of House Greyjoy on the Iron Islands. Balon Greyjoy has rebelled twice — the second time, he names himself King of the Isles and the North."},
-  'highgarden':      {icon:'🌹', lore:"Seat of House Tyrell in the fertile Reach. The richest lordship in Westeros. The Tyrells feed King's Landing — a power they use masterfully."},
-  'oldtown':         {icon:'🦉', lore:"Westeros's oldest and second-largest city. Home of the Citadel, where maesters are made. The Hightowers have held it since the Age of Heroes."},
-  'eyrie':           {icon:'🦅', lore:"Impregnable mountain fortress of House Arryn, accessible only in summer. Its sky cells and moon door are legendary. Lysa Arryn's eccentricities reign here."},
-  'vaes-dothrak':    {icon:'🌙', lore:"The only true city of the Dothraki — a city with no walls, by decree. The sacred horse god Dosh Khaleen rules here. No blood may be shed within its bounds."},
-  'astapor':         {icon:'⚔️',  lore:"City of the Good Masters. Producers of the Unsullied — slave soldiers trained from childhood to feel no pain. Daenerys trades a dragon for them, then frees them."},
-  'meereen':         {icon:'🔗', lore:"Largest city of Slaver's Bay. Daenerys conquers it and attempts to rule, crucifying the Great Masters. She remains as queen, struggling to end centuries of slavery."},
-  'braavos':         {icon:'🗡️',  lore:"The Secret City, founded by escaped slaves from Valyria. Home of the Iron Bank, the Faceless Men, and the Titan of Braavos. Arya Stark trains here."},
-  'pentos':          {icon:'🏛️', lore:"A free city where slavery is forbidden — in name. Magisters grow rich on servants by other names. Daenerys and Viserys begin their exile here with Illyrio Mopatis."},
-  'asshai':          {icon:'🌑', lore:"The city at the end of the world, where the shadows walk and no children are born. Melisandre comes from here. Even brave men's eyes slide away from it."},
-  'hardhome':        {icon:'❄️', lore:"A ruined wildling village on the Shivering Sea coast. Thousands of Free Folk sheltered here — until the Night King came with his army of the dead."},
-  'fist-first-men':  {icon:'⚡', lore:"A ring-fort atop a hill beyond the Wall. The Night's Watch makes camp here. The White Walkers come in the night — most of the 300 brothers die or are turned."},
-  'riverrun':        {icon:'🐟', lore:"Seat of House Tully, built at the confluence of three rivers. Can be flooded as a defense. Robb Stark uses it as his war camp. Jaime Lannister besieges it in the name of the king."},
-  'storms-end':      {icon:'⛈️', lore:"Impregnable seat of House Baratheon. Built by Durran Godsgrief in legend. Its massive curtain wall has never been breached. Davos smuggles onions here during Robert's Rebellion."},
-  'dreadfort':       {icon:'🩸', lore:"Seat of House Bolton in the far North. The Boltons once flayed their enemies alive — a tradition the Red King Ramsay continues. A place of fear even for other Northmen."},
-  'queenscrown':     {icon:'🏚️', lore:"A ruined village beyond the Wall where Jon Snow and Ygritte shelter. Jon must decide where his loyalties lie."},
-  'valyria':         {icon:'💥', lore:"Once the greatest empire in the world. Destroyed in the Doom four centuries ago. Only dragonlords and their mounts survived. Jorah Mormont and Tyrion sail through the Smoking Sea."},
-  'volantis':        {icon:'🌊', lore:"Oldest and proudest of the Free Cities. Three slaves for every free man. Serves Essos's largest fleet. Tyrion and Jorah pass through — Tyrion is captured."},
-  'yunkai':          {icon:'🏺', lore:"The Yellow City of Slaver's Bay. Yunkai produces bed slaves. Daenerys defeats their mercenary army but does not sack the city — she moves on to Meereen."},
-  'sunspear':        {icon:'☀️', lore:"Seat of House Martell in Dorne. A city of spires and domes. Prince Oberyn comes north to demand justice for Elia. When he fails, Dorne plots its own revenge."},
-  'castle-black':    {icon:'🏰', lore:"Headquarters of the Night's Watch."},
-  'moat-cailin':     {icon:'🏚️', lore:"Ruined ancient fortress guarding the Neck — the key to the North. Twenty towers, only three still standing. Impossible to take from the south. The Ironborn hold it briefly."},
-  'qarth':           {icon:'💎', lore:"The greatest city that ever was or will be — or so its citizens claim. Gateway between east and west. Daenerys comes here hungry and desperate; the Warlocks of Qarth steal her dragons."},
+  // ── Lore entries are written as of the start of the story (before AGOT Ch.1) ──
+  // They describe only what is established fact at story-open; no spoilers.
+  'castle-black':    {icon:'🏰', lore:"Headquarters of the Night's Watch, the ancient order that guards the Wall. Once ten thousand strong, the Watch is now fewer than a thousand brothers. Castle Black is the largest of the three manned castles, sitting at the centre of the Wall's length."},
+  'winterfell':      {icon:'🐺', lore:"Seat of House Stark for eight thousand years. The great castle of the North, warmed by hot springs running beneath its floors. The crypts beneath hold the bones of Stark lords, watched over by stone likenesses with iron swords across their laps."},
+  'the-twins':       {icon:'🌉', lore:"Twin castles of House Frey straddling the only bridge across the Green Fork of the Trident for miles in either direction. Lord Walder Frey has grown rich on the toll of every army that must cross. He is known for holding grudges — and for having more children than most men have fingers."},
+  'kings-landing':   {icon:'👑', lore:"Capital of the Seven Kingdoms and seat of the Iron Throne, forged from the swords of Aegon the Conqueror's defeated enemies. A city of nearly half a million souls, crowded with ambitious lords, hungry smallfolk, and the ever-present stench of the sea."},
+  'harrenhal':       {icon:'🔥', lore:"The largest castle ever raised in Westeros, built by King Harren the Black to defy the gods — and half-melted to a ruin by Aegon's dragons on the very day it was completed. Every lord who has since held it has come to grief. It sits now abandoned, a monument to overreach."},
+  'dragonstone':     {icon:'🐉', lore:"Ancient seat of House Targaryen, built in the Valyrian style with stone dragons carved into every tower. It was from Dragonstone that Aegon planned his conquest of Westeros. The island commands the mouth of Blackwater Bay."},
+  'pyke':            {icon:'🦑', lore:"Storm-battered seat of House Greyjoy on the Iron Islands, connected by rope bridges across jagged sea-stacks. The ironmen are a seafaring people who live by the Old Way — taking what they need from weaker folk rather than working for it."},
+  'highgarden':      {icon:'🌹', lore:"Seat of House Tyrell in the fertile heart of the Reach, the breadbasket of Westeros. The Tyrells grow fabulously rich on their fields and their trade. Their castle is said to be the most beautiful in the realm."},
+  'oldtown':         {icon:'🦉', lore:"The oldest city in Westeros and arguably its most learned. Home to the Citadel, where men come from across the known world to forge their maester's chains. The Hightower — a massive lighthouse — has stood at its harbour mouth since the Age of Heroes."},
+  'eyrie':           {icon:'🦅', lore:"The sky fortress of House Arryn, perched atop the Giant's Lance in the Mountains of the Moon. Accessible only in summer by a treacherous mountain path, it is considered impregnable. Its sky cells and moon door are notorious throughout the Vale."},
+  'vaes-dothrak':    {icon:'🌙', lore:"The only true city of the Dothraki — unwalled by decree, for walls are for those who fear. Ruled by the Dosh Khaleen, the widows of dead khals. No blood may be shed within its bounds; all disputes must wait for the open steppe."},
+  'astapor':         {icon:'⛓️', lore:"City of the Good Masters on the coast of Slaver's Bay. Famous — or infamous — for its Unsullied: eunuch slave soldiers trained from boyhood to be utterly fearless and utterly obedient. Their pyramids and harpy-topped spires dominate the red brick waterfront."},
+  'meereen':         {icon:'🏛️', lore:"The largest of the three great slaving cities of Slaver's Bay, capped with a great bronze harpy. Meereen's Great Masters have practised slavery for centuries. Its fighting pits are renowned across Essos."},
+  'braavos':         {icon:'🗡️',  lore:"The Secret City, founded centuries ago by escaped slaves fleeing the Valyrian Freehold. Hidden in a lagoon behind a sea of fog and treacherous shoals. Home to the Iron Bank — which always collects its debts — and the shadowy Faceless Men."},
+  'pentos':          {icon:'🏛️', lore:"A free city where slavery is officially forbidden — though magisters grow wealthy on 'servants' bound by contract. A city of traders and schemers. Illyrio Mopatis, a powerful magister, holds considerable influence here."},
+  'asshai':          {icon:'🌑', lore:"A city at the edge of the known world, where the Shadow falls. No children are born there; no animals will stay. It is said that any sorcery may be practised in Asshai without fear of judgement. Sailors who have been there do not speak of it willingly."},
+  'hardhome':        {icon:'❄️', lore:"A wildling village on the Shivering Sea coast, beyond the Wall. Not quite a proper settlement — more a rough harbour where Free Folk gather to trade. It sits in the shadow of high cliffs, isolated and storm-battered for most of the year."},
+  'fist-first-men':  {icon:'⚡', lore:"A ring-fort atop a steep hill beyond the Wall, ancient beyond reckoning. The First Men built it before the Andals ever came to Westeros. It commands a broad view of the surrounding wilderness — useful for any ranging party that needs a defensible camp."},
+  'riverrun':        {icon:'🐟', lore:"Seat of House Tully, built at the confluence of the Red Fork, Tumblestone, and Tumblestone rivers. The castle can be turned into an island by opening sluice gates to flood the moat — a formidable natural defence. The Tullys have held the Riverlands for centuries."},
+  'storms-end':      {icon:'⛈️', lore:"Ancestral seat of House Baratheon at the edge of Shipbreaker Bay. Built, legend says, by Durran Godsgrief after the gods destroyed his six earlier castles. Its massive rounded curtain wall has never been breached, and has withstood storms that sink fleets."},
+  'dreadfort':       {icon:'🩸', lore:"Seat of House Bolton in the far north of the North. The Boltons were once kings who warred with the Starks for centuries. Their sigil is a flayed man — for the Bolton tradition of wearing the skins of their enemies, now officially outlawed but not entirely forgotten."},
+  'valyria':         {icon:'💥', lore:"Once the greatest empire in the known world, whose dragonlords ruled half of Essos. Four centuries ago it was obliterated in a single cataclysm — the Doom of Valyria. The cause is still unknown. The ruins sit in a smoking, demon-haunted sea that sailors go far out of their way to avoid."},
+  'volantis':        {icon:'🌊', lore:"The oldest and proudest of the Free Cities, first colony of the Valyrian Freehold. Volantis sees itself as the natural heir to Valyria's greatness. Three slaves live within its walls for every free man. It commands the mouth of the Rhoyne and the largest fleet east of the Narrow Sea."},
+  'yunkai':          {icon:'🏺', lore:"The Yellow City, so called for its distinctive yellow-brick architecture. The second city of Slaver's Bay, known for producing bed slaves trained from childhood in the ways of pleasure. Its sellsword companies are its primary military strength."},
+  'sunspear':        {icon:'☀️', lore:"Seat of House Martell in Dorne, the southernmost kingdom. A city of spires and domes, hot and proud. The Martells have never been fully conquered — they joined the realm by marriage, not by force, and they have never forgotten the difference."},
+  'moat-cailin':     {icon:'🏚️', lore:"Ancient ruined fortress guarding the causeway through the Neck — the marshy, crannogman-haunted passage between the North and the southern kingdoms. Twenty towers once stood; only three remain. An army attacking from the south faces disease, arrows from the bogs, and a killing ground with no cover."},
+  'qarth':           {icon:'💎', lore:"The greatest city that ever was or will be — or so its citizens claim. A wealthy trading city sitting astride the Straits of Qarth, gateway between the known east and west. Home to merchant princes, warlocks, and a great harbour whose revenues make its rulers immensely rich."},
+  'white-harbor':    {icon:'⚓', lore:"The largest city in the North and its only true port, seat of House Manderly. The White Knife river gives it access to the interior. The New Castle crowns the bluffs above the harbour. House Manderly, despite being southron in origin, is the wealthiest house in the North."},
+  'duskendale':      {icon:'⚓', lore:"A port town in the Crownlands, once a wealthy trading rival to King's Landing. Lord Darklyn briefly held King Aerys II captive here in the 'Defiance of Duskendale' — an act of rebellion that drove the Mad King to further paranoia and cruelty."},
 };
 
 // ── HOUSE WORDS ───────────────────────────────────────────────────────
@@ -1773,13 +1793,38 @@ function followChar(id){
   const ind    = document.getElementById('follow-indicator');
   if(nameEl) nameEl.textContent = ch ? ch.name : '';
   if(ind)    ind.style.display  = 'flex';
+  _syncFollowBtn();
 }
 
 function stopFollowing(){
   followingId = null;
   const ind = document.getElementById('follow-indicator');
   if(ind) ind.style.display = 'none';
+  _syncFollowBtn();
 }
+
+// Sync the Follow button in the open panel to current follow state
+function _syncFollowBtn(){
+  const btn = document.getElementById('char-follow-btn');
+  if(!btn) return;
+  const isFollowing = followingId && followingId === openPanelId;
+  btn.classList.toggle('following', !!isFollowing);
+  btn.textContent = isFollowing ? 'FOLLOWING' : 'FOLLOW';
+}
+
+// Called by the Follow button in the character panel
+window._panelFollowToggle = function(){
+  if(!openPanelId) return;
+  if(followingId === openPanelId){
+    stopFollowing();
+  } else {
+    const ch = window.CHARS[openPanelId];
+    if(!ch) return;
+    const st = charStateAt(ch, t);
+    const ll = charLatLng(st);
+    panToChar(ll, ()=>{ followChar(openPanelId); });
+  }
+};
 
 // Re-center the map on the followed character each frame (no easing — keeps up with movement)
 function centerOnFollowed(){
@@ -1811,22 +1856,43 @@ function updateUI(){
 
 function buildChronicle(ch){
   const el=document.getElementById('char-chronicle'); if(!el) return;
-  const entries=(ch.chronicle||[]).filter(e=>e.frac<=t/TOTAL_SEC);
-  if(!entries.length){el.innerHTML='';return;}
+  const all = ch.chronicle || [];
+  const curFrac = t / TOTAL_SEC;
+  const revealed = all.filter(e => e.frac <= curFrac);
+  const locked   = all.filter(e => e.frac >  curFrac);
+
+  if(!all.length){ el.innerHTML=''; return; }
+
   const BNAMES=['Game of Thrones','Clash of Kings','Storm of Swords','Feast for Crows','Dance with Dragons'];
-  let html='<div class="chr-title">Chronicle</div>';
-  entries.forEach((e,i)=>{
-    const isLatest=(i===entries.length-1);
-    const bk=Math.min(4,Math.floor(e.frac*5));
-    html+=`<div class="chr-entry${isLatest?' chr-latest':''}">
+  let html = '<div class="chr-title">Chronicle</div>';
+
+  // Revealed entries
+  revealed.forEach((e,i)=>{
+    const isLatest = (i === revealed.length - 1) && locked.length === 0;
+    const bk = Math.min(4, Math.floor(e.frac * 5));
+    html += `<div class="chr-entry${isLatest ? ' chr-latest' : ''}">
       <span class="chr-book">📖 ${BNAMES[bk]}</span>
       <span class="chr-text">${e.text}</span>
     </div>`;
   });
-  el.innerHTML=html;
-  // scroll latest into view
-  const last=el.querySelector('.chr-latest');
-  if(last) last.scrollIntoView({block:'nearest',behavior:'smooth'});
+
+  // Locked future entries — show as "Yet to Happen"
+  if(locked.length > 0){
+    html += `<div class="chr-locked-wrap">`;
+    locked.forEach(e=>{
+      const bk = Math.min(4, Math.floor(e.frac * 5));
+      html += `<div class="chr-entry chr-locked" title="Advance the timeline to reveal">
+        <span class="chr-book chr-locked-book">📖 ${BNAMES[bk]}</span>
+        <span class="chr-text chr-locked-text">⏳ Yet to happen…</span>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  el.innerHTML = html;
+  // scroll latest revealed entry into view
+  const latest = el.querySelector('.chr-latest');
+  if(latest) latest.scrollIntoView({block:'nearest', behavior:'smooth'});
 }
 
 function refreshPanelBio(){
@@ -2147,6 +2213,7 @@ function openPanel(id){
 
   drawJourneyTrail(id);
   document.getElementById('char-panel').classList.add('open');
+  _syncFollowBtn();
 }
 function closePanel(){
   openPanelId=null;
