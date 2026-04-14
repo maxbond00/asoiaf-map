@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>A Song of Ice and Fire — Character Map</title>
+<!-- Leaflet CSS — tile-based interactive map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 /* iOS viewport fix: --app-height is set by JS to window.innerHeight (excludes browser chrome) */
@@ -23,8 +25,13 @@ button,a,[onclick],.tab-btn,.ctrl-btn,.zoom-btn,.hf-btn,.sp-btn,.t-filter,.theor
 
 /* ── MAP ── */
 #map-container{flex:1;position:relative;overflow:hidden;background:#4a7e9e;}
-#world-svg{width:100%;height:100%;cursor:grab;transform-origin:0 0;}
-#world-svg:active{cursor:grabbing;}
+/* Leaflet tile layer fills the container */
+#leaflet-map{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;}
+.leaflet-container{background:#4a7e9e !important;}
+/* SVG overlay — transparent canvas for character tokens, trails, hitboxes */
+#world-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:400;overflow:visible;}
+/* Only specific SVG groups need pointer events */
+#char-tokens,#creature-tokens,#overflow-badges,#loc-hitboxes{pointer-events:all;}
 
 /* ── TIMELINE ── */
 #timeline{background:linear-gradient(to right,#1a0a00,#0a0510,#1a0a00);border-top:2px solid #8b6914;padding:9px 18px;display:flex;align-items:center;gap:14px;flex-shrink:0;}
@@ -738,8 +745,11 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
   </div>
 
   <div id="map-container">
-  <!-- ═══════════════════════════ WORLD SVG ═══════════════════════════ -->
-  <svg id="world-svg" viewBox="0 0 1620 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Leaflet tile map — Quartermaester illustrated ASOIAF tiles -->
+  <div id="leaflet-map"></div>
+
+  <!-- SVG overlay — character tokens, trails, hitboxes (no viewBox: screen pixel coords) -->
+  <svg id="world-svg" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
         <feGaussianBlur stdDeviation="2.5" result="blur"/>
@@ -749,10 +759,6 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
         <feGaussianBlur stdDeviation="4" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
-      <radialGradient id="ocean-grad" cx="35%" cy="40%" r="65%">
-        <stop offset="0%" stop-color="#7ab4d0"/>
-        <stop offset="100%" stop-color="#4e88aa"/>
-      </radialGradient>
       <!-- House color gradients for tokens -->
       <radialGradient id="hg-stark"    cx="50%" cy="40%"><stop offset="0%" stop-color="#5a6070"/><stop offset="100%" stop-color="#2a2a3a"/></radialGradient>
       <radialGradient id="hg-lannist"  cx="50%" cy="40%"><stop offset="0%" stop-color="#c8981a"/><stop offset="100%" stop-color="#6a4800"/></radialGradient>
@@ -771,39 +777,18 @@ body.light-theme #grrm-watch-note { color:#b09060 !important; }
       <radialGradient id="hg-sand"     cx="50%" cy="40%"><stop offset="0%" stop-color="#c06820"/><stop offset="100%" stop-color="#602000"/></radialGradient>
     </defs>
 
-    <!-- OCEAN FILL (covers letterbox bars left/right of image) -->
-    <rect x="0" y="0" width="1800" height="1000" fill="url(#ocean-grad)"/>
-    <!-- MAP BACKGROUND IMAGE — displayed at natural 1024×682 ratio (1500×1000 in SVG coords, centered) -->
-    <image href="map-bg.webp" x="150" y="0" width="1500" height="1000" preserveAspectRatio="none"/>
-
-
-    <!-- ═══════════════ HOUSE SEAT SIGILS ═══════════════ -->
-    <!-- x,y match LOC coords; text y = loc_y + 10 for visual centering -->
-    <g id="house-seats" style="pointer-events:none">
-      <text x="398" y="280" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🐺</text>
-      <text x="281" y="505" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🦁</text>
-      <text x="420" y="567" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">👑</text>
-      <text x="519" y="528" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🐉</text>
-      <text x="345" y="608" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">🌹</text>
-      <text x="432" y="692" text-anchor="middle" font-size="22" opacity="0.20" style="user-select:none">☀️</text>
-      <text x="280" y="510" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦑</text>
-      <text x="502" y="618" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦌</text>
-      <text x="510" y="478" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🦅</text>
-      <text x="352" y="507" text-anchor="middle" font-size="20" opacity="0.20" style="user-select:none">🐟</text>
-    </g>
-
     <!-- ═══════════════ LOCATION HITBOXES ═══════════════ -->
     <g id="loc-hitboxes"></g>
 
     <!-- ═══════════════ CHARACTER TOKENS ═══════════════ -->
     <defs id="clip-defs"><!-- clip paths generated by JS --></defs>
     <g id="journey-trail" style="pointer-events:none"></g>
-    <g id="travel-lines"></g>
+    <g id="travel-lines" style="pointer-events:none"></g>
     <g id="creature-tokens"></g>
     <g id="char-tokens"></g>
     <g id="overflow-badges"></g>
 
-  </svg><!-- end world-svg -->
+  </svg><!-- end world-svg overlay -->
 
     <!-- Mini-map -->
     <div id="mini-map-wrap"><canvas id="mini-map" width="180" height="100"></canvas></div>
@@ -1057,110 +1042,130 @@ let   _evPrevT  = -1;        // previous t, for forward-crossing detection
 const _prevDead = new Set(); // char IDs that were dead in the last render frame
 
 // Travel animation: tracks per-character current rendered position for smooth movement
-const _pos = {};   // id -> {x, y}  current displayed SVG coords
-let transform = {x:0,y:0,s:1};
-let dragging = false, dragPt = {x:0,y:0}, dragOrigin = {x:0,y:0};
+const _pos = {};   // id -> {x, y}  current displayed screen coords
 
 // ── LOCATIONS ─────────────────────────────────────────────────────────
-// LOC x-coordinates remapped for corrected image aspect ratio:
-// Image 1024×682 displayed as 1500×1000 centered in SVG (x offset +150).
-// Formula: new_x = round(old_x × 5/6 + 150)
+// Coordinates in Quartermaester/Google Maps lat/lng (EPSG:3857 / Web Mercator).
+// locToScreen(key) converts these to Leaflet container pixel positions at runtime.
 const LOC = {
-  // Beyond the Wall  (y < 183 = north of the Wall)
-  'beyond-wall':       {x:405, y:118, lbl:"Beyond the Wall"},
-  'hardhome':          {x:466, y:122, lbl:"Hardhome"},
-  'fist-first-men':    {x:380, y:152, lbl:"Fist of First Men"},
-  'crasters-keep':     {x:410, y:163, lbl:"Craster's Keep"},
-  'land-always-winter':{x:342, y:72,  lbl:"Land of Always Winter"},
-  // The Wall  (click-measured on raster map dots, y≈181-183)
-  'castle-black':      {x:412, y:183, lbl:"Castle Black"},
-  'shadow-tower':      {x:357, y:181, lbl:"Shadow Tower"},
-  'eastwatch':         {x:486, y:181, lbl:"Eastwatch-by-the-Sea"},
-  'nightfort':         {x:390, y:182, lbl:"The Nightfort"},
-  'deep-lake':         {x:373, y:182, lbl:"Deep Lake"},
-  'moles-town':        {x:413, y:200, lbl:"Mole's Town"},
+  // Beyond the Wall
+  'beyond-wall':       {lat:79.0,   lng:-112.0,  lbl:"Beyond the Wall"},
+  'hardhome':          {lat:78.72,  lng:-97.16,   lbl:"Hardhome"},
+  'fist-first-men':    {lat:78.27,  lng:-116.93,  lbl:"Fist of First Men"},
+  'crasters-keep':     {lat:77.52,  lng:-111.53,  lbl:"Craster's Keep"},
+  'land-always-winter':{lat:83.0,   lng:-115.0,   lbl:"Land of Always Winter"},
+  // The Wall
+  'castle-black':      {lat:76.27,  lng:-106.70,  lbl:"Castle Black"},
+  'shadow-tower':      {lat:76.37,  lng:-116.54,  lbl:"Shadow Tower"},
+  'eastwatch':         {lat:76.17,  lng:-99.54,   lbl:"Eastwatch-by-the-Sea"},
+  'nightfort':         {lat:76.33,  lng:-109.56,  lbl:"The Nightfort"},
+  'deep-lake':         {lat:76.29,  lng:-111.0,   lbl:"Deep Lake"},
+  'moles-town':        {lat:76.00,  lng:-106.69,  lbl:"Mole's Town"},
   // The North
-  'winterfell':        {x:398, y:270, lbl:"Winterfell"},
-  'white-harbor':      {x:400, y:312, lbl:"White Harbor"},
-  'last-hearth':       {x:456, y:248, lbl:"Last Hearth"},
-  'bear-island':       {x:317, y:278, lbl:"Bear Island"},
-  'deepwood-motte':    {x:352, y:298, lbl:"Deepwood Motte"},
-  'dreadfort':         {x:452, y:318, lbl:"The Dreadfort"},
-  'karhold':           {x:480, y:232, lbl:"Karhold"},
-  'long-lake':         {x:399, y:258, lbl:"Long Lake"},
-  'skagos':            {x:488, y:202, lbl:"Skagos"},
-  'moat-cailin':       {x:408, y:390, lbl:"Moat Cailin"},
-  'greywater-watch':   {x:396, y:412, lbl:"Greywater Watch"},
+  'winterfell':        {lat:66.25,  lng:-123.33,  lbl:"Winterfell"},
+  'white-harbor':      {lat:56.68,  lng:-114.10,  lbl:"White Harbor"},
+  'last-hearth':       {lat:72.62,  lng:-104.69,  lbl:"Last Hearth"},
+  'bear-island':       {lat:71.5,   lng:-148.0,   lbl:"Bear Island"},
+  'deepwood-motte':    {lat:70.19,  lng:-138.53,  lbl:"Deepwood Motte"},
+  'dreadfort':         {lat:67.42,  lng:-102.58,  lbl:"The Dreadfort"},
+  'karhold':           {lat:70.33,  lng:-88.17,   lbl:"Karhold"},
+  'long-lake':         {lat:68.5,   lng:-121.0,   lbl:"Long Lake"},
+  'skagos':            {lat:74.0,   lng:-83.0,    lbl:"Skagos"},
+  'moat-cailin':       {lat:53.88,  lng:-122.36,  lbl:"Moat Cailin"},
+  'greywater-watch':   {lat:46.10,  lng:-124.64,  lbl:"Greywater Watch"},
   // Riverlands
-  'riverrun':          {x:352, y:497, lbl:"Riverrun"},
-  'harrenhal':         {x:435, y:488, lbl:"Harrenhal"},
-  'the-twins':         {x:430, y:453, lbl:"The Twins"},
-  'seagard':           {x:366, y:465, lbl:"Seagard"},
-  'saltpans':          {x:465, y:476, lbl:"Saltpans"},
-  'riverlands':        {x:400, y:475, lbl:"The Riverlands"},
-  'oldstones':         {x:380, y:492, lbl:"Oldstones"},
-  'crossroads-inn':    {x:432, y:472, lbl:"The Crossroads Inn"},
-  'stoney-sept':       {x:349, y:511, lbl:"Stoney Sept"},
+  'riverrun':          {lat:22.29,  lng:-128.29,  lbl:"Riverrun"},
+  'harrenhal':         {lat:18.25,  lng:-114.40,  lbl:"Harrenhal"},
+  'the-twins':         {lat:38.60,  lng:-128.73,  lbl:"The Twins"},
+  'seagard':           {lat:35.19,  lng:-129.26,  lbl:"Seagard"},
+  'saltpans':          {lat:20.92,  lng:-105.48,  lbl:"Saltpans"},
+  'riverlands':        {lat:25.0,   lng:-120.0,   lbl:"The Riverlands"},
+  'oldstones':         {lat:30.92,  lng:-126.40,  lbl:"Oldstones"},
+  'crossroads-inn':    {lat:23.43,  lng:-112.69,  lbl:"The Crossroads Inn"},
+  'stoney-sept':       {lat:9.82,   lng:-125.65,  lbl:"Stoney Sept"},
   // The Vale
-  'eyrie':             {x:510, y:468, lbl:"The Eyrie"},
-  'gulltown':          {x:512, y:440, lbl:"Gulltown"},
-  'vale':              {x:505, y:456, lbl:"The Vale"},
+  'eyrie':             {lat:31.77,  lng:-102.50,  lbl:"The Eyrie"},
+  'gulltown':          {lat:29.42,  lng:-84.21,   lbl:"Gulltown"},
+  'vale':              {lat:32.0,   lng:-96.0,    lbl:"The Vale"},
   // Iron Islands
-  'pyke':              {x:280, y:500, lbl:"Pyke"},
-  'iron-islands':      {x:280, y:500, lbl:"Iron Islands"},
+  'pyke':              {lat:27.74,  lng:-150.62,  lbl:"Pyke"},
+  'iron-islands':      {lat:27.74,  lng:-150.62,  lbl:"Iron Islands"},
   // Westerlands
-  'casterly-rock':     {x:281, y:495, lbl:"Casterly Rock"},
-  'lannisport':        {x:281, y:509, lbl:"Lannisport"},
+  'casterly-rock':     {lat:6.32,   lng:-151.36,  lbl:"Casterly Rock"},
+  'lannisport':        {lat:5.5,    lng:-152.5,   lbl:"Lannisport"},
   // Crownlands
-  'kings-landing':     {x:420, y:557, lbl:"King's Landing"},
-  'dragonstone':       {x:519, y:518, lbl:"Dragonstone"},
-  'duskendale':        {x:442, y:514, lbl:"Duskendale"},
+  'kings-landing':     {lat:1.32,   lng:-106.00,  lbl:"King's Landing"},
+  'dragonstone':       {lat:13.20,  lng:-85.53,   lbl:"Dragonstone"},
+  'duskendale':        {lat:8.62,   lng:-98.80,   lbl:"Duskendale"},
   // Stormlands
-  'storms-end':        {x:502, y:608, lbl:"Storm's End"},
-  'griffin-roost':     {x:496, y:584, lbl:"Griffin's Roost"},
+  'storms-end':        {lat:-16.17, lng:-91.86,   lbl:"Storm's End"},
+  'griffin-roost':     {lat:-14.0,  lng:-89.0,    lbl:"Griffin's Roost"},
   // The Reach
-  'highgarden':        {x:345, y:598, lbl:"Highgarden"},
-  'oldtown':           {x:270, y:626, lbl:"Oldtown"},
-  'horn-hill':         {x:310, y:620, lbl:"Horn Hill"},
-  'the-reach':         {x:325, y:578, lbl:"The Reach"},
+  'highgarden':        {lat:-23.97, lng:-138.35,  lbl:"Highgarden"},
+  'oldtown':           {lat:-36.63, lng:-149.87,  lbl:"Oldtown"},
+  'horn-hill':         {lat:-26.0,  lng:-131.0,   lbl:"Horn Hill"},
+  'the-reach':         {lat:-18.0,  lng:-140.0,   lbl:"The Reach"},
   // Dorne
-  'sunspear':          {x:432, y:682, lbl:"Sunspear"},
-  'water-gardens':     {x:427, y:677, lbl:"Water Gardens"},
-  'starfall':          {x:305, y:664, lbl:"Starfall"},
-  'yronwood':          {x:450, y:652, lbl:"Yronwood"},
-  'dorne':             {x:378, y:668, lbl:"Dorne"},
+  'sunspear':          {lat:-43.58, lng:-84.57,   lbl:"Sunspear"},
+  'water-gardens':     {lat:-42.97, lng:-84.08,   lbl:"Water Gardens"},
+  'starfall':          {lat:-41.38, lng:-135.63,  lbl:"Starfall"},
+  'yronwood':          {lat:-37.65, lng:-114.45,  lbl:"Yronwood"},
+  'dorne':             {lat:-40.0,  lng:-105.0,   lbl:"Dorne"},
   // At sea
-  'narrow-sea':        {x:526, y:500, lbl:"Narrow Sea"},
-  'sunset-sea':        {x:175, y:480, lbl:"Sunset Sea"},
-  'summer-sea':        {x:500, y:780, lbl:"Summer Sea"},
-  // Essos — Free Cities  (click-measured on raster map dots)
-  'braavos':           {x:545, y:362, lbl:"Braavos"},
-  'pentos':            {x:582, y:552, lbl:"Pentos"},
-  'lorath':            {x:650, y:403, lbl:"Lorath"},
-  'norvos':            {x:647, y:509, lbl:"Norvos"},
-  'qohor':             {x:723, y:564, lbl:"Qohor"},
-  'myr':               {x:592, y:626, lbl:"Myr"},
-  'tyrosh':            {x:563, y:648, lbl:"Tyrosh"},
-  'lys':               {x:578, y:691, lbl:"Lys"},
-  'volantis':          {x:730, y:716, lbl:"Volantis"},
+  'narrow-sea':        {lat:15.0,   lng:-72.0,    lbl:"Narrow Sea"},
+  'sunset-sea':        {lat:20.0,   lng:-175.0,   lbl:"Sunset Sea"},
+  'summer-sea':        {lat:-55.0,  lng:-105.0,   lbl:"Summer Sea"},
+  // Essos — Free Cities
+  'braavos':           {lat:43.93,  lng:-59.78,   lbl:"Braavos"},
+  'pentos':            {lat:4.08,   lng:-59.17,   lbl:"Pentos"},
+  'lorath':            {lat:39.77,  lng:-39.39,   lbl:"Lorath"},
+  'norvos':            {lat:19.73,  lng:-31.35,   lbl:"Norvos"},
+  'qohor':             {lat:4.48,   lng:-5.51,    lbl:"Qohor"},
+  'myr':               {lat:-23.28, lng:-49.19,   lbl:"Myr"},
+  'tyrosh':            {lat:-26.71, lng:-69.32,   lbl:"Tyrosh"},
+  'lys':               {lat:-43.77, lng:-56.97,   lbl:"Lys"},
+  'volantis':          {lat:-44.37, lng:-10.69,   lbl:"Volantis"},
   // Essos interior
-  'vaes-dothrak':      {x:932, y:481, lbl:"Vaes Dothrak"},
-  'dothraki-sea':      {x:820, y:490, lbl:"Dothraki Sea"},
-  // Slaver's Bay  (click-measured on raster map dots)
-  'astapor':           {x:920, y:709, lbl:"Astapor"},
-  'yunkai':            {x:937, y:663, lbl:"Yunkai"},
-  'meereen':           {x:969, y:589, lbl:"Meereen"},
-  'slavers-bay':       {x:940, y:650, lbl:"Slaver's Bay"},
+  'vaes-dothrak':      {lat:-18.02, lng:71.84,    lbl:"Vaes Dothrak"},
+  'dothraki-sea':      {lat:-8.0,   lng:30.0,     lbl:"Dothraki Sea"},
+  // Slaver's Bay
+  'astapor':           {lat:-58.70, lng:71.79,    lbl:"Astapor"},
+  'yunkai':            {lat:-49.78, lng:75.48,    lbl:"Yunkai"},
+  'meereen':           {lat:-45.49, lng:80.45,    lbl:"Meereen"},
+  'slavers-bay':       {lat:-52.0,  lng:75.0,     lbl:"Slaver's Bay"},
   // Far Essos
-  'qarth':             {x:1184,y:728, lbl:"Qarth"},
-  'asshai':            {x:1500,y:867, lbl:"Asshai"},
-  'red-waste':         {x:1060,y:680, lbl:"Red Waste"},
-  'mantarys':          {x:785, y:655, lbl:"Mantarys"},
-  'valyria':           {x:690, y:710, lbl:"Valyria (ruins)"},
-  'unknown':           {x:900, y:200, lbl:"Location Unknown"},
-  'at-sea':            {x:450, y:852, lbl:"At Sea"},
-  'stepstones':        {x:538, y:635, lbl:"Stepstones"},
+  'qarth':             {lat:-81.37, lng:161.40,   lbl:"Qarth"},
+  'asshai':            {lat:-84.0,  lng:167.0,    lbl:"Asshai"},
+  'red-waste':         {lat:-65.0,  lng:105.0,    lbl:"Red Waste"},
+  'mantarys':          {lat:-50.74, lng:39.32,    lbl:"Mantarys"},
+  'valyria':           {lat:-70.26, lng:32.42,    lbl:"Valyria (ruins)"},
+  'unknown':           {lat:73.0,   lng:-50.0,    lbl:"Location Unknown"},
+  'at-sea':            {lat:-50.0,  lng:-100.0,   lbl:"At Sea"},
+  'stepstones':        {lat:-8.0,   lng:-72.0,    lbl:"Stepstones"},
 };
+
+// ── COORDINATE HELPERS ────────────────────────────────────────────────
+// Convert a LOC lat/lng to Leaflet container pixel position (screen coords).
+// All SVG token/hitbox placement goes through this — map pan/zoom is handled by Leaflet.
+function locToScreen(key){
+  const loc = LOC[key] || LOC['unknown'];
+  if(!window._leafMap) return {x:0, y:0};
+  const pt = window._leafMap.latLngToContainerPoint(L.latLng(loc.lat, loc.lng));
+  return {x: pt.x, y: pt.y};
+}
+
+// Interpolated lat/lng for a character state (used for Leaflet navigation).
+function charLatLng(st){
+  if(!st.travel || st.travel.frac<=0 || st.travel.frac>=1){
+    const loc=LOC[st.loc]||LOC['unknown'];
+    return {lat:loc.lat, lng:loc.lng};
+  }
+  const from=LOC[st.travel.fromLoc]||LOC['unknown'];
+  const to  =LOC[st.travel.toLoc]  ||LOC['unknown'];
+  const f=st.travel.frac;
+  const ease=f<0.5?2*f*f:1-Math.pow(-2*f+2,2)/2;
+  return {lat:from.lat+(to.lat-from.lat)*ease, lng:from.lng+(to.lng-from.lng)*ease};
+}
 
 // ── LOCATION LORE ─────────────────────────────────────────────────────
 const LOC_LORE = {
@@ -1323,15 +1328,13 @@ function charStateAt(ch, time){
 // Get interpolated SVG {x,y} for a character given its travel state
 function charXY(st){
   if(!st.travel || st.travel.frac<=0 || st.travel.frac>=1){
-    const pos=LOC[st.loc]||LOC['unknown'];
-    return {x:pos.x,y:pos.y};
+    return locToScreen(st.loc);
   }
-  const from=LOC[st.travel.fromLoc]||LOC['unknown'];
-  const to  =LOC[st.travel.toLoc]  ||LOC['unknown'];
-  const f=st.travel.frac;
-  // Ease in-out for natural movement
-  const ease=f<0.5?2*f*f:1-Math.pow(-2*f+2,2)/2;
-  return {x:from.x+(to.x-from.x)*ease, y:from.y+(to.y-from.y)*ease};
+  const a = locToScreen(st.travel.fromLoc);
+  const b = locToScreen(st.travel.toLoc);
+  const f = st.travel.frac;
+  const ease = f<0.5 ? 2*f*f : 1-Math.pow(-2*f+2,2)/2;
+  return {x: a.x+(b.x-a.x)*ease, y: a.y+(b.y-a.y)*ease};
 }
 
 // ── EVENT TRIGGER DETECTION ───────────────────────────────────────────
@@ -1382,12 +1385,12 @@ function drawEventFX(){
     const totalDur   = isBattle ? Math.max(anim.battleWindow, rippleTotal) : rippleTotal;
     if(elapsed > totalDur){ delete _evAnim[frac]; continue; }
 
-    const loc = LOC[anim.loc]; if(!loc) continue;
+    const lsc = locToScreen(anim.loc); if(!lsc) continue;
 
     // ── Red-screen flash for massacres (very start) ──────────────
     if(anim.type==='massacre' && elapsed < 900){
       const fp = elapsed<450 ? elapsed/450 : (900-elapsed)/450;
-      fxG.appendChild(mkEl('rect',{x:0,y:0,width:1620,height:1000,
+      fxG.appendChild(mkEl('rect',{x:0,y:0,width:mc.clientWidth,height:mc.clientHeight,
         fill:'#8b0000', opacity: Math.min(0.35, fp*0.35)}));
     }
 
@@ -1397,7 +1400,7 @@ function drawEventFX(){
       // Bright inner flash
       if(elapsed < 320){
         const fp = 1 - elapsed/320;
-        fxG.appendChild(mkEl('circle',{cx:loc.x,cy:loc.y,r:22,
+        fxG.appendChild(mkEl('circle',{cx:lsc.x,cy:lsc.y,r:22,
           fill:rc, opacity: fp*0.65}));
       }
       // Expanding ripple rings
@@ -1409,7 +1412,7 @@ function drawEventFX(){
         const r  = 14 + p * 58;
         const op = (1-p) * (anim.type==='massacre' ? 0.85 : 0.7);
         const sw = Math.max(0.2, 2.5 - p*2.2);
-        fxG.appendChild(mkEl('circle',{cx:loc.x,cy:loc.y,r,fill:'none',
+        fxG.appendChild(mkEl('circle',{cx:lsc.x,cy:lsc.y,r,fill:'none',
           stroke:rc, 'stroke-width':sw, opacity:op}));
       }
     }
@@ -1423,26 +1426,26 @@ function drawEventFX(){
       // Pulsing region glow
       const gPulse = 0.30 + 0.35*Math.sin(elapsed/1200*Math.PI*2);
       const gR     = 42  + 9  *Math.sin(elapsed/1200*Math.PI*2);
-      fxG.appendChild(mkEl('circle',{cx:loc.x,cy:loc.y,r:gR,
+      fxG.appendChild(mkEl('circle',{cx:lsc.x,cy:lsc.y,r:gR,
         fill: anim.type==='massacre' ? '#6b0000' : '#8b3000',
         opacity: gPulse * env * 0.52}));
 
       // Pulsing sword / blood icon
       const iScale = 0.82 + 0.32*Math.sin(elapsed/800*Math.PI*2);
       const icon   = anim.type==='massacre' ? '🩸' : '⚔️';
-      const iY     = loc.y - 38;
+      const iY     = lsc.y - 38;
       const itxt   = mkEl('text',{
-        x:loc.x, y:iY,
+        x:lsc.x, y:iY,
         'text-anchor':'middle','dominant-baseline':'central',
         'font-size':'24', opacity: env,
-        transform:`translate(${loc.x},${iY}) scale(${iScale}) translate(${-loc.x},${-iY})`
+        transform:`translate(${lsc.x},${iY}) scale(${iScale}) translate(${-lsc.x},${-iY})`
       });
       itxt.textContent = icon;
       fxG.appendChild(itxt);
 
       // Event label text above icon
       const ltxt = mkEl('text',{
-        x:loc.x, y:loc.y-62,
+        x:lsc.x, y:lsc.y-62,
         'text-anchor':'middle','dominant-baseline':'central',
         'font-size':'9','font-weight':'bold',
         'font-family':'Georgia,serif','letter-spacing':'1.5',
@@ -1585,7 +1588,7 @@ function renderCreatures(){
   });
 
   Object.entries(byLoc).forEach(([locKey, items])=>{
-    const pos = LOC[locKey]||LOC['unknown'];
+    const pos = locToScreen(locKey);
     const cols = Math.min(CREAT_COLS, items.length);
     const rows = Math.ceil(items.length/cols);
     items.forEach(({id,cr,isDead},idx)=>{
@@ -1644,7 +1647,7 @@ function render(){
   // Stationary characters — grid layout per location
   const badgeDesired = new Map(); // locKey → badge data
   Object.entries(byLoc).forEach(([locKey,items])=>{
-    const pos=LOC[locKey]||LOC['unknown'];
+    const pos=locToScreen(locKey);
     items.sort((a,b)=>tokPriority(a.st,a.ch)-tokPriority(b.st,b.ch));
     const visible=items.slice(0,MAX_VISIBLE);
     const overflow=items.length-MAX_VISIBLE;
@@ -1703,8 +1706,8 @@ function render(){
   if(travelG){
     travelG.innerHTML='';
     traveling.forEach(({st})=>{
-      const from=LOC[st.travel.fromLoc]||LOC['unknown'];
-      const to  =LOC[st.travel.toLoc]  ||LOC['unknown'];
+      const from=locToScreen(st.travel.fromLoc);
+      const to  =locToScreen(st.travel.toLoc);
       travelG.appendChild(mkEl('line',{
         x1:from.x,y1:from.y,x2:to.x,y2:to.y,
         stroke:'rgba(212,168,32,0.4)','stroke-width':'1.8',
@@ -1749,30 +1752,17 @@ function render(){
 
 }
 
-function zoomToLoc(pos){
-  const W=mc.clientWidth, H=mc.clientHeight, s=3.5;
-  transform={x:W/2-pos.x*(W/1800)*s, y:H/2-pos.y*(H/1000)*s, s};
-  applyXf();
+function zoomToLoc(locKey){
+  const loc=LOC[locKey]||LOC['unknown'];
+  if(window._leafMap) window._leafMap.flyTo([loc.lat,loc.lng], 5, {duration:0.5});
 }
 
 // Smooth animated pan+zoom — used by search. Calls onDone() when complete.
-function panToChar(pos, onDone){
-  const W=mc.clientWidth, H=mc.clientHeight;
-  const scx=W/1800, scy=H/1000, targetS=3.8;
-  const endX=W/2-pos.x*scx*targetS, endY=H/2-pos.y*scy*targetS;
-  const startX=transform.x, startY=transform.y, startS=transform.s;
-  const dur=480, t0=performance.now();
-  function ease(k){return k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;}
-  function step(now){
-    const f=Math.min(1,(now-t0)/dur), e=ease(f);
-    transform.x=startX+(endX-startX)*e;
-    transform.y=startY+(endY-startY)*e;
-    transform.s=startS+(targetS-startS)*e;
-    applyXf();
-    if(f<1) requestAnimationFrame(step);
-    else if(onDone) onDone();
-  }
-  requestAnimationFrame(step);
+function panToChar(ll, onDone){
+  if(!window._leafMap){ if(onDone) setTimeout(onDone,0); return; }
+  const zoom = Math.max(window._leafMap.getZoom(), 4);
+  if(onDone) window._leafMap.once('moveend', onDone);
+  window._leafMap.flyTo([ll.lat, ll.lng], zoom, {duration:0.48});
 }
 
 // ── CHARACTER FOLLOW ──────────────────────────────────────────────────
@@ -1797,13 +1787,8 @@ function centerOnFollowed(){
   const ch=window.CHARS[followingId];
   if(!ch){ stopFollowing(); return; }
   const st=charStateAt(ch,t);
-  const {x,y}=charXY(st);
-  const W=mc.clientWidth, H=mc.clientHeight;
-  const s=Math.max(transform.s,3);
-  transform.x=W/2-x*(W/1800)*s;
-  transform.y=H/2-y*(H/1000)*s;
-  transform.s=s;
-  applyXf();
+  const ll=charLatLng(st);
+  if(window._leafMap) window._leafMap.panTo([ll.lat, ll.lng], {animate:false});
 }
 
 function updateUI(){
@@ -1933,49 +1918,19 @@ let seekDragging=false;
   track.addEventListener('touchmove', e=>{e.preventDefault();seekClick(e.touches[0]);},{passive:false});
 })();
 
-// ── ZOOM & PAN ────────────────────────────────────────────────────────
-const svg=document.getElementById('world-svg');
+// ── ZOOM & PAN — handled by Leaflet ──────────────────────────────────
 const mc =document.getElementById('map-container');
-function clampTransform(){
-  const W=mc.clientWidth,H=mc.clientHeight;
-  transform.s=Math.max(1,Math.min(12,transform.s));
-  transform.x=Math.min(0,Math.max(W*(1-transform.s),transform.x));
-  transform.y=Math.min(0,Math.max(H*(1-transform.s),transform.y));
-}
-function applyXf(){clampTransform();svg.style.transform=`translate(${transform.x}px,${transform.y}px) scale(${transform.s})`;drawMiniMap();}
-function zoomAdj(f){transform.s=Math.max(1,Math.min(12,transform.s*f));applyXf();}
-function resetView(){transform={x:0,y:0,s:1};applyXf();}
-function focusWest(){
-  const W=mc.clientWidth,H=mc.clientHeight,s=2.4;
-  transform={x:W*(0.5-s*0.22),y:H*(0.5-s*0.38),s};applyXf();
-}
-function focusEss(){
-  const W=mc.clientWidth,H=mc.clientHeight,s=1.9;
-  transform={x:W*(0.5-s*0.73),y:H*(0.5-s*0.42),s};applyXf();
-}
-
-svg.addEventListener('mousedown',e=>{
-  if(e.target.closest('.char-token')) return;
-  stopFollowing();   // user taking manual control → release camera
-  dragging=true; dragPt={x:e.clientX,y:e.clientY}; dragOrigin={x:transform.x,y:transform.y};
+// Expose zoom helpers (used by +/- buttons in HTML)
+function zoomAdj(f){ if(window._leafMap){ if(f>1) window._leafMap.zoomIn(0.5); else window._leafMap.zoomOut(0.5); } }
+function resetView(){ if(window._leafMap) window._leafMap.setView([22,-105],4); }
+function focusWest(){ if(window._leafMap) window._leafMap.flyTo([28,-120],4,{duration:0.4}); }
+function focusEss(){  if(window._leafMap) window._leafMap.flyTo([-10, 35],4,{duration:0.4}); }
+// Release follow mode whenever user manually pans the Leaflet map
+document.addEventListener('DOMContentLoaded',()=>{
+  const lm=document.getElementById('leaflet-map');
+  if(lm) lm.addEventListener('mousedown',()=>{ if(followingId) stopFollowing(); });
+  if(lm) lm.addEventListener('touchstart',()=>{ if(followingId) stopFollowing(); },{passive:true});
 });
-window.addEventListener('mousemove',e=>{
-  if(!dragging) return;
-  transform.x=dragOrigin.x+(e.clientX-dragPt.x);
-  transform.y=dragOrigin.y+(e.clientY-dragPt.y);
-  applyXf();
-});
-window.addEventListener('mouseup',()=>{dragging=false;});
-mc.addEventListener('wheel',e=>{
-  e.preventDefault();
-  const f=e.deltaY<0?1.1:0.9;
-  const r=mc.getBoundingClientRect();
-  const mx=e.clientX-r.left, my=e.clientY-r.top;
-  const ns=Math.max(1,Math.min(12,transform.s*f)), sc=ns/transform.s;
-  transform.x=mx-sc*(mx-transform.x);
-  transform.y=my-sc*(my-transform.y);
-  transform.s=ns; applyXf();
-},{passive:false});
 
 // ── TOOLTIP ───────────────────────────────────────────────────────────
 const tipEl=document.getElementById('tooltip');
@@ -1993,10 +1948,11 @@ function drawJourneyTrail(charId){
   if(!ch || !ch.waypoints || ch.waypoints.length < 2) return;
   const ns = 'http://www.w3.org/2000/svg';
 
-  // Resolve waypoints to map coords
+  // Resolve waypoints to screen coords
   const pts = ch.waypoints.map(wp => {
-    const loc = LOC[wp.loc]; if(!loc) return null;
-    return { x:loc.x, y:loc.y, book:wp.book, bookIdx:Math.min(Math.floor(wp.book),4), loc:wp.loc, confirmed:wp.confirmed };
+    if(!LOC[wp.loc]) return null;
+    const sc = locToScreen(wp.loc);
+    return { x:sc.x, y:sc.y, book:wp.book, bookIdx:Math.min(Math.floor(wp.book),4), loc:wp.loc, confirmed:wp.confirmed };
   }).filter(Boolean);
 
   // Draw segments between consecutive different locations
@@ -2235,8 +2191,8 @@ function openLocPopup(locKey, items){
     div.appendChild(dotWrap); div.appendChild(info);
     div.addEventListener('click',()=>{
       closeLocPopup();
-      const pos=charXY(st);
-      panToChar(pos,()=>{ followChar(id); openPanel(id); });
+      const ll=charLatLng(st);
+      panToChar(ll,()=>{ followChar(id); openPanel(id); });
     });
     list.appendChild(div);
   });
@@ -2252,10 +2208,11 @@ function buildLocHitboxes(){
   if(!g) return;
   g.innerHTML='';
   const ns='http://www.w3.org/2000/svg';
-  Object.entries(LOC).forEach(([key,loc])=>{
+  Object.entries(LOC).forEach(([key])=>{
+    const sc=locToScreen(key);
     // outer invisible hit-area
     const hit=document.createElementNS(ns,'circle');
-    hit.setAttribute('cx',loc.x); hit.setAttribute('cy',loc.y);
+    hit.setAttribute('cx',sc.x); hit.setAttribute('cy',sc.y);
     hit.setAttribute('r','18'); hit.setAttribute('fill','transparent');
     hit.setAttribute('cursor','pointer');
     hit.setAttribute('class','loc-hit');
@@ -2264,7 +2221,7 @@ function buildLocHitboxes(){
     // visible dot — only for lore locations; others get a tiny dot
     const hasLore=!!LOC_LORE[key];
     const dot=document.createElementNS(ns,'circle');
-    dot.setAttribute('cx',loc.x); dot.setAttribute('cy',loc.y);
+    dot.setAttribute('cx',sc.x); dot.setAttribute('cy',sc.y);
     dot.setAttribute('r', hasLore ? '4' : '2.5');
     dot.setAttribute('fill', hasLore ? '#c8a050' : '#888870');
     dot.setAttribute('stroke', hasLore ? '#0d0800' : 'none');
@@ -2289,8 +2246,9 @@ function buildLocHitboxes(){
   });
 }
 
-// Build hitboxes once on load, after LOC and CHARS are defined
-window.addEventListener('load', ()=>{ setTimeout(buildLocHitboxes, 200); });
+// Expose globally so chunk-map.js Leaflet move events can call them
+window.buildLocHitboxes = buildLocHitboxes;
+window.render = render;
 
 // ── KEYBOARD SHORTCUTS ────────────────────────────────────────────────
 document.addEventListener('keydown',e=>{
@@ -2429,7 +2387,7 @@ const HOUSE_DOT_COL = {
     const r = results[i]; if(!r) return;
     const {id, ch} = r;
     const st  = charStateAt(ch, t);
-    const xy  = charXY(st);   // interpolated position — accurate for traveling chars
+    const xy  = charLatLng(st);   // interpolated lat/lng — accurate for traveling chars
 
     // Flash the search bar as instant feedback
     const row = document.getElementById('search-input-row');
@@ -2711,12 +2669,21 @@ function drawMiniMap(){
   });
 
   // ── CHARACTER DOTS ─────────────────────────────────────────────────
+  // Helper: convert lat/lng → mini-map pixel (Mercator projection, zoom-4 scale)
+  function mmPx(lat,lng){
+    const scale=4096; // 256*2^4
+    const mx=(lng+180)/360*scale/scale*MW;
+    const lr=lat*Math.PI/180;
+    const sinL=Math.sin(lr);
+    const my=(0.5-Math.log((1+sinL)/(1-sinL))/(4*Math.PI))*scale/scale*MH;
+    return {x:mx,y:my};
+  }
   if(window.CHARS){
     Object.entries(window.CHARS).forEach(([id,ch])=>{
       if(houseFilter!=='all'&&ch.house!==houseFilter) return;
       const st=charStateAt(ch,t);
       const loc=LOC[st.loc]; if(!loc) return;
-      const mx=loc.x/1800*MW, my=loc.y/1000*MH;
+      const {x:mx,y:my}=mmPx(loc.lat,loc.lng);
       ctx.fillStyle=MINI_HOUSE_COLORS[ch.house]||'#888';
       ctx.globalAlpha=st.isDead?0.22:0.95;
       ctx.beginPath(); ctx.arc(mx,my,1.7,0,Math.PI*2); ctx.fill();
@@ -2725,34 +2692,48 @@ function drawMiniMap(){
   }
 
   // ── VIEWPORT RECT ──────────────────────────────────────────────────
-  const W=mc.clientWidth, H=mc.clientHeight;
-  const vl=(-transform.x/transform.s)/1800*MW;
-  const vt=(-transform.y/transform.s)/1000*MH;
-  const vw=(W/transform.s)/1800*MW;
-  const vh=(H/transform.s)/1000*MH;
-  ctx.strokeStyle='rgba(218,174,32,.96)'; ctx.lineWidth=1.5;
-  ctx.strokeRect(Math.max(0,vl),Math.max(0,vt),Math.min(MW-vl,vw),Math.min(MH-vt,vh));
+  if(window._leafMap){
+    try{
+      const b=window._leafMap.getBounds();
+      const tl=mmPx(b.getNorth(),b.getWest());
+      const br=mmPx(b.getSouth(),b.getEast());
+      ctx.strokeStyle='rgba(218,174,32,.96)'; ctx.lineWidth=1.5;
+      const rx=Math.max(0,tl.x), ry=Math.max(0,tl.y);
+      ctx.strokeRect(rx,ry,Math.min(MW-rx,br.x-tl.x),Math.min(MH-ry,br.y-tl.y));
+    }catch(_){}
+  }
 }
 
-// Mini-map click → pan main map
+// Mini-map click → pan main Leaflet map
 window.addEventListener('load',()=>{
   const mm=document.getElementById('mini-map');
   if(mm) mm.addEventListener('click',e=>{
+    if(!window._leafMap) return;
     const r=e.target.getBoundingClientRect();
-    const mx=(e.clientX-r.left)/180, my=(e.clientY-r.top)/100;
-    const W=mc.clientWidth, H=mc.clientHeight;
-    transform.x=W/2-mx*1800*(W/1800)*transform.s;
-    transform.y=H/2-my*1000*(H/1000)*transform.s;
-    applyXf();
+    const fx=(e.clientX-r.left)/180;  // 0-1 fraction across mini-map width
+    const fy=(e.clientY-r.top)/100;   // 0-1 fraction down mini-map height
+    // Invert the Mercator formula to get lat/lng from mini-map fraction
+    const lng=fx*360-180;
+    const n=Math.PI*(1-2*fy);
+    const lat=Math.atan(0.5*(Math.exp(n)-Math.exp(-n)))*180/Math.PI;
+    window._leafMap.panTo([lat,lng]);
   });
 });
 
 // ── INIT ──────────────────────────────────────────────────────────────
+// Expose drawMiniMap globally so chunk-map.js can call it
+window.drawMiniMap = drawMiniMap;
+
 function init(){
   const count=Object.keys(window.CHARS).length;
   const el=document.getElementById('char-count');
   if(el) el.textContent=count+' characters tracked';
-  render(); updateUI();
+  // Defer first render until Leaflet map is ready (locToScreen needs _leafMap)
+  function tryRender(){
+    if(window._leafMap){ render(); updateUI(); buildLocHitboxes(); }
+    else setTimeout(tryRender, 80);
+  }
+  tryRender();
 
   // Event markers on timeline
   const evContainer=document.getElementById('event-markers');
@@ -2846,15 +2827,8 @@ function addTouchAsMouse(el){
   },{passive:false});
 }
 
-// Patch touch onto the main map SVG after the DOM is ready
-(function(){
-  function patchMapTouch(){
-    const worldSvg=document.getElementById('world-svg');
-    if(worldSvg) addTouchAsMouse(worldSvg);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',patchMapTouch);
-  else patchMapTouch();
-})();
+// Note: touch pan/zoom on the main map is handled natively by Leaflet.
+// addTouchAsMouse is still used for the graph canvas (relations tab).
 
 // ── iOS VIEWPORT HEIGHT FIX ────────────────────────────────────────────────
 // iOS Safari's 100vh includes the browser chrome bar, making the app taller
@@ -2882,6 +2856,9 @@ function addTouchAsMouse(el){
 })();
 </script>
 
+<!-- Leaflet JS — must load before chunk-map.js initialises the tile layer -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <!-- ═══════════════════ CHARACTER DATA CHUNKS ═══════════════════ -->
 <script src="chunk-starks-lannisters-baratheons.js"></script>
 <script src="chunk-targaryens-tyrells-martells-greyjoys.js"></script>
@@ -2892,6 +2869,8 @@ function addTouchAsMouse(el){
 <script src="chunk-pov.js"></script>
 <script src="chunk-history.js"></script>
 <script src="chunk-graph.js"></script>
+<!-- Leaflet tile map — initialises _leafMap used by all coordinate helpers -->
+<script src="chunk-map.js"></script>
 <!-- Firebase SDK (compat v9) — shared vote counts -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
